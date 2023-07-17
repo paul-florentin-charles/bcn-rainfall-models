@@ -14,15 +14,18 @@ class YearlyRainfall:
     starting_year: int = 1970
 
     def __init__(self):
-        self.yearly_rainfall: pd.DataFrame = YearlyRainfall.retrieve_yearly_rainfall()
+        self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall()
 
     def __str__(self):
-        return self.yearly_rainfall.to_string()
+        return self.__yearly_rainfall.to_string()
+
+    def get_yearly_rainfall(self):
+        return self.__yearly_rainfall
 
     def get_average_yearly_rainfall(self,
                                     begin_year: Optional[int] = None,
                                     end_year: Optional[int] = None) -> float:
-        yr: pd.DataFrame = self.yearly_rainfall.copy(deep=True)
+        yr: pd.DataFrame = self.__yearly_rainfall.copy(deep=True)
 
         if begin_year is not None:
             yr = yr[yr['Year'] >= begin_year]
@@ -38,8 +41,35 @@ class YearlyRainfall:
 
         return round(yr.loc['Rainfall'] / nb_years, 2)
 
+    def get_years_below_average(self,
+                                begin_year: Optional[int] = None,
+                                end_year: Optional[int] = None) -> int:
+        average_yearly_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+
+        yr = self.__yearly_rainfall[self.__yearly_rainfall['Rainfall'] < average_yearly_rainfall]
+
+        return yr.count()['Year']
+
+    def get_years_above_average(self,
+                                begin_year: Optional[int] = None,
+                                end_year: Optional[int] = None) -> int:
+        average_yearly_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+
+        yr = self.__yearly_rainfall[self.__yearly_rainfall['Rainfall'] > average_yearly_rainfall]
+
+        return yr.count()['Year']
+
+    def add_percentage_of_normal(self,
+                                 begin_year: Optional[int] = None,
+                                 end_year: Optional[int] = None) -> None:
+        normal: float = self.get_average_yearly_rainfall(begin_year, end_year)
+        if normal == 0.:
+            return
+
+        self.__yearly_rainfall['Percentage of normal'] = round(self.__yearly_rainfall['Rainfall'] / normal * 100.0, 2)
+
     @classmethod
-    def retrieve_yearly_rainfall(cls) -> pd.DataFrame:
+    def load_yearly_rainfall(cls) -> pd.DataFrame:
         monthly_rainfall: pd.DataFrame = pd.read_csv(cls.dataset_url)
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
