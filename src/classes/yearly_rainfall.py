@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 
 from typing import Optional
 
@@ -11,16 +14,21 @@ class YearlyRainfall:
         "precipitacionsbarcelonadesde1786.csv"
     )
 
-    starting_year: int = 1970
-
-    def __init__(self):
-        self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall()
+    def __init__(self, __starting_year):
+        self.__starting_year = __starting_year
+        self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall(self.__starting_year)
 
     def __str__(self):
         return self.__yearly_rainfall.to_string()
 
     def get_yearly_rainfall(self):
         return self.__yearly_rainfall
+
+    def get_starting_year(self):
+        return self.__starting_year
+
+    def export_as_csv(self, path: Optional[str] = None) -> str:
+        return self.__yearly_rainfall.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(self,
                                     begin_year: Optional[int] = None,
@@ -68,8 +76,21 @@ class YearlyRainfall:
 
         self.__yearly_rainfall['Percentage of normal'] = round(self.__yearly_rainfall['Rainfall'] / normal * 100.0, 2)
 
+    def add_linear_regression(self) -> (float, float):
+        years: np.ndarray = self.__yearly_rainfall['Year'].values.reshape(-1, 1)
+        rainfalls: np.ndarray = self.__yearly_rainfall['Rainfall'].values
+
+        reg = LinearRegression()
+        reg.fit(years, rainfalls)
+        self.__yearly_rainfall['LinReg'] = reg.predict(years)
+        self.__yearly_rainfall['LinReg'] = round(self.__yearly_rainfall['LinReg'], 2)
+
+        return r2_score(rainfalls,
+                        self.__yearly_rainfall['LinReg'].values), \
+            reg.coef_[0]
+
     @classmethod
-    def load_yearly_rainfall(cls) -> pd.DataFrame:
+    def load_yearly_rainfall(cls, starting_year) -> pd.DataFrame:
         monthly_rainfall: pd.DataFrame = pd.read_csv(cls.dataset_url)
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
@@ -78,8 +99,10 @@ class YearlyRainfall:
         yearly_rainfall: pd.DataFrame = pd.concat((years, rainfall), axis='columns') \
             .set_axis(['Year', 'Rainfall'],
                       axis='columns')
-        yearly_rainfall = yearly_rainfall[yearly_rainfall['Year'] >= cls.starting_year] \
+        yearly_rainfall = yearly_rainfall[yearly_rainfall['Year'] >= starting_year] \
             .reset_index() \
             .drop(columns='index')
+
+        yearly_rainfall['Rainfall'] = round(yearly_rainfall['Rainfall'], 2)
 
         return yearly_rainfall

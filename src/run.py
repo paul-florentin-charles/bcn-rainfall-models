@@ -15,18 +15,6 @@ starting_year = 1970
 year_step = 10
 
 
-def apply_linear_regression_to_yearly_rainfall(yearly_rainfall: pd.DataFrame) -> pd.DataFrame:
-    reg = linear_model.LinearRegression()
-    reg.fit(yearly_rainfall["Year"].values.reshape(-1, 1), yearly_rainfall["Rainfall"].values)
-    yearly_rainfall["Linear Regression"] = reg.predict(yearly_rainfall["Year"].values.reshape(-1, 1))
-
-    print("Coefficient of determination:", metrics.r2_score(yearly_rainfall["Rainfall"].values,
-                                                            yearly_rainfall["Linear Regression"].values))
-    print("Slope (mm/year):", reg.coef_[0])
-
-    return yearly_rainfall
-
-
 def apply_savgol_filter_to_yearly_rainfall(yearly_rainfall: pd.DataFrame) -> pd.DataFrame:
     yearly_rainfall["Savgol Filter"] = signal.savgol_filter(yearly_rainfall["Rainfall"].values,
                                                             window_length=len(yearly_rainfall["Rainfall"].values),
@@ -39,8 +27,7 @@ def count_years_below_normal(yearly_rainfall: pd.DataFrame) -> int:
     return yearly_rainfall[yearly_rainfall["Percentage of normal"] < 100.0].count()["Year"]
 
 
-def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall: pd.DataFrame,
-                                                               normal: float) -> tuple[MLPClassifier, StandardScaler]:
+def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall: pd.DataFrame) -> tuple[MLPClassifier, StandardScaler]:
     # Building training data
     X = []
     y = []
@@ -120,7 +107,7 @@ def plot_yearly_rainfall_linear_regression(yearly_rainfall: pd.DataFrame):
 
 
 def run():
-    yearly_rainfall_obj = YearlyRainfall()
+    yearly_rainfall_obj = YearlyRainfall(starting_year)
 
     avg_1970_2000 = yearly_rainfall_obj.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall_obj.get_average_yearly_rainfall(1980, 2010)
@@ -132,7 +119,8 @@ def run():
 
     yearly_rainfall_obj.add_percentage_of_normal(1980, 2010)
 
-    model, scaler = build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_obj.get_yearly_rainfall(), avg_1980_2010)
+    model, scaler = build_and_fit_mlp_to_predict_years_below_normal_for_decade(
+        yearly_rainfall_obj.get_yearly_rainfall())
     X_predict = [list(range(1960, 1960 + year_step)),
                  list(range(2020, 2020 + year_step)),
                  list(range(2030, 2030 + year_step)),
@@ -146,9 +134,12 @@ def run():
     print("Number of years above normal:", nb_years_above_normal)
     print("Number of years below normal", nb_years_below_normal)
 
+    yearly_rainfall_obj.add_linear_regression()
+
+    print(yearly_rainfall_obj.export_as_csv())
+
     plot = False
     if plot:
-        apply_linear_regression_to_yearly_rainfall(yearly_rainfall_obj.get_yearly_rainfall())
         plot_yearly_rainfall_linear_regression(yearly_rainfall_obj.get_yearly_rainfall())
 
         apply_savgol_filter_to_yearly_rainfall(yearly_rainfall_obj.get_yearly_rainfall())
