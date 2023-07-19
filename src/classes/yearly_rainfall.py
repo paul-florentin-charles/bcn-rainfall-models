@@ -25,19 +25,29 @@ class YearlyRainfall:
     def __init__(self,
                  yearly_rainfall: Optional[pd.DataFrame] = None,
                  starting_year: Optional[int] = None):
-        self.__starting_year: int = starting_year
         if yearly_rainfall is None:
-            self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall(self.__starting_year)
+            self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall(starting_year)
         else:
             self.__yearly_rainfall: pd.DataFrame = yearly_rainfall
+        self.__starting_year: int = starting_year
 
     def __str__(self):
         return self.__yearly_rainfall.to_string()
 
-    def get_yearly_rainfall(self):
-        return self.__yearly_rainfall
+    def get_yearly_rainfall(self,
+                            begin_year: Optional[int] = None,
+                            end_year: Optional[int] = None) -> pd.DataFrame:
+        yr: pd.DataFrame = self.__yearly_rainfall
 
-    def get_starting_year(self):
+        if begin_year is not None:
+            yr = yr[yr[YEAR] >= begin_year]
+
+        if end_year is not None:
+            yr = yr[yr[YEAR] <= end_year]
+
+        return yr
+
+    def get_starting_year(self) -> int:
         return self.__starting_year
 
     def export_as_csv(self, path: Optional[str] = None) -> str:
@@ -46,13 +56,7 @@ class YearlyRainfall:
     def get_average_yearly_rainfall(self,
                                     begin_year: Optional[int] = None,
                                     end_year: Optional[int] = None) -> float:
-        yr: pd.DataFrame = self.__yearly_rainfall.copy(deep=True)
-
-        if begin_year is not None:
-            yr = yr[yr[YEAR] >= begin_year]
-
-        if end_year is not None:
-            yr = yr[yr[YEAR] <= end_year]
+        yr: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
         nb_years: int = len(yr)
         if nb_years == 0:
@@ -65,29 +69,20 @@ class YearlyRainfall:
     def get_years_below_average(self,
                                 begin_year: Optional[int] = None,
                                 end_year: Optional[int] = None) -> int:
-        average_yearly_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+        yr: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
-        yr = self.__yearly_rainfall[self.__yearly_rainfall[RAINFALL] < average_yearly_rainfall]
+        yr = yr[yr[RAINFALL] < self.get_average_yearly_rainfall(begin_year, end_year)]
 
         return yr.count()[YEAR]
 
     def get_years_above_average(self,
                                 begin_year: Optional[int] = None,
                                 end_year: Optional[int] = None) -> int:
-        average_yearly_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+        yr: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
-        yr = self.__yearly_rainfall[self.__yearly_rainfall[RAINFALL] > average_yearly_rainfall]
+        yr = yr[yr[RAINFALL] > self.get_average_yearly_rainfall(begin_year, end_year)]
 
         return yr.count()[YEAR]
-
-    def restrict_to_yearly_interval(self,
-                                    begin_year: Optional[int] = None,
-                                    end_year: Optional[int] = None) -> None:
-        if begin_year is not None:
-            self.__yearly_rainfall = self.__yearly_rainfall[self.__yearly_rainfall[YEAR] >= begin_year]
-
-        if end_year is not None:
-            self.__yearly_rainfall = self.__yearly_rainfall[self.__yearly_rainfall[YEAR] <= end_year]
 
     def add_percentage_of_normal(self,
                                  begin_year: Optional[int] = None,
@@ -119,7 +114,7 @@ class YearlyRainfall:
 
         self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER] = round(self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER], 2)
 
-    def plot_and_legend_rainfall(self):
+    def plot_rainfall(self, show=False) -> None:
         for column_label in self.__yearly_rainfall.columns[1:]:
             if column_label == PERCENTAGE_OF_NORMAL:
                 continue
@@ -129,11 +124,16 @@ class YearlyRainfall:
                      label=column_label)
 
         plt.xlabel(YEAR)
-        plt.ylabel(str.format("{0} in (mm)", RAINFALL))
-        plt.title('Barcelona rainfall evolution and various models')
+        plt.ylabel(f"{RAINFALL} in (mm)")
+        plt.title("Barcelona rainfall evolution and various models")
         plt.legend()
+        if show:
+            plt.show()
 
-    def plot_and_legend_normal(self):
+    def plot_normal(self, show=False) -> None:
+        if PERCENTAGE_OF_NORMAL not in self.__yearly_rainfall.columns:
+            return
+
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')
         plt.scatter(self.__yearly_rainfall[YEAR],
                     self.__yearly_rainfall[PERCENTAGE_OF_NORMAL],
@@ -141,8 +141,10 @@ class YearlyRainfall:
 
         plt.xlabel(YEAR)
         plt.ylabel("Percentage (%)")
-        plt.title('Barcelona rainfall evolution compared to normal')
+        plt.title("Barcelona rainfall evolution compared to normal")
         plt.legend()
+        if show:
+            plt.show()
 
     @classmethod
     def load_yearly_rainfall(cls, starting_year: Optional[int] = None) -> pd.DataFrame:
