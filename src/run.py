@@ -1,45 +1,30 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from scipy import signal
-from sklearn import linear_model, metrics, neural_network, preprocessing
+from sklearn import neural_network, preprocessing
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
-from classes.yearly_rainfall import YearlyRainfall
 
-dataset_url = str.format("https://opendata-ajuntament.barcelona.cat/data/dataset/{0}/resource/{1}/download/{2}",
-                         "5334c15e-0d70-410b-85f3-d97740ffc1ed",
-                         "6f1fb778-0767-478b-b332-c64a833d26d2",
-                         "precipitacionsbarcelonadesde1786.csv")
+from classes.yearly_rainfall import YearlyRainfall
 
 starting_year = 1970
 year_step = 10
 
 
-def apply_savgol_filter_to_yearly_rainfall(yearly_rainfall: pd.DataFrame) -> pd.DataFrame:
-    yearly_rainfall["Savgol Filter"] = signal.savgol_filter(yearly_rainfall["Rainfall"].values,
-                                                            window_length=len(yearly_rainfall["Rainfall"].values),
-                                                            polyorder=len(yearly_rainfall) // year_step)
-
-    return yearly_rainfall
-
-
-def count_years_below_normal(yearly_rainfall: pd.DataFrame) -> int:
-    return yearly_rainfall[yearly_rainfall["Percentage of normal"] < 100.0].count()["Year"]
-
-
-def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall: pd.DataFrame) -> tuple[MLPClassifier, StandardScaler]:
+def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_obj: YearlyRainfall) -> tuple[
+    MLPClassifier, StandardScaler]:
     # Building training data
     X = []
     y = []
-    for year in range(yearly_rainfall["Year"].iloc[0], yearly_rainfall["Year"].iloc[-1] // year_step * year_step,
+    for year in range(yearly_rainfall_obj.get_yearly_rainfall()["Year"].iloc[0],
+                      yearly_rainfall_obj.get_yearly_rainfall()["Year"].iloc[-1] // year_step * year_step,
                       year_step):
         years = []
         for year2 in range(year, year + year_step):
             years.append(year2)
         X.append(years)
-        tmp_yearly_rainfall = yearly_rainfall[yearly_rainfall["Year"] >= year]
-        tmp_yearly_rainfall = tmp_yearly_rainfall[tmp_yearly_rainfall["Year"] < year + year_step]
-        y.append(count_years_below_normal(tmp_yearly_rainfall))
+        tmp_yearly_rainfall_obj = YearlyRainfall(yearly_rainfall=yearly_rainfall_obj.get_yearly_rainfall())
+        tmp_yearly_rainfall_obj.restrict_to_yearly_interval(year, year + year_step - 1)
+        y.append(tmp_yearly_rainfall_obj.get_years_below_average(year, year + year_step - 1))
 
     # Preprocessing data
     scaler = preprocessing.StandardScaler()
@@ -73,41 +58,8 @@ def group_yearly_rainfall_by_decade(yearly_rainfall: pd.DataFrame) -> pd.DataFra
     return df
 
 
-def plot_yearly_rainfall(yearly_rainfall: pd.DataFrame):
-    yearly_rainfall.plot(x="Year",
-                         y="Rainfall",
-                         ylabel="Rainfall (mm)")
-
-
-def plot_yearly_rainfall_savgol_filter(yearly_rainfall: pd.DataFrame):
-    yearly_rainfall.plot(x="Year",
-                         y="Savgol Filter",
-                         ylabel="Rainfall (mm)")
-
-
-def plot_yearly_rainfall_deviation_from_normal(yearly_rainfall: pd.DataFrame):
-    yearly_rainfall.plot(x="Year",
-                         y="Percentage of normal",
-                         label="Percentage of normal (%)",
-                         kind="scatter",
-                         title="Barcelona rainfall deviation from normal")
-
-
-def plot_yearly_rainfall_linear_regression(yearly_rainfall: pd.DataFrame):
-    yearly_rainfall.plot(x="Year",
-                         y="Linear Regression",
-                         ylabel="Rainfall (mm)",
-                         label="Linear Regression of Rainfall",
-                         title="Barcelona linear regression of rainfall")
-    plt.scatter(yearly_rainfall["Year"].values.reshape(-1, 1),
-                yearly_rainfall["Rainfall"].values,
-                color="red",
-                label="Rainfall")
-    plt.legend()
-
-
 def run():
-    yearly_rainfall_obj = YearlyRainfall(starting_year)
+    yearly_rainfall_obj = YearlyRainfall(starting_year=starting_year)
 
     avg_1970_2000 = yearly_rainfall_obj.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall_obj.get_average_yearly_rainfall(1980, 2010)
@@ -119,8 +71,7 @@ def run():
 
     yearly_rainfall_obj.add_percentage_of_normal(1980, 2010)
 
-    model, scaler = build_and_fit_mlp_to_predict_years_below_normal_for_decade(
-        yearly_rainfall_obj.get_yearly_rainfall())
+    model, scaler = build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_obj)
     X_predict = [list(range(1960, 1960 + year_step)),
                  list(range(2020, 2020 + year_step)),
                  list(range(2030, 2030 + year_step)),
@@ -135,20 +86,15 @@ def run():
     print("Number of years below normal", nb_years_below_normal)
 
     yearly_rainfall_obj.add_linear_regression()
+    yearly_rainfall_obj.add_savgol_filter()
 
     print(yearly_rainfall_obj.export_as_csv())
 
-    plot = False
-    if plot:
-        plot_yearly_rainfall_linear_regression(yearly_rainfall_obj.get_yearly_rainfall())
+    yearly_rainfall_obj.plot_and_legend_rainfall()
+    plt.show()
 
-        apply_savgol_filter_to_yearly_rainfall(yearly_rainfall_obj.get_yearly_rainfall())
-        plot_yearly_rainfall_savgol_filter(yearly_rainfall_obj.get_yearly_rainfall())
-
-        plot_yearly_rainfall_deviation_from_normal(yearly_rainfall_obj.get_yearly_rainfall())
-        plt.axhline(y=100.0, color='orange', linestyle="--", label="Normal")
-        plt.legend()
-        plt.show()
+    yearly_rainfall_obj.plot_and_legend_normal()
+    plt.show()
 
 
 if __name__ == "__main__":
