@@ -7,51 +7,65 @@ import matplotlib.pyplot as plt
 
 from typing import Optional
 
-YEAR: str = 'Year'
-RAINFALL: str = 'Rainfall'
-PERCENTAGE_OF_NORMAL: str = 'Percentage of normal'
-LINEAR_REGRESSION: str = 'Linear regression'
-SAVITZKY_GOLAY_FILTER: str = 'Savitzky–Golay filter'
+from src.enums.labels import Label
+from src.enums.months import Month
+from src.cfg import DATASET_URL
+from src.decorators import plots
 
 
 class YearlyRainfall:
-    dataset_url: str = str.format(
-        "https://opendata-ajuntament.barcelona.cat/data/dataset/{0}/resource/{1}/download/{2}",
-        "5334c15e-0d70-410b-85f3-d97740ffc1ed",
-        "6f1fb778-0767-478b-b332-c64a833d26d2",
-        "precipitacionsbarcelonadesde1786.csv"
-    )
-
     def __init__(self,
-                 yearly_rainfall: Optional[pd.DataFrame] = None,
-                 starting_year: Optional[int] = None):
+                 starting_year: Optional[int] = None,
+                 yearly_rainfall: Optional[pd.DataFrame] = None):
+        self.starting_year: int = starting_year
         if yearly_rainfall is None:
-            self.__yearly_rainfall: pd.DataFrame = YearlyRainfall.load_yearly_rainfall(starting_year)
+            self.load_yearly_rainfall()
         else:
-            self.__yearly_rainfall: pd.DataFrame = yearly_rainfall
-        self.__starting_year: int = starting_year
+            self.yearly_rainfall: pd.DataFrame = yearly_rainfall
 
     def __str__(self):
-        return self.__yearly_rainfall.to_string()
+        return self.yearly_rainfall.to_string()
+
+    def load_yearly_rainfall(self) -> None:
+        self.yearly_rainfall = self.load_rainfall(Month.JANUARY.value)
+
+    def load_rainfall(self, start_month: int, end_month: Optional[int] = None) -> pd.DataFrame:
+        monthly_rainfall: pd.DataFrame = pd.read_csv(DATASET_URL)
+
+        years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
+        rainfall: pd.Series = monthly_rainfall.iloc[:, start_month:end_month].sum(axis='columns')
+
+        yearly_rainfall: pd.DataFrame = pd.concat((years, rainfall), axis='columns') \
+            .set_axis([Label.YEAR.value, Label.RAINFALL.value],
+                      axis='columns')
+
+        if self.starting_year is not None:
+            yearly_rainfall = yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= self.starting_year] \
+                .reset_index() \
+                .drop(columns='index')
+
+        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value], 2)
+
+        return yearly_rainfall
 
     def get_yearly_rainfall(self,
                             begin_year: Optional[int] = None,
                             end_year: Optional[int] = None) -> pd.DataFrame:
-        yr: pd.DataFrame = self.__yearly_rainfall
+        yr: pd.DataFrame = self.yearly_rainfall
 
         if begin_year is not None:
-            yr = yr[yr[YEAR] >= begin_year]
+            yr = yr[yr[Label.YEAR.value] >= begin_year]
 
         if end_year is not None:
-            yr = yr[yr[YEAR] <= end_year]
+            yr = yr[yr[Label.YEAR.value] <= end_year]
 
         return yr
 
     def get_starting_year(self) -> int:
-        return self.__starting_year
+        return self.starting_year
 
     def export_as_csv(self, path: Optional[str] = None) -> str:
-        return self.__yearly_rainfall.to_csv(path_or_buf=path, index=False)
+        return self.yearly_rainfall.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(self,
                                     begin_year: Optional[int] = None,
@@ -64,25 +78,25 @@ class YearlyRainfall:
 
         yr = yr.sum(axis='rows')
 
-        return round(yr.loc[RAINFALL] / nb_years, 2)
+        return round(yr.loc[Label.RAINFALL.value] / nb_years, 2)
 
     def get_years_below_average(self,
                                 begin_year: Optional[int] = None,
                                 end_year: Optional[int] = None) -> int:
         yr: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
-        yr = yr[yr[RAINFALL] < self.get_average_yearly_rainfall(begin_year, end_year)]
+        yr = yr[yr[Label.RAINFALL.value] < self.get_average_yearly_rainfall(begin_year, end_year)]
 
-        return yr.count()[YEAR]
+        return yr.count()[Label.YEAR.value]
 
     def get_years_above_average(self,
                                 begin_year: Optional[int] = None,
                                 end_year: Optional[int] = None) -> int:
         yr: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
-        yr = yr[yr[RAINFALL] > self.get_average_yearly_rainfall(begin_year, end_year)]
+        yr = yr[yr[Label.RAINFALL.value] > self.get_average_yearly_rainfall(begin_year, end_year)]
 
-        return yr.count()[YEAR]
+        return yr.count()[Label.YEAR.value]
 
     def add_percentage_of_normal(self,
                                  begin_year: Optional[int] = None,
@@ -91,77 +105,59 @@ class YearlyRainfall:
         if normal == 0.:
             return
 
-        self.__yearly_rainfall[PERCENTAGE_OF_NORMAL] = round(self.__yearly_rainfall[RAINFALL] / normal * 100.0, 2)
+        self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value] = round(
+            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, 2)
 
     def add_linear_regression(self) -> (float, float):
-        years: np.ndarray = self.__yearly_rainfall[YEAR].values.reshape(-1, 1)
-        rainfalls: np.ndarray = self.__yearly_rainfall[RAINFALL].values
+        years: np.ndarray = self.yearly_rainfall[Label.YEAR.value].values.reshape(-1, 1)
+        rainfalls: np.ndarray = self.yearly_rainfall[Label.RAINFALL.value].values
 
         reg = LinearRegression()
         reg.fit(years, rainfalls)
-        self.__yearly_rainfall[LINEAR_REGRESSION] = reg.predict(years)
-        self.__yearly_rainfall[LINEAR_REGRESSION] = round(self.__yearly_rainfall[LINEAR_REGRESSION], 2)
+        self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = reg.predict(years)
+        self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = round(
+            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], 2)
 
         return r2_score(rainfalls,
-                        self.__yearly_rainfall[LINEAR_REGRESSION].values), \
+                        self.yearly_rainfall[Label.LINEAR_REGRESSION.value].values), \
             reg.coef_[0]
 
     def add_savgol_filter(self) -> None:
-        self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER] = signal.savgol_filter(self.__yearly_rainfall[RAINFALL],
-                                                                             window_length=len(self.__yearly_rainfall),
-                                                                             polyorder=len(
-                                                                                 self.__yearly_rainfall) // 10)
+        self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = signal.savgol_filter(
+            self.yearly_rainfall[Label.RAINFALL.value],
+            window_length=len(self.yearly_rainfall),
+            polyorder=len(
+                self.yearly_rainfall) // 10)
 
-        self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER] = round(self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER], 2)
+        self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
+            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], 2)
 
-    def plot_rainfall(self, show: Optional[bool] = False) -> None:
-        for column_label in self.__yearly_rainfall.columns[1:]:
-            if column_label == PERCENTAGE_OF_NORMAL:
+    @plots.legend()
+    def plot_rainfall(self, title: Optional[str] = None) -> None:
+        for column_label in self.yearly_rainfall.columns[1:]:
+            if column_label == Label.PERCENTAGE_OF_NORMAL.value:
                 continue
 
-            plt.plot(self.__yearly_rainfall[YEAR],
-                     self.__yearly_rainfall[column_label],
+            plt.plot(self.yearly_rainfall[Label.YEAR.value],
+                     self.yearly_rainfall[column_label],
                      label=column_label)
 
-        plt.xlabel(YEAR)
-        plt.ylabel(f"{RAINFALL} in (mm)")
-        plt.title("Barcelona rainfall evolution and various models")
-        plt.legend()
-        if show:
-            plt.show()
+        if title is not None:
+            plt.title(title)
+        else:
+            plt.title("Barcelona rainfall evolution and various models")
 
-    def plot_normal(self, show: Optional[bool] = False) -> None:
-        if PERCENTAGE_OF_NORMAL not in self.__yearly_rainfall.columns:
+    @plots.legend()
+    def plot_normal(self, title: Optional[str] = None) -> None:
+        if Label.PERCENTAGE_OF_NORMAL.value not in self.yearly_rainfall.columns:
             return
 
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')
-        plt.scatter(self.__yearly_rainfall[YEAR],
-                    self.__yearly_rainfall[PERCENTAGE_OF_NORMAL],
-                    label=PERCENTAGE_OF_NORMAL)
+        plt.scatter(self.yearly_rainfall[Label.YEAR.value],
+                    self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value],
+                    label=Label.PERCENTAGE_OF_NORMAL.value)
 
-        plt.xlabel(YEAR)
-        plt.ylabel("Percentage (%)")
-        plt.title("Barcelona rainfall evolution compared to normal")
-        plt.legend()
-        if show:
-            plt.show()
-
-    @classmethod
-    def load_yearly_rainfall(cls, starting_year: Optional[int] = None) -> pd.DataFrame:
-        monthly_rainfall: pd.DataFrame = pd.read_csv(cls.dataset_url)
-
-        years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
-        rainfall: pd.Series = monthly_rainfall.iloc[:, 1:].sum(axis='columns')
-
-        yearly_rainfall: pd.DataFrame = pd.concat((years, rainfall), axis='columns') \
-            .set_axis([YEAR, RAINFALL],
-                      axis='columns')
-
-        if starting_year is not None:
-            yearly_rainfall = yearly_rainfall[yearly_rainfall[YEAR] >= starting_year] \
-                .reset_index() \
-                .drop(columns='index')
-
-        yearly_rainfall[RAINFALL] = round(yearly_rainfall[RAINFALL], 2)
-
-        return yearly_rainfall
+        if title is not None:
+            plt.title(title)
+        else:
+            plt.title("Barcelona rainfall evolution compared to normal")

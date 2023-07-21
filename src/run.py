@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
 from sklearn import neural_network, preprocessing
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
-from classes.yearly_rainfall import YearlyRainfall
+from src.classes.monthly_rainfall import MonthlyRainfall
+from src.classes.yearly_rainfall import YearlyRainfall
+from src.enums.months import Month
 
 starting_year = 1970
 year_step = 10
@@ -41,40 +42,36 @@ def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_o
 
 
 def run():
-    yearly_rainfall_obj = YearlyRainfall(starting_year=starting_year)
+    by_year: bool = False
 
-    avg_1970_2000 = yearly_rainfall_obj.get_average_yearly_rainfall(1970, 2000)
-    avg_1980_2010 = yearly_rainfall_obj.get_average_yearly_rainfall(1980, 2010)
-    avg_1990_2020 = yearly_rainfall_obj.get_average_yearly_rainfall(1990, 2020)
+    if by_year:
+        yearly_rainfall = YearlyRainfall(starting_year=starting_year)
+    else:
+        yearly_rainfall = MonthlyRainfall(Month.JANUARY, starting_year=starting_year)
+
+    avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
+    avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)
+    avg_1990_2020 = yearly_rainfall.get_average_yearly_rainfall(1990, 2020)
 
     print("Normal 1970 - 2000:", avg_1970_2000)
     print("Normal 1980 - 2010:", avg_1980_2010)
     print("Normal 1990 - 2020:", avg_1990_2020)
 
-    yearly_rainfall_obj.add_percentage_of_normal(1980, 2010)
+    yearly_rainfall.add_percentage_of_normal(1980, 2010)
 
-    model, scaler = build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_obj)
-    X_predict = [list(range(1960, 1960 + year_step)),
-                 list(range(2020, 2020 + year_step)),
-                 list(range(2030, 2030 + year_step)),
-                 list(range(2080, 2080 + year_step))]
-    y = model.predict(scaler.transform(X_predict))
-    for idx, x in enumerate(X_predict):
-        print(y[idx], "years below normal predicted for these years:", x)
+    print("Number of years above normal:", yearly_rainfall.get_years_above_average())
+    print("Number of years below normal", yearly_rainfall.get_years_below_average())
 
-    nb_years_above_normal = yearly_rainfall_obj.get_years_above_average()
-    nb_years_below_normal = yearly_rainfall_obj.get_years_below_average()
-    print("Number of years above normal:", nb_years_above_normal)
-    print("Number of years below normal", nb_years_below_normal)
+    r2_score, slope = yearly_rainfall.add_linear_regression()
+    print("R2 score:", r2_score)
+    print("Slope (in mm/year)", slope)
 
-    yearly_rainfall_obj.add_linear_regression()
-    yearly_rainfall_obj.add_savgol_filter()
+    yearly_rainfall.add_savgol_filter()
 
-    print(yearly_rainfall_obj.export_as_csv())
+    # print(yearly_rainfall.export_as_csv())
 
-    yearly_rainfall_obj.plot_rainfall(show=True)
-
-    yearly_rainfall_obj.plot_normal(show=True)
+    yearly_rainfall.plot_rainfall()
+    yearly_rainfall.plot_normal()
 
 
 if __name__ == "__main__":
