@@ -114,7 +114,7 @@ class YearlyRainfall:
 
         self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER] = round(self.__yearly_rainfall[SAVITZKY_GOLAY_FILTER], 2)
 
-    def plot_rainfall(self, show=False) -> None:
+    def plot_rainfall(self, show: Optional[bool] = False) -> None:
         for column_label in self.__yearly_rainfall.columns[1:]:
             if column_label == PERCENTAGE_OF_NORMAL:
                 continue
@@ -130,7 +130,7 @@ class YearlyRainfall:
         if show:
             plt.show()
 
-    def plot_normal(self, show=False) -> None:
+    def plot_normal(self, show: Optional[bool] = False) -> None:
         if PERCENTAGE_OF_NORMAL not in self.__yearly_rainfall.columns:
             return
 
