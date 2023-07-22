@@ -1,10 +1,12 @@
-from sklearn import neural_network, preprocessing
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
 from src.classes.monthly_rainfall import MonthlyRainfall
 from src.classes.yearly_rainfall import YearlyRainfall
+from src.classes.seasonal_rainfall import SeasonalRainfall
+
 from src.enums.months import Month
+from src.enums.seasons import Season
 
 starting_year = 1970
 year_step = 10
@@ -26,16 +28,16 @@ def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_o
         y.append(tmp_yearly_rainfall_obj.get_years_below_average(year, year + year_step - 1))
 
     # Preprocessing data
-    scaler = preprocessing.StandardScaler()
+    scaler = StandardScaler()
     scaler.fit(X)
     X = scaler.transform(X)
 
     # Building and training model
-    clf = neural_network.MLPClassifier(solver='lbfgs',
-                                       alpha=1e-5,
-                                       hidden_layer_sizes=(5, year_step),
-                                       random_state=1,
-                                       max_iter=1000)
+    clf = MLPClassifier(solver='lbfgs',
+                        alpha=1e-5,
+                        hidden_layer_sizes=(5, year_step),
+                        random_state=1,
+                        max_iter=1000)
     clf.fit(X, y)
 
     return clf, scaler
@@ -43,11 +45,15 @@ def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_o
 
 def run():
     by_year: bool = False
+    by_season: bool = True
 
     if by_year:
         yearly_rainfall = YearlyRainfall(starting_year=starting_year)
     else:
         yearly_rainfall = MonthlyRainfall(Month.JANUARY, starting_year=starting_year)
+
+    if by_season:
+        yearly_rainfall = SeasonalRainfall(Season.SPRING, starting_year=starting_year)
 
     avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)

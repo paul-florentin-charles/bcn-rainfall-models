@@ -5,7 +5,7 @@ from typing import Callable
 from src.enums.labels import Label
 
 
-def legend():
+def legend_and_show():
     def decorator(func: Callable):
         def wrapper(*args):
             func(*args)

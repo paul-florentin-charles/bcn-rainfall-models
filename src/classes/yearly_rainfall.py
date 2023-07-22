@@ -33,7 +33,12 @@ class YearlyRainfall:
         monthly_rainfall: pd.DataFrame = pd.read_csv(DATASET_URL)
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
-        rainfall: pd.Series = monthly_rainfall.iloc[:, start_month:end_month].sum(axis='columns')
+        if end_month is not None and end_month < start_month:
+            rainfall: pd.Series = pd.concat((monthly_rainfall.iloc[:, start_month:start_month + 1],
+                                             monthly_rainfall.iloc[:, 1:end_month]), axis='columns')\
+                .sum(axis='columns')
+        else:
+            rainfall: pd.Series = monthly_rainfall.iloc[:, start_month:end_month].sum(axis='columns')
 
         yearly_rainfall: pd.DataFrame = pd.concat((years, rainfall), axis='columns') \
             .set_axis([Label.YEAR.value, Label.RAINFALL.value],
@@ -132,7 +137,7 @@ class YearlyRainfall:
         self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
             self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], 2)
 
-    @plots.legend()
+    @plots.legend_and_show()
     def plot_rainfall(self, title: Optional[str] = None) -> None:
         for column_label in self.yearly_rainfall.columns[1:]:
             if column_label == Label.PERCENTAGE_OF_NORMAL.value:
@@ -147,7 +152,7 @@ class YearlyRainfall:
         else:
             plt.title("Barcelona rainfall evolution and various models")
 
-    @plots.legend()
+    @plots.legend_and_show()
     def plot_normal(self, title: Optional[str] = None) -> None:
         if Label.PERCENTAGE_OF_NORMAL.value not in self.yearly_rainfall.columns:
             return
