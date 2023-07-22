@@ -1,23 +1,31 @@
-import pandas as pd
+from typing import Optional
+
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from scipy import signal
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-import matplotlib.pyplot as plt
 
-from typing import Optional
-
+import src.config as cfg
+from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
-from src.cfg import DATASET_URL
-from src.decorators import plots
 
 
 class YearlyRainfall:
     def __init__(self,
-                 starting_year: Optional[int] = None,
+                 start_year: Optional[int] = None,
+                 rounding_precision: Optional[int] = None,
                  yearly_rainfall: Optional[pd.DataFrame] = None):
-        self.starting_year: int = starting_year
+        if start_year is None:
+            self.starting_year: int = cfg.get_start_year()
+        else:
+            self.starting_year: int = start_year
+        if rounding_precision is None:
+            self.rounding_precision: int = cfg.get_rounding_precision()
+        else:
+            self.rounding_precision: int = rounding_precision
         if yearly_rainfall is None:
             self.load_yearly_rainfall()
         else:
@@ -30,7 +38,7 @@ class YearlyRainfall:
         self.yearly_rainfall = self.load_rainfall(Month.JANUARY.value)
 
     def load_rainfall(self, start_month: int, end_month: Optional[int] = None) -> pd.DataFrame:
-        monthly_rainfall: pd.DataFrame = pd.read_csv(DATASET_URL)
+        monthly_rainfall: pd.DataFrame = pd.read_csv(cfg.get_dataset_url())
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
         if end_month is not None and end_month < start_month:
@@ -49,7 +57,7 @@ class YearlyRainfall:
                 .reset_index() \
                 .drop(columns='index')
 
-        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value], 2)
+        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value], self.rounding_precision)
 
         return yearly_rainfall
 
@@ -66,9 +74,6 @@ class YearlyRainfall:
 
         return yr
 
-    def get_starting_year(self) -> int:
-        return self.starting_year
-
     def export_as_csv(self, path: Optional[str] = None) -> str:
         return self.yearly_rainfall.to_csv(path_or_buf=path, index=False)
 
@@ -83,7 +88,7 @@ class YearlyRainfall:
 
         yr = yr.sum(axis='rows')
 
-        return round(yr.loc[Label.RAINFALL.value] / nb_years, 2)
+        return round(yr.loc[Label.RAINFALL.value] / nb_years, self.rounding_precision)
 
     def get_years_below_average(self,
                                 begin_year: Optional[int] = None,
@@ -111,7 +116,7 @@ class YearlyRainfall:
             return
 
         self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value] = round(
-            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, 2)
+            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, self.rounding_precision)
 
     def add_linear_regression(self) -> (float, float):
         years: np.ndarray = self.yearly_rainfall[Label.YEAR.value].values.reshape(-1, 1)
@@ -121,7 +126,7 @@ class YearlyRainfall:
         reg.fit(years, rainfalls)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = reg.predict(years)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = round(
-            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], 2)
+            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], self.rounding_precision)
 
         return r2_score(rainfalls,
                         self.yearly_rainfall[Label.LINEAR_REGRESSION.value].values), \
@@ -135,7 +140,7 @@ class YearlyRainfall:
                 self.yearly_rainfall) // 10)
 
         self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
-            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], 2)
+            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], self.rounding_precision)
 
     @plots.legend_and_show()
     def plot_rainfall(self, title: Optional[str] = None) -> None:

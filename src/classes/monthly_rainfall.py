@@ -9,10 +9,11 @@ from src.enums.months import Month
 class MonthlyRainfall(YearlyRainfall):
     def __init__(self,
                  month: Month,
-                 starting_year: Optional[int] = None,
+                 start_year: Optional[int] = None,
+                 rounding_precision: Optional[int] = None,
                  yearly_rainfall: Optional[pd.DataFrame] = None):
         self.month: Month = month
-        super().__init__(starting_year, yearly_rainfall)
+        super().__init__(start_year, yearly_rainfall, rounding_precision)
 
     def load_yearly_rainfall(self) -> None:
         self.yearly_rainfall = self.load_rainfall(self.month.value, self.month.value + 1)

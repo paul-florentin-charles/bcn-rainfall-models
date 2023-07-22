@@ -7,8 +7,9 @@ from src.classes.seasonal_rainfall import SeasonalRainfall
 
 from src.enums.months import Month
 from src.enums.seasons import Season
+from src.config import get_start_year
 
-starting_year = 1970
+starting_year = get_start_year()
 year_step = 10
 
 
@@ -48,12 +49,12 @@ def run():
     by_season: bool = True
 
     if by_year:
-        yearly_rainfall = YearlyRainfall(starting_year=starting_year)
+        yearly_rainfall = YearlyRainfall()
     else:
-        yearly_rainfall = MonthlyRainfall(Month.JANUARY, starting_year=starting_year)
+        yearly_rainfall = MonthlyRainfall(Month.JANUARY)
 
     if by_season:
-        yearly_rainfall = SeasonalRainfall(Season.SPRING, starting_year=starting_year)
+        yearly_rainfall = SeasonalRainfall(Season.SUMMER)
 
     avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)
