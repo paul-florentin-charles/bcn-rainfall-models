@@ -16,26 +16,17 @@ from src.enums.months import Month
 class YearlyRainfall:
     def __init__(self,
                  start_year: Optional[int] = None,
-                 rounding_precision: Optional[int] = None,
+                 round_precision: Optional[int] = None,
                  yearly_rainfall: Optional[pd.DataFrame] = None):
-        if start_year is None:
-            self.starting_year: int = cfg.get_start_year()
-        else:
-            self.starting_year: int = start_year
-        if rounding_precision is None:
-            self.rounding_precision: int = cfg.get_rounding_precision()
-        else:
-            self.rounding_precision: int = rounding_precision
-        if yearly_rainfall is None:
-            self.load_yearly_rainfall()
-        else:
-            self.yearly_rainfall: pd.DataFrame = yearly_rainfall
+        self.starting_year: int = cfg.get_start_year() if start_year is None else start_year
+        self.round_precision: int = cfg.get_round_precision() if round_precision is None else round_precision
+        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall() if yearly_rainfall is None else yearly_rainfall
 
     def __str__(self):
         return self.yearly_rainfall.to_string()
 
-    def load_yearly_rainfall(self) -> None:
-        self.yearly_rainfall = self.load_rainfall(Month.JANUARY.value)
+    def load_yearly_rainfall(self) -> pd.DataFrame:
+        return self.load_rainfall(Month.JANUARY.value)
 
     def load_rainfall(self, start_month: int, end_month: Optional[int] = None) -> pd.DataFrame:
         monthly_rainfall: pd.DataFrame = pd.read_csv(cfg.get_dataset_url())
@@ -57,7 +48,7 @@ class YearlyRainfall:
                 .reset_index() \
                 .drop(columns='index')
 
-        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value], self.rounding_precision)
+        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value], self.round_precision)
 
         return yearly_rainfall
 
@@ -88,7 +79,7 @@ class YearlyRainfall:
 
         yr = yr.sum(axis='rows')
 
-        return round(yr.loc[Label.RAINFALL.value] / nb_years, self.rounding_precision)
+        return round(yr.loc[Label.RAINFALL.value] / nb_years, self.round_precision)
 
     def get_years_below_average(self,
                                 begin_year: Optional[int] = None,
@@ -116,7 +107,7 @@ class YearlyRainfall:
             return
 
         self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value] = round(
-            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, self.rounding_precision)
+            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, self.round_precision)
 
     def add_linear_regression(self) -> (float, float):
         years: np.ndarray = self.yearly_rainfall[Label.YEAR.value].values.reshape(-1, 1)
@@ -126,7 +117,7 @@ class YearlyRainfall:
         reg.fit(years, rainfalls)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = reg.predict(years)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = round(
-            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], self.rounding_precision)
+            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], self.round_precision)
 
         return r2_score(rainfalls,
                         self.yearly_rainfall[Label.LINEAR_REGRESSION.value].values), \
@@ -140,7 +131,7 @@ class YearlyRainfall:
                 self.yearly_rainfall) // 10)
 
         self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
-            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], self.rounding_precision)
+            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision)
 
     @plots.legend_and_show()
     def plot_rainfall(self, title: Optional[str] = None) -> None:

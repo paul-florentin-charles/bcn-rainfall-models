@@ -2,14 +2,11 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
 from src.classes.monthly_rainfall import MonthlyRainfall
-from src.classes.yearly_rainfall import YearlyRainfall
 from src.classes.seasonal_rainfall import SeasonalRainfall
-
+from src.classes.yearly_rainfall import YearlyRainfall
 from src.enums.months import Month
 from src.enums.seasons import Season
-from src.config import get_start_year
 
-starting_year = get_start_year()
 year_step = 10
 
 
@@ -46,15 +43,14 @@ def build_and_fit_mlp_to_predict_years_below_normal_for_decade(yearly_rainfall_o
 
 def run():
     by_year: bool = False
-    by_season: bool = True
+    by_month: bool = False
 
     if by_year:
-        yearly_rainfall = YearlyRainfall()
+        yearly_rainfall: YearlyRainfall = YearlyRainfall()
+    elif by_month:
+        yearly_rainfall: MonthlyRainfall = MonthlyRainfall(Month.JANUARY)
     else:
-        yearly_rainfall = MonthlyRainfall(Month.JANUARY)
-
-    if by_season:
-        yearly_rainfall = SeasonalRainfall(Season.SUMMER)
+        yearly_rainfall: SeasonalRainfall = SeasonalRainfall(Season.WINTER)
 
     avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)
@@ -74,8 +70,6 @@ def run():
     print("Slope (in mm/year)", slope)
 
     yearly_rainfall.add_savgol_filter()
-
-    # print(yearly_rainfall.export_as_csv())
 
     yearly_rainfall.plot_rainfall()
     yearly_rainfall.plot_normal()

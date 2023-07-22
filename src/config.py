@@ -26,10 +26,10 @@ def get_start_year() -> int:
     return start_year
 
 
-def get_rounding_precision() -> int:
+def get_round_precision() -> int:
     rounding_precision: int = 0
     with open(CONFIG_YAML, 'r') as stream:
         yaml_config: dict = safe_load(stream)
-        rounding_precision += yaml_config['data']['rounding_precision']
+        rounding_precision += yaml_config['data']['round_precision']
 
     return rounding_precision
