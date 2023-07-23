@@ -1,7 +1,14 @@
+"""
+Provides integer equivalents for months.
+"""
+
 from enum import Enum
 
 
 class Month(Enum):
+    """
+    An Enum listing months as integers.
+    """
     JANUARY: int = 1
     FEBRUARY: int = 2
     MARCH: int = 3
