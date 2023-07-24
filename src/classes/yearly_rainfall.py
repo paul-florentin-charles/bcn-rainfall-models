@@ -10,6 +10,7 @@ import pandas as pd
 from scipy import signal
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+from sklearn.cluster import KMeans
 
 import src.config as cfg
 from src.decorators import plots
@@ -29,7 +30,7 @@ class YearlyRainfall:
         self.starting_year: int = cfg.get_start_year() \
             if start_year is None \
             else start_year
-        self.round_precision: int = cfg.get_round_precision() \
+        self.round_precision: int = cfg.get_rainfall_precision() \
             if round_precision is None \
             else round_precision
         self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall() \
@@ -209,7 +210,7 @@ class YearlyRainfall:
         years: np.ndarray = self.yearly_rainfall[Label.YEAR.value].values.reshape(-1, 1)
         rainfalls: np.ndarray = self.yearly_rainfall[Label.RAINFALL.value].values
 
-        reg = LinearRegression()
+        reg: LinearRegression = LinearRegression()
         reg.fit(years, rainfalls)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = reg.predict(years)
         self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = round(
@@ -235,6 +236,19 @@ class YearlyRainfall:
         self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
             self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision)
 
+    def add_kmeans(self) -> None:
+        """
+        Compute and add K-Mean clustering of Rainfallc according to Year
+        to our pandas DataFrame.
+
+        :return: None
+        """
+        fit_data: np.ndarray = self.yearly_rainfall[[Label.YEAR.value, Label.RAINFALL.value]].values
+
+        kmeans: KMeans = KMeans(n_init=10, n_clusters=cfg.get_kmeans_clusters())
+        kmeans.fit(fit_data)
+        self.yearly_rainfall[Label.KMEANS.value] = kmeans.predict(fit_data)
+
     @plots.legend_and_show()
     def plot_rainfall(self, title: Optional[str] = None) -> None:
         """
@@ -244,7 +258,7 @@ class YearlyRainfall:
         :return: None
         """
         for column_label in self.yearly_rainfall.columns[1:]:
-            if column_label == Label.PERCENTAGE_OF_NORMAL.value:
+            if column_label in [Label.PERCENTAGE_OF_NORMAL.value, Label.KMEANS.value]:
                 continue
 
             plt.plot(self.yearly_rainfall[Label.YEAR.value],
@@ -268,9 +282,17 @@ class YearlyRainfall:
             return
 
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')
-        plt.scatter(self.yearly_rainfall[Label.YEAR.value],
-                    self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value],
-                    label=Label.PERCENTAGE_OF_NORMAL.value)
+        if Label.KMEANS.value not in self.yearly_rainfall.columns:
+            plt.scatter(self.yearly_rainfall[Label.YEAR.value],
+                        self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value],
+                        label=Label.PERCENTAGE_OF_NORMAL.value)
+        else:
+            year_rain: pd.DataFrame = self.yearly_rainfall
+            for label_value in range(cfg.get_kmeans_clusters()):
+                year_rain = year_rain[year_rain[Label.KMEANS.value] == label_value]
+                plt.scatter(year_rain[Label.YEAR.value],
+                            year_rain[Label.PERCENTAGE_OF_NORMAL.value])
+                year_rain = self.yearly_rainfall
 
         if title is not None:
             plt.title(title)

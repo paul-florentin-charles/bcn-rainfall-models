@@ -42,7 +42,7 @@ def get_start_year() -> int:
     return start_year
 
 
-def get_round_precision() -> int:
+def get_rainfall_precision() -> int:
     """
     The decimal precision of Rainfall values.
 
@@ -51,6 +51,20 @@ def get_round_precision() -> int:
     rounding_precision: int = 0
     with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
         yaml_config: dict = safe_load(stream)
-        rounding_precision += yaml_config['data']['round_precision']
+        rounding_precision += yaml_config['data']['rainfall_precision']
 
     return rounding_precision
+
+
+def get_kmeans_clusters() -> int:
+    """
+    The number of clusters to use for K-Means clustering of Rainfall data.
+
+    :return: A number of clusters as an Integer.
+    """
+    n_kmeans_clusters: int = 0
+    with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
+        yaml_config: dict = safe_load(stream)
+        n_kmeans_clusters += yaml_config['data']['kmeans_clusters']
+
+    return n_kmeans_clusters

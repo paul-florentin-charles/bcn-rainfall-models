@@ -7,4 +7,5 @@ dataset:
 
 data:
   start_year: 1970
-  round_precision: 2
+  rainfall_precision: 2
+  kmeans_clusters: 4

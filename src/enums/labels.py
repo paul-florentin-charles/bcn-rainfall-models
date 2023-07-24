@@ -14,3 +14,4 @@ class Label(str, Enum):
     PERCENTAGE_OF_NORMAL: str = 'Percentage of normal'
     LINEAR_REGRESSION: str = 'Linear regression'
     SAVITZKY_GOLAY_FILTER: str = 'Savitzky–Golay filter'
+    KMEANS: str = 'K-Means'

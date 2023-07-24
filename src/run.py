@@ -20,12 +20,15 @@ def run() -> None:
     by_year: bool = False
     by_month: bool = False
 
+    month: Month = Month.JULY
+    season: Season = Season.SUMMER
+
     if by_year:
         yearly_rainfall: YearlyRainfall = YearlyRainfall()
     elif by_month:
-        yearly_rainfall: MonthlyRainfall = MonthlyRainfall(Month.JANUARY)
+        yearly_rainfall: MonthlyRainfall = MonthlyRainfall(month)
     else:
-        yearly_rainfall: SeasonalRainfall = SeasonalRainfall(Season.WINTER)
+        yearly_rainfall: SeasonalRainfall = SeasonalRainfall(season)
 
     avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)
@@ -45,6 +48,7 @@ def run() -> None:
     print("Slope (in mm/year):", slope)
 
     yearly_rainfall.add_savgol_filter()
+    yearly_rainfall.add_kmeans()
 
     yearly_rainfall.plot_rainfall()
     yearly_rainfall.plot_normal()
