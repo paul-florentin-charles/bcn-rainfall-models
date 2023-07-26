@@ -5,7 +5,7 @@ from typing import Optional
 
 from yaml import safe_load
 
-CONFIG_FILE_PATH: str = './config.yaml'
+CONFIG_FILE_PATH: str = 'config.yaml'
 UTF_8: str = 'utf-8'
 MODE: str = 'rt'
 

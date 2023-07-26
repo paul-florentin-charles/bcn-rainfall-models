@@ -2,7 +2,7 @@
 
 from src.config import Config, CONFIG_FILE_PATH
 
-cfg: Config = Config(f"../src/{CONFIG_FILE_PATH}")
+cfg: Config = Config(f"src/{CONFIG_FILE_PATH}")
 
 
 class TestConfig:
