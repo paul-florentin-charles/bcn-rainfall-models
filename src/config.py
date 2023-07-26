@@ -1,6 +1,7 @@
 """
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
+from typing import Optional
 
 from yaml import safe_load
 
@@ -9,62 +10,58 @@ UTF_8: str = 'utf-8'
 MODE: str = 'rt'
 
 
-def get_dataset_url() -> str:
+class Config:
     """
-    Build the dataset URL location from the configuration.
+    Provides function to retrieve and/or build fields from YAML Configuration.
 
-    :return: The dataset URL as a String.
+    It needs to be instantiated first to be loaded.
     """
-    dataset_url: str = ""
-    with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
-        yaml_config: dict = safe_load(stream)
-        dataset_url += yaml_config['base_url']
 
-        yaml_dataset_config: dict = yaml_config['dataset']
+    def __init__(self, config_file_path: Optional[str] = None):
+        self.config_file_path: str = CONFIG_FILE_PATH \
+            if config_file_path is None \
+            else config_file_path
+        with open(self.config_file_path, mode=MODE, encoding=UTF_8) as stream:
+            self.yaml_config: dict = safe_load(stream)
+
+    def get_dataset_url(self) -> str:
+        """
+        Build the dataset URL location from the configuration.
+
+        :return: The dataset URL as a String.
+        """
+        dataset_url: str = self.yaml_config['base_url']
+
+        yaml_dataset_config: dict = self.yaml_config['dataset']
         dataset_url += f"/dataset/{yaml_dataset_config['id']}"
         dataset_url += f"/resource/{yaml_dataset_config['resource_id']}"
         dataset_url += f"/download/{yaml_dataset_config['file_name']}"
 
-    return dataset_url
+        return dataset_url
 
+    def get_start_year(self) -> int:
+        """
+        Retrieve the year the data should start at.
 
-def get_start_year() -> int:
-    """
-    Retrieve the year the data should start at.
+        :return: A year as an Integer.
+        """
 
-    :return: A year as an Integer.
-    """
-    start_year: int = 0
-    with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
-        yaml_config: dict = safe_load(stream)
-        start_year += yaml_config['data']['start_year']
+        return self.yaml_config['data']['start_year']
 
-    return start_year
+    def get_rainfall_precision(self) -> int:
+        """
+        The decimal precision of Rainfall values.
 
+        :return: A rounding precision as an Integer.
+        """
 
-def get_rainfall_precision() -> int:
-    """
-    The decimal precision of Rainfall values.
+        return self.yaml_config['data']['rainfall_precision']
 
-    :return: A rounding precision as an Integer.
-    """
-    rounding_precision: int = 0
-    with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
-        yaml_config: dict = safe_load(stream)
-        rounding_precision += yaml_config['data']['rainfall_precision']
+    def get_kmeans_clusters(self) -> int:
+        """
+        The number of clusters to use for K-Means clustering of Rainfall data.
 
-    return rounding_precision
+        :return: A number of clusters as an Integer.
+        """
 
-
-def get_kmeans_clusters() -> int:
-    """
-    The number of clusters to use for K-Means clustering of Rainfall data.
-
-    :return: A number of clusters as an Integer.
-    """
-    n_kmeans_clusters: int = 0
-    with open(CONFIG_FILE_PATH, mode=MODE, encoding=UTF_8) as stream:
-        yaml_config: dict = safe_load(stream)
-        n_kmeans_clusters += yaml_config['data']['kmeans_clusters']
-
-    return n_kmeans_clusters
+        return self.yaml_config['data']['kmeans_clusters']

@@ -21,7 +21,7 @@ def run() -> None:
     by_month: bool = False
 
     month: Month = Month.JULY
-    season: Season = Season.SUMMER
+    season: Season = Season.FALL
 
     if by_year:
         yearly_rainfall: YearlyRainfall = YearlyRainfall()
