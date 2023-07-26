@@ -23,17 +23,13 @@ class YearlyRainfall:
     Provides numerous functions to load, manipulate and export Yearly Rainfall data.
     """
 
-    def __init__(self,
-                 start_year: Optional[int] = None,
-                 yearly_rainfall: Optional[pd.DataFrame] = None):
+    def __init__(self, start_year: Optional[int] = None):
         cfg: Config = Config()
         self.starting_year: int = cfg.get_start_year() \
             if start_year is None \
             else start_year
         self.round_precision: int = cfg.get_rainfall_precision()
-        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall() \
-            if yearly_rainfall is None \
-            else yearly_rainfall
+        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall()
 
     def __str__(self):
         return self.yearly_rainfall.to_string()
