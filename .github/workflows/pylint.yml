@@ -20,5 +20,5 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint src/$(git ls-files '*.py') --disable import-error
-        pylint tst/$(git ls-files '*.py') --disable import-error,missing-docstring
+        pylint $(git ls-files src/'*.py') --disable import-error
+        pylint $(git ls-files tst/'*.py') --disable import-error,missing-docstring
