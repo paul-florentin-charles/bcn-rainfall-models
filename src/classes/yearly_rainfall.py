@@ -12,7 +12,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.cluster import KMeans
 
-import src.config as cfg
+from src.config import Config
 from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
@@ -25,14 +25,12 @@ class YearlyRainfall:
 
     def __init__(self,
                  start_year: Optional[int] = None,
-                 round_precision: Optional[int] = None,
                  yearly_rainfall: Optional[pd.DataFrame] = None):
+        cfg: Config = Config()
         self.starting_year: int = cfg.get_start_year() \
             if start_year is None \
             else start_year
-        self.round_precision: int = cfg.get_rainfall_precision() \
-            if round_precision is None \
-            else round_precision
+        self.round_precision: int = cfg.get_rainfall_precision()
         self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall() \
             if yearly_rainfall is None \
             else yearly_rainfall
@@ -60,7 +58,7 @@ class YearlyRainfall:
         to end getting our rainfall values (optional)
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
-        monthly_rainfall: pd.DataFrame = pd.read_csv(cfg.get_dataset_url())
+        monthly_rainfall: pd.DataFrame = pd.read_csv(Config().get_dataset_url())
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
         if end_month is not None and end_month < start_month:
@@ -245,7 +243,7 @@ class YearlyRainfall:
         """
         fit_data: np.ndarray = self.yearly_rainfall[[Label.YEAR.value, Label.RAINFALL.value]].values
 
-        kmeans: KMeans = KMeans(n_init=10, n_clusters=cfg.get_kmeans_clusters())
+        kmeans: KMeans = KMeans(n_init=10, n_clusters=Config().get_kmeans_clusters())
         kmeans.fit(fit_data)
         self.yearly_rainfall[Label.KMEANS.value] = kmeans.predict(fit_data)
 
@@ -288,7 +286,7 @@ class YearlyRainfall:
                         label=Label.PERCENTAGE_OF_NORMAL.value)
         else:
             year_rain: pd.DataFrame = self.yearly_rainfall
-            for label_value in range(cfg.get_kmeans_clusters()):
+            for label_value in range(Config().get_kmeans_clusters()):
                 year_rain = year_rain[year_rain[Label.KMEANS.value] == label_value]
                 plt.scatter(year_rain[Label.YEAR.value],
                             year_rain[Label.PERCENTAGE_OF_NORMAL.value])

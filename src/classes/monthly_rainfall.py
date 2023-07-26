@@ -18,10 +18,9 @@ class MonthlyRainfall(YearlyRainfall):
     def __init__(self,
                  month: Month,
                  start_year: Optional[int] = None,
-                 round_precision: Optional[int] = None,
                  yearly_rainfall: Optional[pd.DataFrame] = None):
         self.month: Month = month
-        super().__init__(start_year, yearly_rainfall, round_precision)
+        super().__init__(start_year, yearly_rainfall)
 
     def load_yearly_rainfall(self) -> pd.DataFrame:
         """
