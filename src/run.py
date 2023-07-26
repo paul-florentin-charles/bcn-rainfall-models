@@ -17,11 +17,11 @@ def run() -> None:
 
     :return: None
     """
-    by_year: bool = False
+    by_year: bool = True
     by_month: bool = False
 
     month: Month = Month.JULY
-    season: Season = Season.FALL
+    season: Season = Season.SUMMER
 
     if by_year:
         yearly_rainfall: YearlyRainfall = YearlyRainfall()
