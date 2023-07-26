@@ -2,7 +2,7 @@
 Provides a rich class to manipulate Yearly Rainfall data.
 """
 
-from typing import Optional
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,17 +23,13 @@ class YearlyRainfall:
     Provides numerous functions to load, manipulate and export Yearly Rainfall data.
     """
 
-    def __init__(self,
-                 start_year: Optional[int] = None,
-                 yearly_rainfall: Optional[pd.DataFrame] = None):
+    def __init__(self, start_year: Optional[int] = None):
         cfg: Config = Config()
         self.starting_year: int = cfg.get_start_year() \
             if start_year is None \
             else start_year
         self.round_precision: int = cfg.get_rainfall_precision()
-        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall() \
-            if yearly_rainfall is None \
-            else yearly_rainfall
+        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall()
 
     def __str__(self):
         return self.yearly_rainfall.to_string()
@@ -178,6 +174,28 @@ class YearlyRainfall:
 
         return year_rain.count()[Label.YEAR.value]
 
+    def get_standard_deviation(self,
+                               label: Optional[Label] = Label.RAINFALL,
+                               begin_year: Optional[int] = None,
+                               end_year: Optional[int] = None) -> Union[float, None]:
+        """
+        Compute the standard deviation of a column specified by its label within DataFrame
+        and for an optional time range.
+        By default, it uses the 'Rainfall' column.
+
+        :param label: A string corresponding to an existing column label (optional).
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values (optional).
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :return: The standard deviation as a float.
+        Nothing if the specified column does not exist.
+        """
+        if label not in self.yearly_rainfall.columns:
+            return None
+
+        return self.get_yearly_rainfall(begin_year, end_year)[label].std()
+
     def add_percentage_of_normal(self,
                                  begin_year: Optional[int] = None,
                                  end_year: Optional[int] = None) -> None:
@@ -236,7 +254,7 @@ class YearlyRainfall:
 
     def add_kmeans(self) -> None:
         """
-        Compute and add K-Mean clustering of Rainfallc according to Year
+        Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
 
         :return: None
@@ -247,6 +265,21 @@ class YearlyRainfall:
         kmeans.fit(fit_data)
         self.yearly_rainfall[Label.KMEANS.value] = kmeans.predict(fit_data)
 
+    def remove_column(self, label: Label) -> bool:
+        """
+        Remove a column for DataFrame using its label.
+        Removing 'Year' or 'Rainfall' columns is prevented.
+
+        :param label: A string corresponding to an existing column label.
+        :return: A boolean set to whether the operation passed or not.
+        """
+        if label not in self.yearly_rainfall.columns.drop([Label.YEAR, Label.RAINFALL]):
+            return False
+
+        self.yearly_rainfall = self.yearly_rainfall.drop(label.value, axis='columns')
+
+        return True
+
     @plots.legend_and_show()
     def plot_rainfall(self, title: Optional[str] = None) -> None:
         """
@@ -256,7 +289,7 @@ class YearlyRainfall:
         :return: None
         """
         for column_label in self.yearly_rainfall.columns[1:]:
-            if column_label in [Label.PERCENTAGE_OF_NORMAL.value, Label.KMEANS.value]:
+            if column_label in [Label.PERCENTAGE_OF_NORMAL, Label.KMEANS]:
                 continue
 
             plt.plot(self.yearly_rainfall[Label.YEAR.value],
@@ -268,7 +301,7 @@ class YearlyRainfall:
         else:
             plt.title("Barcelona rainfall evolution and various models")
 
-    @plots.legend_and_show()
+    @plots.legend_and_show(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
     def plot_normal(self, title: Optional[str] = None) -> None:
         """
         Plot Rainfall normals data.
@@ -276,7 +309,7 @@ class YearlyRainfall:
         :param title: A string for the plot title (optional)
         :return: None
         """
-        if Label.PERCENTAGE_OF_NORMAL.value not in self.yearly_rainfall.columns:
+        if Label.PERCENTAGE_OF_NORMAL not in self.yearly_rainfall.columns:
             return
 
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')

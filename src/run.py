@@ -8,6 +8,7 @@ from src.classes.seasonal_rainfall import SeasonalRainfall
 from src.classes.yearly_rainfall import YearlyRainfall
 from src.enums.months import Month
 from src.enums.seasons import Season
+from src.enums.labels import Label
 
 
 def run() -> None:
@@ -17,11 +18,11 @@ def run() -> None:
 
     :return: None
     """
-    by_year: bool = True
-    by_month: bool = False
+    by_year: bool = False
+    by_month: bool = True
 
-    month: Month = Month.JULY
-    season: Season = Season.SUMMER
+    month: Month = Month.MAY
+    season: Season = Season.WINTER
 
     if by_year:
         yearly_rainfall: YearlyRainfall = YearlyRainfall()
@@ -49,6 +50,13 @@ def run() -> None:
 
     yearly_rainfall.add_savgol_filter()
     yearly_rainfall.add_kmeans()
+
+    print("Rainfall standard deviation (in mm):", yearly_rainfall.get_standard_deviation())
+    print("Normal standard deviation (in %):",
+          yearly_rainfall.get_standard_deviation(label=Label.PERCENTAGE_OF_NORMAL))
+
+    drop: bool = yearly_rainfall.remove_column(Label.RAINFALL)
+    print("Column", Label.RAINFALL.value, "has been dropped:", drop)
 
     yearly_rainfall.plot_rainfall()
     yearly_rainfall.plot_normal()
