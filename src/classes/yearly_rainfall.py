@@ -268,7 +268,7 @@ class YearlyRainfall:
         else:
             plt.title("Barcelona rainfall evolution and various models")
 
-    @plots.legend_and_show()
+    @plots.legend_and_show(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
     def plot_normal(self, title: Optional[str] = None) -> None:
         """
         Plot Rainfall normals data.
