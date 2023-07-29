@@ -8,11 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import signal
+from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-from sklearn.cluster import KMeans
 
-from src.config import Config
 from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
@@ -23,16 +22,17 @@ class YearlyRainfall:
     Provides numerous functions to load, manipulate and export Yearly Rainfall data.
     """
 
-    def __init__(self, start_year: Optional[int] = None):
-        cfg: Config = Config()
-        self.starting_year: int = cfg.get_start_year() \
-            if start_year is None \
-            else start_year
-        self.round_precision: int = cfg.get_rainfall_precision()
-        self.yearly_rainfall: pd.DataFrame = self.load_yearly_rainfall()
+    def __init__(self,
+                 dataset_url: str,
+                 start_year: Optional[int] = 1970,
+                 round_precision: Optional[int] = 2):
+        self.dataset_url: str = dataset_url
+        self.starting_year: int = start_year
+        self.round_precision: int = round_precision
+        self.data: pd.DataFrame = self.load_yearly_rainfall()
 
     def __str__(self):
-        return self.yearly_rainfall.to_string()
+        return self.data.to_string()
 
     def load_yearly_rainfall(self) -> pd.DataFrame:
         """
@@ -54,7 +54,7 @@ class YearlyRainfall:
         to end getting our rainfall values (optional)
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
-        monthly_rainfall: pd.DataFrame = pd.read_csv(Config().get_dataset_url())
+        monthly_rainfall: pd.DataFrame = pd.read_csv(self.dataset_url)
 
         years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
         if end_month is not None and end_month < start_month:
@@ -70,12 +70,11 @@ class YearlyRainfall:
             .set_axis([Label.YEAR.value, Label.RAINFALL.value],
                       axis='columns')
 
-        if self.starting_year is not None:
-            yearly_rainfall = yearly_rainfall[
-                yearly_rainfall[Label.YEAR.value] >= self.starting_year
-                ] \
-                .reset_index() \
-                .drop(columns='index')
+        yearly_rainfall = yearly_rainfall[
+            yearly_rainfall[Label.YEAR.value] >= self.starting_year
+            ] \
+            .reset_index() \
+            .drop(columns='index')
 
         yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value],
                                                       self.round_precision)
@@ -95,7 +94,7 @@ class YearlyRainfall:
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
-        year_rain: pd.DataFrame = self.yearly_rainfall
+        year_rain: pd.DataFrame = self.data
 
         if begin_year is not None:
             year_rain = year_rain[year_rain[Label.YEAR.value] >= begin_year]
@@ -112,7 +111,7 @@ class YearlyRainfall:
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string.
         """
-        return self.yearly_rainfall.to_csv(path_or_buf=path, index=False)
+        return self.data.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(self,
                                     begin_year: Optional[int] = None,
@@ -153,7 +152,7 @@ class YearlyRainfall:
         year_rain: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
         year_rain = year_rain[year_rain[Label.RAINFALL.value] < normal]
 
-        return year_rain.count()[Label.YEAR.value]
+        return int(year_rain.count()[Label.YEAR.value])
 
     def get_years_above_average(self,
                                 begin_year: Optional[int] = None,
@@ -172,7 +171,7 @@ class YearlyRainfall:
         year_rain: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
         year_rain = year_rain[year_rain[Label.RAINFALL.value] > normal]
 
-        return year_rain.count()[Label.YEAR.value]
+        return int(year_rain.count()[Label.YEAR.value])
 
     def get_standard_deviation(self,
                                label: Optional[Label] = Label.RAINFALL,
@@ -191,7 +190,7 @@ class YearlyRainfall:
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
-        if label not in self.yearly_rainfall.columns:
+        if label not in self.data.columns:
             return None
 
         return self.get_yearly_rainfall(begin_year, end_year)[label].std()
@@ -213,8 +212,8 @@ class YearlyRainfall:
         if normal == 0.:
             return
 
-        self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value] = round(
-            self.yearly_rainfall[Label.RAINFALL.value] / normal * 100.0, self.round_precision)
+        self.data[Label.PERCENTAGE_OF_NORMAL.value] = round(
+            self.data[Label.RAINFALL.value] / normal * 100.0, self.round_precision)
 
     def add_linear_regression(self) -> (float, float):
         """
@@ -223,17 +222,17 @@ class YearlyRainfall:
 
         :return: a tuple containing two floats (r2 score, slope).
         """
-        years: np.ndarray = self.yearly_rainfall[Label.YEAR.value].values.reshape(-1, 1)
-        rainfalls: np.ndarray = self.yearly_rainfall[Label.RAINFALL.value].values
+        years: np.ndarray = self.data[Label.YEAR.value].values.reshape(-1, 1)
+        rainfalls: np.ndarray = self.data[Label.RAINFALL.value].values
 
         reg: LinearRegression = LinearRegression()
         reg.fit(years, rainfalls)
-        self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = reg.predict(years)
-        self.yearly_rainfall[Label.LINEAR_REGRESSION.value] = round(
-            self.yearly_rainfall[Label.LINEAR_REGRESSION.value], self.round_precision)
+        self.data[Label.LINEAR_REGRESSION.value] = reg.predict(years)
+        self.data[Label.LINEAR_REGRESSION.value] = round(
+            self.data[Label.LINEAR_REGRESSION.value], self.round_precision)
 
         return r2_score(rainfalls,
-                        self.yearly_rainfall[Label.LINEAR_REGRESSION.value].values), \
+                        self.data[Label.LINEAR_REGRESSION.value].values), \
             reg.coef_[0]
 
     def add_savgol_filter(self) -> None:
@@ -243,27 +242,30 @@ class YearlyRainfall:
 
         :return: None
         """
-        self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = signal.savgol_filter(
-            self.yearly_rainfall[Label.RAINFALL.value],
-            window_length=len(self.yearly_rainfall),
+        self.data[Label.SAVITZKY_GOLAY_FILTER.value] = signal.savgol_filter(
+            self.data[Label.RAINFALL.value],
+            window_length=len(self.data),
             polyorder=len(
-                self.yearly_rainfall) // 10)
+                self.data) // 10)
 
-        self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value] = round(
-            self.yearly_rainfall[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision)
+        self.data[Label.SAVITZKY_GOLAY_FILTER.value] = round(
+            self.data[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision)
 
-    def add_kmeans(self) -> None:
+    def add_kmeans(self, kmeans_clusters: Optional[int] = 4) -> int:
         """
         Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
 
-        :return: None
+        :param kmeans_clusters: The number of clusters to compute (optional)
+        :return: The number of computed clusters as an integer
         """
-        fit_data: np.ndarray = self.yearly_rainfall[[Label.YEAR.value, Label.RAINFALL.value]].values
+        fit_data: np.ndarray = self.data[[Label.YEAR.value, Label.RAINFALL.value]].values
 
-        kmeans: KMeans = KMeans(n_init=10, n_clusters=Config().get_kmeans_clusters())
+        kmeans: KMeans = KMeans(n_init=10, n_clusters=kmeans_clusters)
         kmeans.fit(fit_data)
-        self.yearly_rainfall[Label.KMEANS.value] = kmeans.predict(fit_data)
+        self.data[Label.KMEANS.value] = kmeans.predict(fit_data)
+
+        return kmeans.n_clusters
 
     def remove_column(self, label: Label) -> bool:
         """
@@ -273,10 +275,10 @@ class YearlyRainfall:
         :param label: A string corresponding to an existing column label.
         :return: A boolean set to whether the operation passed or not.
         """
-        if label not in self.yearly_rainfall.columns.drop([Label.YEAR, Label.RAINFALL]):
+        if label not in self.data.columns.drop([Label.YEAR, Label.RAINFALL]):
             return False
 
-        self.yearly_rainfall = self.yearly_rainfall.drop(label.value, axis='columns')
+        self.data = self.data.drop(label.value, axis='columns')
 
         return True
 
@@ -288,12 +290,12 @@ class YearlyRainfall:
         :param title: A string for the plot title (optional)
         :return: None
         """
-        for column_label in self.yearly_rainfall.columns[1:]:
+        for column_label in self.data.columns[1:]:
             if column_label in [Label.PERCENTAGE_OF_NORMAL, Label.KMEANS]:
                 continue
 
-            plt.plot(self.yearly_rainfall[Label.YEAR.value],
-                     self.yearly_rainfall[column_label],
+            plt.plot(self.data[Label.YEAR.value],
+                     self.data[column_label],
                      label=column_label)
 
         if title is not None:
@@ -302,28 +304,31 @@ class YearlyRainfall:
             plt.title("Barcelona rainfall evolution and various models")
 
     @plots.legend_and_show(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
-    def plot_normal(self, title: Optional[str] = None) -> None:
+    def plot_normal(self,
+                    title: Optional[str] = None,
+                    kmeans_clusters: Optional[int] = None) -> None:
         """
         Plot Rainfall normals data.
 
+        :param kmeans_clusters: The number of clusters to display
         :param title: A string for the plot title (optional)
         :return: None
         """
-        if Label.PERCENTAGE_OF_NORMAL not in self.yearly_rainfall.columns:
+        if Label.PERCENTAGE_OF_NORMAL not in self.data.columns:
             return
 
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')
-        if Label.KMEANS.value not in self.yearly_rainfall.columns:
-            plt.scatter(self.yearly_rainfall[Label.YEAR.value],
-                        self.yearly_rainfall[Label.PERCENTAGE_OF_NORMAL.value],
+        if Label.KMEANS.value not in self.data.columns or kmeans_clusters is None:
+            plt.scatter(self.data[Label.YEAR.value],
+                        self.data[Label.PERCENTAGE_OF_NORMAL.value],
                         label=Label.PERCENTAGE_OF_NORMAL.value)
         else:
-            year_rain: pd.DataFrame = self.yearly_rainfall
-            for label_value in range(Config().get_kmeans_clusters()):
+            year_rain: pd.DataFrame = self.data
+            for label_value in range(kmeans_clusters):
                 year_rain = year_rain[year_rain[Label.KMEANS.value] == label_value]
                 plt.scatter(year_rain[Label.YEAR.value],
                             year_rain[Label.PERCENTAGE_OF_NORMAL.value])
-                year_rain = self.yearly_rainfall
+                year_rain = self.data
 
         if title is not None:
             plt.title(title)

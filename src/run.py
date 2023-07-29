@@ -6,6 +6,7 @@ For the moment, it merely runs a script to test functionalities.
 from src.classes.monthly_rainfall import MonthlyRainfall
 from src.classes.seasonal_rainfall import SeasonalRainfall
 from src.classes.yearly_rainfall import YearlyRainfall
+from src.config import Config, CONFIG_FNAME
 from src.enums.months import Month
 from src.enums.seasons import Season
 from src.enums.labels import Label
@@ -18,6 +19,8 @@ def run() -> None:
 
     :return: None
     """
+    config: Config = Config(CONFIG_FNAME)
+
     by_year: bool = False
     by_month: bool = True
 
@@ -25,11 +28,11 @@ def run() -> None:
     season: Season = Season.WINTER
 
     if by_year:
-        yearly_rainfall: YearlyRainfall = YearlyRainfall()
+        yearly_rainfall: YearlyRainfall = YearlyRainfall(config.get_dataset_url())
     elif by_month:
-        yearly_rainfall: MonthlyRainfall = MonthlyRainfall(month)
+        yearly_rainfall: MonthlyRainfall = MonthlyRainfall(config.get_dataset_url(), month)
     else:
-        yearly_rainfall: SeasonalRainfall = SeasonalRainfall(season)
+        yearly_rainfall: SeasonalRainfall = SeasonalRainfall(config.get_dataset_url(), season)
 
     avg_1970_2000 = yearly_rainfall.get_average_yearly_rainfall(1970, 2000)
     avg_1980_2010 = yearly_rainfall.get_average_yearly_rainfall(1980, 2010)
@@ -49,7 +52,7 @@ def run() -> None:
     print("Slope (in mm/year):", slope)
 
     yearly_rainfall.add_savgol_filter()
-    yearly_rainfall.add_kmeans()
+    n_clusters: int = yearly_rainfall.add_kmeans()
 
     print("Rainfall standard deviation (in mm):", yearly_rainfall.get_standard_deviation())
     print("Normal standard deviation (in %):",
@@ -59,7 +62,7 @@ def run() -> None:
     print("Column", Label.RAINFALL.value, "has been dropped:", drop)
 
     yearly_rainfall.plot_rainfall()
-    yearly_rainfall.plot_normal()
+    yearly_rainfall.plot_normal(kmeans_clusters=n_clusters)
 
 
 if __name__ == "__main__":

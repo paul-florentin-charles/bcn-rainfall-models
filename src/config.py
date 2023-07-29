@@ -1,11 +1,10 @@
 """
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
-from typing import Optional
 
 from yaml import safe_load
 
-CONFIG_FILE_PATH: str = 'config.yaml'
+CONFIG_FNAME: str = 'config.yaml'
 UTF_8: str = 'utf-8'
 MODE: str = 'rt'
 
@@ -17,11 +16,9 @@ class Config:
     It needs to be instantiated first to be loaded.
     """
 
-    def __init__(self, config_file_path: Optional[str] = None):
-        self.config_file_path: str = CONFIG_FILE_PATH \
-            if config_file_path is None \
-            else config_file_path
-        with open(self.config_file_path, mode=MODE, encoding=UTF_8) as stream:
+    def __init__(self, path: str):
+        self.path: str = path
+        with open(self.path, mode=MODE, encoding=UTF_8) as stream:
             self.yaml_config: dict = safe_load(stream)
 
     def get_dataset_url(self) -> str:
