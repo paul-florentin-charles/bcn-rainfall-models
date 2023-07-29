@@ -16,10 +16,12 @@ class SeasonalRainfall(YearlyRainfall):
     """
 
     def __init__(self,
+                 dataset_url: str,
                  season: Season,
-                 start_year: Optional[int] = None):
+                 start_year: Optional[int] = 1970,
+                 round_precision: Optional[int] = 2):
         self.season: Season = season
-        super().__init__(start_year)
+        super().__init__(dataset_url, start_year, round_precision)
 
     def load_yearly_rainfall(self) -> pd.DataFrame:
         """
@@ -43,10 +45,13 @@ class SeasonalRainfall(YearlyRainfall):
 
         super().plot_rainfall(title)
 
-    def plot_normal(self, title: Optional[str] = None) -> None:
+    def plot_normal(self,
+                    title: Optional[str] = None,
+                    kmeans_clusters: Optional[int] = None) -> None:
         """
         Plot Rainfall normals data for the instance season.
 
+        :param kmeans_clusters: The number of clusters to display
         :param title: A string for the plot title (optional)
         :return: None
         """
@@ -54,4 +59,4 @@ class SeasonalRainfall(YearlyRainfall):
             title = f"Barcelona rainfall evolution compared to normal for " \
                     f"{self.season.name.lower()}"
 
-        super().plot_normal(title)
+        super().plot_normal(title, kmeans_clusters)
