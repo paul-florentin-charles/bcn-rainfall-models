@@ -42,6 +42,7 @@ class YearlyRainfall:
 
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
+
         return self.load_rainfall(Month.JANUARY.value)
 
     def load_rainfall(self,
@@ -107,6 +108,7 @@ class YearlyRainfall:
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string.
         """
+
         return self.data.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(self,

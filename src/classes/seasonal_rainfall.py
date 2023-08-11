@@ -30,6 +30,7 @@ class SeasonalRainfall(YearlyRainfall):
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance season according to year.
         """
+
         return self.load_rainfall(self.season.value[0].value, self.season.value[2].value + 1)
 
     def plot_rainfall(self, title: Optional[str] = None) -> None:
