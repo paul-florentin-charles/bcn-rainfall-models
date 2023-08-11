@@ -13,7 +13,7 @@ from src.enums.labels import Label
 def get_average_rainfall(yearly_rainfall: pd.DataFrame,
                          round_precision: Optional[int] = 2) -> float:
     """
-    Computes Rainfall average for a specific year range.
+    Computes Rainfall average.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param round_precision: A float representing the rainfall precision (optional).
@@ -33,8 +33,8 @@ def get_years_compared_to_given_rainfall_value(yearly_rainfall: pd.DataFrame,
                                                rainfall_value: float,
                                                comparator: Callable) -> int:
     """
-    Computes the number of years that pass comparison to the given rainfall value
-    for a specific year range.
+    Computes the number of years that conform specified comparison
+    to the given rainfall value.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param rainfall_value: A float representing the rainfall value.

@@ -16,7 +16,7 @@ from sklearn.metrics import r2_score
 from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
-from src.utils import metrics
+from src.utils import metrics, dataframe_operations as df_opr
 
 
 class YearlyRainfall:
@@ -72,9 +72,8 @@ class YearlyRainfall:
             .set_axis([Label.YEAR.value, Label.RAINFALL.value],
                       axis='columns')
 
-        yearly_rainfall = yearly_rainfall[
-            yearly_rainfall[Label.YEAR.value] >= self.starting_year
-            ] \
+        yearly_rainfall = df_opr.get_rainfall_within_year_interval(yearly_rainfall,
+                                                                   begin_year=self.starting_year) \
             .reset_index() \
             .drop(columns='index')
 
@@ -96,15 +95,10 @@ class YearlyRainfall:
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
-        year_rain: pd.DataFrame = self.data
 
-        if begin_year is not None:
-            year_rain = year_rain[year_rain[Label.YEAR.value] >= begin_year]
-
-        if end_year is not None:
-            year_rain = year_rain[year_rain[Label.YEAR.value] <= end_year]
-
-        return year_rain
+        return df_opr.get_rainfall_within_year_interval(self.data,
+                                                        begin_year,
+                                                        end_year)
 
     def export_as_csv(self, path: Optional[str] = None) -> str:
         """
@@ -189,7 +183,8 @@ class YearlyRainfall:
         if label not in self.data.columns:
             return None
 
-        return self.get_yearly_rainfall(begin_year, end_year)[label].std()
+        return round(self.get_yearly_rainfall(begin_year, end_year)[label].std(),
+                     self.round_precision)
 
     def add_percentage_of_normal(self,
                                  begin_year: Optional[int] = None,
