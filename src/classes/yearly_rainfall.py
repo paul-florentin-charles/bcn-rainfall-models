@@ -2,6 +2,7 @@
 Provides a rich class to manipulate Yearly Rainfall data.
 """
 
+import operator as opr
 from typing import Optional, Union
 
 import matplotlib.pyplot as plt
@@ -15,6 +16,7 @@ from sklearn.metrics import r2_score
 from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
+from src.utils import metrics
 
 
 class YearlyRainfall:
@@ -125,15 +127,9 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :return: A float representing the average Rainfall.
         """
-        year_rain: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
 
-        nb_years: int = len(year_rain)
-        if nb_years == 0:
-            return 0.
-
-        year_rain = year_rain.sum(axis='rows')
-
-        return round(year_rain.loc[Label.RAINFALL.value] / nb_years, self.round_precision)
+        return metrics.get_average_rainfall(self.get_yearly_rainfall(begin_year, end_year),
+                                            self.round_precision)
 
     def get_years_below_average(self,
                                 begin_year: Optional[int] = None,
@@ -147,12 +143,12 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :return: The number of years below the computed average as an integer.
         """
-        normal: float = self.get_average_yearly_rainfall(begin_year, end_year)
 
-        year_rain: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
-        year_rain = year_rain[year_rain[Label.RAINFALL.value] < normal]
-
-        return int(year_rain.count()[Label.YEAR.value])
+        return metrics.get_years_compared_to_given_rainfall_value(
+            self.get_yearly_rainfall(begin_year, end_year),
+            self.get_average_yearly_rainfall(begin_year, end_year),
+            opr.lt
+        )
 
     def get_years_above_average(self,
                                 begin_year: Optional[int] = None,
@@ -166,12 +162,12 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :return: The number of years above the computed average as an integer.
         """
-        normal: float = self.get_average_yearly_rainfall(begin_year, end_year)
 
-        year_rain: pd.DataFrame = self.get_yearly_rainfall(begin_year, end_year)
-        year_rain = year_rain[year_rain[Label.RAINFALL.value] > normal]
-
-        return int(year_rain.count()[Label.YEAR.value])
+        return metrics.get_years_compared_to_given_rainfall_value(
+            self.get_yearly_rainfall(begin_year, end_year),
+            self.get_average_yearly_rainfall(begin_year, end_year),
+            opr.gt
+        )
 
     def get_standard_deviation(self,
                                label: Optional[Label] = Label.RAINFALL,
