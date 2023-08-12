@@ -226,7 +226,7 @@ class YearlyRainfall:
 
         return r2_score(rainfalls,
                         self.data[Label.LINEAR_REGRESSION.value].values), \
-            reg.coef_[0]
+            round(reg.coef_[0], self.round_precision)
 
     def add_savgol_filter(self) -> None:
         """
@@ -283,7 +283,7 @@ class YearlyRainfall:
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        success: bool = plotting.plot_column_according_to_year(self.data, Label.RAINFALL)
+        success: bool = plotting.bar_column_according_to_year(self.data, Label.RAINFALL)
         if not success:
             return False
 
@@ -297,7 +297,9 @@ class YearlyRainfall:
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        success: bool = plotting.plot_column_according_to_year(self.data, Label.LINEAR_REGRESSION)
+        success: bool = plotting.plot_column_according_to_year(self.data,
+                                                               Label.LINEAR_REGRESSION,
+                                                               'red')
         if not success:
             return False
 
@@ -312,7 +314,8 @@ class YearlyRainfall:
         """
 
         success: bool = plotting.plot_column_according_to_year(self.data,
-                                                               Label.SAVITZKY_GOLAY_FILTER)
+                                                               Label.SAVITZKY_GOLAY_FILTER,
+                                                               'orange')
         if not success:
             return False
 
