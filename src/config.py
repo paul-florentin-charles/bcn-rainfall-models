@@ -1,6 +1,7 @@
 """
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
+from typing import Optional
 
 from yaml import safe_load
 
@@ -16,7 +17,7 @@ class Config:
     It needs to be instantiated first to be loaded.
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: Optional[str] = CONFIG_FNAME):
         self.path: str = path
         with open(self.path, mode=MODE, encoding=UTF_8) as stream:
             self.yaml_config: dict = safe_load(stream)

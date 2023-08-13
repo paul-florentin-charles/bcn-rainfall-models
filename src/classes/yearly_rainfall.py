@@ -16,7 +16,7 @@ from sklearn.metrics import r2_score
 from src.decorators import plots
 from src.enums.labels import Label
 from src.enums.months import Month
-from src.utils import metrics, dataframe_operations as df_opr
+from src.utils import metrics, dataframe_operations as df_opr, plotting
 
 
 class YearlyRainfall:
@@ -42,6 +42,7 @@ class YearlyRainfall:
 
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
+
         return self.load_rainfall(Month.JANUARY.value)
 
     def load_rainfall(self,
@@ -107,6 +108,7 @@ class YearlyRainfall:
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string.
         """
+
         return self.data.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(self,
@@ -224,7 +226,7 @@ class YearlyRainfall:
 
         return r2_score(rainfalls,
                         self.data[Label.LINEAR_REGRESSION.value].values), \
-            reg.coef_[0]
+            round(reg.coef_[0], self.round_precision)
 
     def add_savgol_filter(self) -> None:
         """
@@ -247,7 +249,7 @@ class YearlyRainfall:
         Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
 
-        :param kmeans_clusters: The number of clusters to compute (optional)
+        :param kmeans_clusters: The number of clusters to compute. Defaults to 4. (optional)
         :return: The number of computed clusters as an integer
         """
         fit_data: np.ndarray = self.data[[Label.YEAR.value, Label.RAINFALL.value]].values
@@ -273,55 +275,78 @@ class YearlyRainfall:
 
         return True
 
-    @plots.legend_and_show()
-    def plot_rainfall(self, title: Optional[str] = None) -> None:
+    @plots.legend()
+    def plot_rainfall(self) -> bool:
         """
-        Plot Yearly Rainfall data.
+        Plot Rainfall data according to year.
 
-        :param title: A string for the plot title (optional)
-        :return: None
+        :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
-        for column_label in self.data.columns[1:]:
-            if column_label in [Label.PERCENTAGE_OF_NORMAL, Label.KMEANS]:
-                continue
 
-            plt.plot(self.data[Label.YEAR.value],
-                     self.data[column_label],
-                     label=column_label)
+        success: bool = plotting.bar_column_according_to_year(self.data, Label.RAINFALL)
+        if not success:
+            return False
 
-        if title is not None:
-            plt.title(title)
-        else:
-            plt.title("Barcelona rainfall evolution and various models")
+        return True
 
-    @plots.legend_and_show(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
-    def plot_normal(self,
-                    title: Optional[str] = None,
-                    kmeans_clusters: Optional[int] = None) -> None:
+    @plots.legend()
+    def plot_linear_regression(self) -> bool:
         """
-        Plot Rainfall normals data.
+        Plot linear regression of Rainfall data according to year.
 
-        :param kmeans_clusters: The number of clusters to display
-        :param title: A string for the plot title (optional)
-        :return: None
+        :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
-        if Label.PERCENTAGE_OF_NORMAL not in self.data.columns:
-            return
 
+        success: bool = plotting.plot_column_according_to_year(self.data,
+                                                               Label.LINEAR_REGRESSION,
+                                                               'red')
+        if not success:
+            return False
+
+        return True
+
+    @plots.legend()
+    def plot_savgol_filter(self) -> bool:
+        """
+        Plot Savitzky–Golay filter of Rainfall data according to year.
+
+        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        """
+
+        success: bool = plotting.plot_column_according_to_year(self.data,
+                                                               Label.SAVITZKY_GOLAY_FILTER,
+                                                               'orange')
+        if not success:
+            return False
+
+        return True
+
+    @plots.legend(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
+    def plot_normal(self, display_clusters: Optional[bool] = False) -> bool:
+        """
+        Plot Rainfall normals data according to year.
+
+        :param display_clusters: The number of clusters to display
+        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        """
         plt.axhline(y=100.0, color='orange', linestyle='dashed', label='Normal')
-        if Label.KMEANS.value not in self.data.columns or kmeans_clusters is None:
-            plt.scatter(self.data[Label.YEAR.value],
-                        self.data[Label.PERCENTAGE_OF_NORMAL.value],
-                        label=Label.PERCENTAGE_OF_NORMAL.value)
-        else:
-            year_rain: pd.DataFrame = self.data
-            for label_value in range(kmeans_clusters):
-                year_rain = year_rain[year_rain[Label.KMEANS.value] == label_value]
-                plt.scatter(year_rain[Label.YEAR.value],
-                            year_rain[Label.PERCENTAGE_OF_NORMAL.value])
-                year_rain = self.data
 
-        if title is not None:
-            plt.title(title)
+        success: bool = False
+        if not display_clusters:
+            success = plotting.scatter_column_according_to_year(self.data,
+                                                                Label.PERCENTAGE_OF_NORMAL)
         else:
-            plt.title("Barcelona rainfall evolution compared to normal")
+            for label_value in range(metrics.get_clusters_number(self.data)):
+                success = plotting.scatter_column_according_to_year(
+                    self.data[self.data[Label.KMEANS.value] == label_value],
+                    Label.PERCENTAGE_OF_NORMAL,
+                    display_label=False
+                )
+
+                if not success:
+                    return False
+
+        if not success:
+            return False
+
+        return True

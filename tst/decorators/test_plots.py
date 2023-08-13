@@ -6,7 +6,8 @@ import numpy.random as nprand
 from src.decorators import plots
 
 
-@plots.legend_and_show()
-def test_legend_and_show():
+@plots.legend()
+def test_legend():
     plt.scatter(nprand.random_integers(1950, 2020, size=100),
                 nprand.random_integers(0, 1000, size=100))
+    plt.show()

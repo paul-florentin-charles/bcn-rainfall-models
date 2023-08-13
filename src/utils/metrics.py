@@ -19,14 +19,12 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame,
     :param round_precision: A float representing the rainfall precision (optional).
     :return: A float representing the average Rainfall.
     """
-
     nb_years: int = len(yearly_rainfall)
     if nb_years == 0:
         return 0.
 
-    year_rain = yearly_rainfall.sum(axis='rows')
-
-    return round(year_rain.loc[Label.RAINFALL.value] / nb_years, round_precision)
+    return round(yearly_rainfall.sum(axis='rows').loc[Label.RAINFALL.value] / nb_years,
+                 round_precision)
 
 
 def get_years_compared_to_given_rainfall_value(yearly_rainfall: pd.DataFrame,
@@ -46,3 +44,16 @@ def get_years_compared_to_given_rainfall_value(yearly_rainfall: pd.DataFrame,
     ]
 
     return int(yearly_rainfall.count()[Label.YEAR.value])
+
+
+def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
+    """
+    Computes the number of clusters.
+
+    :param yearly_rainfall: A pandas DataFrame displaying clusters label according to year.
+    :return: The number of clusters as an integer.
+    """
+    if Label.KMEANS not in yearly_rainfall.columns:
+        return 0
+
+    return max(yearly_rainfall[Label.KMEANS.value]) + 1

@@ -22,7 +22,7 @@ def get_rainfall_within_year_interval(yearly_rainfall: pd.DataFrame,
     :param end_year: An integer representing the year
     to end getting our rainfall values (optional).
     :return: A pandas DataFrame displaying rainfall data (in mm)
-    for instance month according to year.
+    according to year.
     """
     if begin_year is not None:
         yearly_rainfall = yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= begin_year]

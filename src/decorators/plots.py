@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 from src.enums.labels import Label
 
 
-def legend_and_show(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)"):
+def legend(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)") -> Callable:
     """
-    Add labels to x-axis and y-axis, enable legend and show plot.
+    Add labels to x-axis and y-axis and enable legend plot.
 
     :return: A callable function that takes any number of arguments.
     """
@@ -22,7 +22,6 @@ def legend_and_show(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)"):
             plt.xlabel(Label.YEAR.value)
             plt.ylabel(ylabel)
             plt.legend()
-            plt.show()
 
         return wrapper
 

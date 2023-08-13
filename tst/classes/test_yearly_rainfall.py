@@ -1,5 +1,6 @@
 # pylint: disable=missing-docstring
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 from src.classes.yearly_rainfall import YearlyRainfall
@@ -115,9 +116,13 @@ class TestYearlyRainfall:
         assert removed
 
     @staticmethod
-    def test_plot_rainfall() -> None:
+    def test_plot_rainfall_and_models() -> None:
         yearly_rainfall.plot_rainfall()
+        yearly_rainfall.plot_linear_regression()
+        yearly_rainfall.plot_savgol_filter()
+        plt.show()
 
     @staticmethod
     def test_plot_normal() -> None:
         yearly_rainfall.plot_normal()
+        plt.show()
