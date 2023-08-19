@@ -127,43 +127,81 @@ class YearlyRainfall:
         return metrics.get_average_rainfall(self.get_yearly_rainfall(begin_year, end_year),
                                             self.round_precision)
 
-    def get_years_below_average(self,
-                                begin_year: Optional[int] = None,
-                                end_year: Optional[int] = None) -> int:
+    def get_years_below_normal(self,
+                               normal: Optional[float] = None,
+                               begin_year: Optional[int] = None,
+                               end_year: Optional[int] = None) -> int:
         """
-        Computes the number of years below average rainfall for a specific year range.
+        Computes the number of years below normal for a specific year range.
 
+        :param normal: A float representing a normal of the rainfall (optional).
+        Defaults to 30 years normal from class starting year.
         :param begin_year: An integer representing the year
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :return: The number of years below the computed average as an integer.
+        :return: The number of years below the normal as an integer.
         """
+        if normal is None:
+            normal = metrics.get_normal(self.data, self.starting_year)
 
         return metrics.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
-            self.get_average_yearly_rainfall(begin_year, end_year),
+            normal,
             opr.lt
         )
 
-    def get_years_above_average(self,
-                                begin_year: Optional[int] = None,
-                                end_year: Optional[int] = None) -> int:
+    def get_years_above_normal(self,
+                               normal: Optional[float] = None,
+                               begin_year: Optional[int] = None,
+                               end_year: Optional[int] = None) -> int:
         """
-        Computes the number of years above average rainfall for a specific year range.
+        Computes the number of years above normal for a specific year range.
 
+        :param normal: A float representing a normal of the rainfall (optional).
+        Defaults to 30 years normal from class starting year.
         :param begin_year: An integer representing the year
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :return: The number of years above the computed average as an integer.
+        :return: The number of years above the normal as an integer.
         """
+        if normal is None:
+            normal = metrics.get_normal(self.data, self.starting_year)
 
         return metrics.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
-            self.get_average_yearly_rainfall(begin_year, end_year),
+            normal,
             opr.gt
         )
+
+    def get_relative_distance_from_normal(self,
+                                          normal: Optional[float] = None,
+                                          begin_year: Optional[int] = None,
+                                          end_year: Optional[int] = None) -> float:
+        """
+        Computes the relative distance between above and below normal years
+        for a specific year range.
+
+        :param normal: A float representing a normal of the rainfall (optional).
+        Defaults to 30 years normal from class starting year.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values (optional).
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :return: The relative distance as a float.
+        """
+        if normal is None:
+            normal = metrics.get_normal(self.data, self.starting_year)
+
+        gap: int = end_year - begin_year + 1
+        if gap == 0:
+            return 0.
+
+        n_years_above_normal: int = self.get_years_above_normal(normal, begin_year, end_year)
+        n_years_below_normal: int = self.get_years_below_normal(normal, begin_year, end_year)
+
+        return (n_years_above_normal - n_years_below_normal) / gap * 100
 
     def get_standard_deviation(self,
                                label: Optional[Label] = Label.RAINFALL,

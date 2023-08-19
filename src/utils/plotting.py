@@ -15,9 +15,9 @@ def plot_column_according_to_year(yearly_rainfall: pd.DataFrame,
     """
     Plot specified column data according to year.
 
-    :param color:
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param label: A Label enum designating the column to be plotted as y-values.
+    :param color: A string to set plot colour (optional).
     :return: A boolean set to True if data has been successfully plotted, False otherwise.
     """
     if Label.YEAR not in yearly_rainfall.columns or label not in yearly_rainfall.columns:
@@ -104,6 +104,44 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: list) -> list:
         slopes.append(monthly_rainfall.add_linear_regression()[1])
 
     plt.bar(month_labels, slopes, label='Linear Regression slope (mm/year)')
+    plt.legend()
+
+    return slopes
+
+
+def bar_seasonal_rainfall_averages(seasonal_rainfalls: list) -> list:
+    """
+    Plots a bar graphic displaying average rainfall for each season passed through the list.
+
+    :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
+    To be purposeful, all instances should have the same time frame in years.
+    :return: A list of the Rainfall averages for each season.
+    """
+    season_labels, averages = [], []
+    for seasonal_rainfall in seasonal_rainfalls:
+        season_labels.append(seasonal_rainfall.season.name)
+        averages.append(seasonal_rainfall.get_average_yearly_rainfall())
+
+    plt.bar(season_labels, averages, label='Average rainfall (mm)')
+    plt.legend()
+
+    return averages
+
+
+def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: list) -> list:
+    """
+    Plots a bar graphic displaying linear regression slope for each season passed through the list.
+
+    :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
+    To be purposeful, all instances should have the same time frame in years.
+    :return: A list of the Rainfall LinReg slopes for each season.
+    """
+    season_labels, slopes = [], []
+    for seasonal_rainfall in seasonal_rainfalls:
+        season_labels.append(seasonal_rainfall.season.name)
+        slopes.append(seasonal_rainfall.add_linear_regression()[1])
+
+    plt.bar(season_labels, slopes, label='Linear Regression slope (mm/year)')
     plt.legend()
 
     return slopes
