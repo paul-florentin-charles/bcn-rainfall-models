@@ -8,6 +8,7 @@ from typing import Callable, Optional
 import pandas as pd
 
 from src.enums.labels import Label
+from src.utils import dataframe_operations as df_opr
 
 
 def get_average_rainfall(yearly_rainfall: pd.DataFrame,
@@ -57,3 +58,19 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
         return 0
 
     return max(yearly_rainfall[Label.KMEANS.value]) + 1
+
+
+def get_normal(yearly_rainfall: pd.DataFrame, begin_year: Optional[int] = 1970) -> float:
+    """
+    Computes average rainfall over 30 years time frame.
+
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
+    :param begin_year: A year to start the time frame (optional).
+    :return: A float storing the normal.
+    """
+
+    return get_average_rainfall(
+        df_opr.get_rainfall_within_year_interval(yearly_rainfall,
+                                                 begin_year,
+                                                 begin_year + 30)
+    )

@@ -10,8 +10,12 @@ from tst.test_config import config
 
 yearly_rainfall = YearlyRainfall(config.get_dataset_url())
 
+begin_year: int = 1990
+end_year: int = 2020
+
 
 class TestYearlyRainfall:
+
     @staticmethod
     def test_load_yearly_rainfall() -> None:
         data: pd.DataFrame = yearly_rainfall.load_yearly_rainfall()
@@ -29,8 +33,6 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_yearly_rainfall() -> None:
-        begin_year: int = 1970
-        end_year: int = 2010
         data: pd.DataFrame = yearly_rainfall.get_yearly_rainfall(begin_year, end_year)
 
         assert isinstance(data, pd.DataFrame)
@@ -44,29 +46,42 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_average_yearly_rainfall() -> None:
-        begin_year: int = 1980
-        end_year: int = 2005
         avg_rainfall: float = yearly_rainfall.get_average_yearly_rainfall(begin_year, end_year)
 
         assert isinstance(avg_rainfall, float)
 
     @staticmethod
     def test_get_years_below_average() -> None:
-        begin_year: int = 1950
-        end_year: int = 1975
-        n_years_below_avg: int = yearly_rainfall.get_years_below_average(begin_year, end_year)
+        n_years_below_avg: int = yearly_rainfall.get_years_below_normal(
+            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            begin_year,
+            end_year
+        )
 
         assert isinstance(n_years_below_avg, int)
         assert n_years_below_avg <= end_year - begin_year + 1
 
     @staticmethod
     def test_get_years_above_average() -> None:
-        begin_year: int = 1950
-        end_year: int = 1975
-        n_years_above_avg: int = yearly_rainfall.get_years_above_average(begin_year, end_year)
+        n_years_above_avg: int = yearly_rainfall.get_years_above_normal(
+            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            begin_year,
+            end_year
+        )
 
         assert isinstance(n_years_above_avg, int)
         assert n_years_above_avg <= end_year - begin_year + 1
+
+    @staticmethod
+    def test_get_relative_distance_from_normal() -> None:
+        relative_distance: float = yearly_rainfall.get_relative_distance_from_normal(
+            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            begin_year,
+            end_year
+        )
+
+        assert isinstance(relative_distance, float)
+        assert -100. <= relative_distance <= 100.
 
     @staticmethod
     def test_get_standard_deviation() -> None:
