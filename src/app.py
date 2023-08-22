@@ -1,6 +1,6 @@
 """
-File to run the future application.
-For the moment, it merely runs a script to test functionalities.
+Run the Flask app from this file.
+Currently developing the Swagger API using flasgger.
 """
 
 from flasgger import Swagger
