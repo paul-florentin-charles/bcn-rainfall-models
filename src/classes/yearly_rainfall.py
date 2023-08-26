@@ -306,12 +306,8 @@ class YearlyRainfall:
         :param label: A string corresponding to an existing column label.
         :return: A boolean set to whether the operation passed or not.
         """
-        if label not in self.data.columns.drop([Label.YEAR, Label.RAINFALL]):
-            return False
 
-        self.data = self.data.drop(label.value, axis='columns')
-
-        return True
+        return df_opr.remove_column(self.data, label)
 
     @plots.legend()
     def plot_rainfall(self) -> bool:
