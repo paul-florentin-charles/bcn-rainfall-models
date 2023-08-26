@@ -123,12 +123,15 @@ class TestYearlyRainfall:
     def test_remove_column() -> None:
         removed: bool = yearly_rainfall.remove_column(Label.YEAR)
 
+        assert Label.YEAR in yearly_rainfall.data.columns
         assert not removed
 
         removed = yearly_rainfall.remove_column(Label.SAVITZKY_GOLAY_FILTER)
-        yearly_rainfall.add_savgol_filter()
 
+        assert Label.SAVITZKY_GOLAY_FILTER not in yearly_rainfall.data.columns
         assert removed
+
+        yearly_rainfall.add_savgol_filter()
 
     @staticmethod
     def test_plot_rainfall_and_models() -> None:
