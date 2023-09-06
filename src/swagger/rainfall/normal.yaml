@@ -1,0 +1,17 @@
+Retrieve 30 years rainfall average for Barcelona after a given year.
+Commonly called rainfall normal.
+---
+tags:
+  - rainfall
+parameters:
+  - name: begin_year
+    in: query
+    type: integer
+    required: true
+    default: 1970
+responses:
+  200:
+    description: the 30 years normal
+    schema:
+      type: number
+      example: 607.28

@@ -51,6 +51,12 @@ class TestYearlyRainfall:
         assert isinstance(avg_rainfall, float)
 
     @staticmethod
+    def test_get_normal() -> None:
+        normal: float = yearly_rainfall.get_normal(begin_year)
+
+        assert isinstance(normal, float)
+
+    @staticmethod
     def test_get_years_below_average() -> None:
         n_years_below_avg: int = yearly_rainfall.get_years_below_normal(
             yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
