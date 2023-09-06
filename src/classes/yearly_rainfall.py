@@ -127,6 +127,20 @@ class YearlyRainfall:
         return metrics.get_average_rainfall(self.get_yearly_rainfall(begin_year, end_year),
                                             self.round_precision)
 
+    def get_normal(self, begin_year: Optional[int] = None) -> float:
+        """
+        Computes Rainfall average over 30 years time frame.
+
+        :param begin_year: An integer representing the year
+        to start from to compute our normal (optional).
+        If None, it is set to instance starting_year attribute.
+        :return: A float storing the normal.
+        """
+        if begin_year is None:
+            begin_year = self.starting_year
+
+        return metrics.get_normal(self.data, begin_year)
+
     def get_years_below_normal(self,
                                normal: Optional[float] = None,
                                begin_year: Optional[int] = None,
