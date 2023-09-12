@@ -63,3 +63,12 @@ class Config:
         """
 
         return self.yaml_config['data']['kmeans_clusters']
+
+    def get_api_doc_path(self) -> str:
+        """
+        The path to Swagger YAML spec files to document API.
+
+        :return: The path to API Swagger documentation as a String
+        """
+
+        return self.yaml_config['api']['doc_path']

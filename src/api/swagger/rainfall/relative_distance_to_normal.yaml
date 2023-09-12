@@ -1,0 +1,31 @@
+Retrieve the rainfall relative distance to normal for Barcelona between two years.
+The metric is a percentage that can be negative.
+If 100%, all the years are above normal.
+If -100%, all the years are below normal.
+If 0%, there are as many years below as years above.
+Only the starting year is compulsory.
+If no ending year is precised, computes the relative distance until most recent year available.
+---
+tags:
+  - rainfall
+parameters:
+  - name: normal
+    in: query
+    type: number
+    required: false
+  - name: begin_year
+    in: query
+    type: integer
+    required: true
+    default: 1970
+  - name: end_year
+    in: query
+    type: integer
+    required: false
+    default: 2020
+responses:
+  200:
+    description: the relative distance to normal as a percentage.
+    schema:
+      type: number
+      example: -25.67
