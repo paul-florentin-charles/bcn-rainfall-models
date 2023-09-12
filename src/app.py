@@ -22,7 +22,7 @@ swagger = Swagger(app)
 
 
 @app.route('/rainfall/average')
-@swag_from(f'{cfg.get_api_doc_path()}/rainfall/average.yaml')
+@swag_from(f'{cfg.get_api_doc_path()}rainfall/average.yaml')
 def average_rainfall() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_average_yearly_rainfall(
         request.args.get(*Parameter.BEGIN_YEAR.value),
