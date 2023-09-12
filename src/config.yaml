@@ -9,3 +9,6 @@ data:
   start_year: 1970
   rainfall_precision: 2
   kmeans_clusters: 4
+
+api:
+  doc_path: api/swagger/

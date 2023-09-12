@@ -215,7 +215,8 @@ class YearlyRainfall:
         n_years_above_normal: int = self.get_years_above_normal(normal, begin_year, end_year)
         n_years_below_normal: int = self.get_years_below_normal(normal, begin_year, end_year)
 
-        return (n_years_above_normal - n_years_below_normal) / gap * 100
+        return round((n_years_above_normal - n_years_below_normal) / gap * 100,
+                     self.round_precision)
 
     def get_standard_deviation(self,
                                label: Optional[Label] = Label.RAINFALL,
