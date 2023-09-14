@@ -1,0 +1,24 @@
+Compute the standard deviation of rainfall for Barcelona between two years.
+Only the starting year is compulsory.
+If no ending year is precised, computes average until most recent year available.
+---
+operationId: getRainfallStandardDeviation
+tags:
+  - rainfall
+parameters:
+  - name: begin_year
+    in: query
+    type: integer
+    required: true
+    default: 1970
+  - name: end_year
+    in: query
+    type: integer
+    required: false
+    default: 2020
+responses:
+  200:
+    description: the rainfall standard deviation (in mm)
+    schema:
+      type: number
+      example: 172.43

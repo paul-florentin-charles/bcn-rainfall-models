@@ -95,6 +95,7 @@ class TestYearlyRainfall:
 
         assert isinstance(std, float)
 
+        yearly_rainfall.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
         std = yearly_rainfall.get_standard_deviation(label=Label.SAVITZKY_GOLAY_FILTER)
 
         assert std is None

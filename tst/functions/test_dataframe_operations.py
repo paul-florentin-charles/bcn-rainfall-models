@@ -28,6 +28,7 @@ class TestDataframeOperations:
         assert Label.YEAR in yearly_rainfall.data.columns
         assert not removed
 
+        yearly_rainfall.add_savgol_filter()
         removed = df_opr.remove_column(yearly_rainfall.data, Label.SAVITZKY_GOLAY_FILTER)
 
         assert Label.SAVITZKY_GOLAY_FILTER not in yearly_rainfall.data.columns
