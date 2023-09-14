@@ -7,8 +7,8 @@ from typing import Callable, Optional
 
 import pandas as pd
 
-from src.enums.labels import Label
-from src.utils import dataframe_operations as df_opr
+from src.core.utils.enums.labels import Label
+from src.core.utils.functions import dataframe_operations as df_opr
 
 
 def get_average_rainfall(yearly_rainfall: pd.DataFrame,

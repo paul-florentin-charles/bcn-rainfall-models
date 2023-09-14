@@ -2,10 +2,10 @@
 
 import pandas as pd
 
-import src.utils.dataframe_operations as df_opr
-from src.enums.labels import Label
+import src.core.utils.functions.dataframe_operations as df_opr
+from src.core.utils.enums.labels import Label
 
-from tst.classes.test_yearly_rainfall import yearly_rainfall
+from tst.models.test_yearly_rainfall import yearly_rainfall
 
 
 class TestDataframeOperations:
@@ -28,6 +28,7 @@ class TestDataframeOperations:
         assert Label.YEAR in yearly_rainfall.data.columns
         assert not removed
 
+        yearly_rainfall.add_savgol_filter()
         removed = df_opr.remove_column(yearly_rainfall.data, Label.SAVITZKY_GOLAY_FILTER)
 
         assert Label.SAVITZKY_GOLAY_FILTER not in yearly_rainfall.data.columns

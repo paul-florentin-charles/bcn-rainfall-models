@@ -3,9 +3,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from src.classes.yearly_rainfall import YearlyRainfall
-from src.enums.labels import Label
-from src.enums.months import Month
+from src.core.models.yearly_rainfall import YearlyRainfall
+from src.core.utils.enums.labels import Label
+from src.core.utils.enums.months import Month
 from tst.test_config import config
 
 yearly_rainfall = YearlyRainfall(config.get_dataset_url())
@@ -95,6 +95,7 @@ class TestYearlyRainfall:
 
         assert isinstance(std, float)
 
+        yearly_rainfall.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
         std = yearly_rainfall.get_standard_deviation(label=Label.SAVITZKY_GOLAY_FILTER)
 
         assert std is None

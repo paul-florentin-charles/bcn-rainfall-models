@@ -13,10 +13,10 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
-from src.decorators import plots
-from src.enums.labels import Label
-from src.enums.months import Month
-from src.utils import metrics, dataframe_operations as df_opr, plotting
+from src.core.utils.decorators import plots
+from src.core.utils.enums.labels import Label
+from src.core.utils.enums.months import Month
+from src.core.utils.functions import dataframe_operations as df_opr, metrics, plotting
 
 
 class YearlyRainfall:

@@ -2,10 +2,10 @@
 
 from operator import lt
 
-from src.utils import metrics
-from src.enums.labels import Label
+from src.core.utils.functions import metrics
+from src.core.utils.enums.labels import Label
 
-from tst.classes.test_yearly_rainfall import yearly_rainfall
+from tst.models.test_yearly_rainfall import yearly_rainfall
 
 
 class TestMetrics:

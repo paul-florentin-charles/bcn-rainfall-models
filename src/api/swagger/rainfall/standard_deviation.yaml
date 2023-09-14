@@ -1,8 +1,8 @@
-Retrieve average rainfall for Barcelona between two years.
+Compute the standard deviation of rainfall for Barcelona between two years.
 Only the starting year is compulsory.
 If no ending year is precised, computes average until most recent year available.
 ---
-operationId: getRainfallAverage
+operationId: getRainfallStandardDeviation
 tags:
   - rainfall
 parameters:
@@ -18,7 +18,7 @@ parameters:
     default: 2020
 responses:
   200:
-    description: the average rainfall (in mm)
+    description: the rainfall standard deviation (in mm)
     schema:
       type: number
-      example: 623.75
+      example: 172.43
