@@ -3,9 +3,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from src.core.models.yearly_rainfall import YearlyRainfall
-from src.core.utils.enums.labels import Label
-from src.core.utils.enums.months import Month
+from core.models.yearly_rainfall import YearlyRainfall
+from core.utils.enums.labels import Label
+from core.utils.enums.months import Month
 from tst.test_config import config
 
 yearly_rainfall = YearlyRainfall(config.get_dataset_url())

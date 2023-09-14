@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy.random as nprand
 
-from src.core.utils.decorators import plots
+from core.utils.decorators import plots
 
 
 @plots.legend()

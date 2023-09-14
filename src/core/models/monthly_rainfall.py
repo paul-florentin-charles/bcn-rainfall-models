@@ -6,8 +6,8 @@ from typing import Optional
 
 import pandas as pd
 
-from src.core.models.yearly_rainfall import YearlyRainfall
-from src.core.utils.enums.months import Month
+from core.models.yearly_rainfall import YearlyRainfall
+from core.utils.enums.months import Month
 
 
 class MonthlyRainfall(YearlyRainfall):

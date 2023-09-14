@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # pylint: disable=missing-function-docstring
 
 """
@@ -8,9 +10,9 @@ Currently developing the Swagger API using flasgger.
 from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, request, Response
 
-from src.api.parameters import Parameter
-from src.core.models.all_rainfall import AllRainfall
-from src.config import Config
+from api.parameters import Parameter
+from core.models.all_rainfall import AllRainfall
+from config import Config
 
 cfg = Config()
 all_rainfall = AllRainfall(cfg.get_dataset_url(),

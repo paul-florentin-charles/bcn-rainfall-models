@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring
 
-from src.core.utils.enums.labels import Label
+from core.utils.enums.labels import Label
 
 
 def test_labels() -> None:
