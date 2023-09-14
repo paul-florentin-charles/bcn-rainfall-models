@@ -6,6 +6,7 @@ If 0%, there are as many years below as years above.
 Only the starting year is compulsory.
 If no ending year is precised, computes the relative distance until most recent year available.
 ---
+operationId: getRainfallRelativeDistanceToNormal
 tags:
   - rainfall
 parameters:

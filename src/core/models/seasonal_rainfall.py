@@ -6,8 +6,8 @@ from typing import Optional
 
 import pandas as pd
 
-from src.classes.yearly_rainfall import YearlyRainfall
-from src.enums.seasons import Season
+from src.core.models.yearly_rainfall import YearlyRainfall
+from src.core.utils.enums.seasons import Season
 
 
 class SeasonalRainfall(YearlyRainfall):

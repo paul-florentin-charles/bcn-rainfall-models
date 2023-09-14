@@ -2,10 +2,10 @@
 
 import pandas as pd
 
-import src.utils.dataframe_operations as df_opr
-from src.enums.labels import Label
+import src.core.utils.functions.dataframe_operations as df_opr
+from src.core.utils.enums.labels import Label
 
-from tst.classes.test_yearly_rainfall import yearly_rainfall
+from tst.models.test_yearly_rainfall import yearly_rainfall
 
 
 class TestDataframeOperations:

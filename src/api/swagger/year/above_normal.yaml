@@ -3,6 +3,7 @@ Only the starting year is compulsory.
 If normal is set to None, it will be computed as a 30 years average
 starting from the starting year set in configuration.
 ---
+operationId: getYearsAboveNormal
 tags:
   - year
 parameters:

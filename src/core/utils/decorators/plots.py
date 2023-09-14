@@ -6,7 +6,7 @@ from typing import Callable, Optional
 
 import matplotlib.pyplot as plt
 
-from src.enums.labels import Label
+from src.core.utils.enums.labels import Label
 
 
 def legend(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)") -> Callable:

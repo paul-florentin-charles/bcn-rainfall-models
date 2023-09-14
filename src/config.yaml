@@ -11,4 +11,4 @@ data:
   kmeans_clusters: 4
 
 api:
-  doc_path: api/swagger/
+  doc_path: api/swagger

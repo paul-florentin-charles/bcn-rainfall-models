@@ -2,6 +2,7 @@ Retrieve average rainfall for Barcelona between two years.
 Only the starting year is compulsory.
 If no ending year is precised, computes average until most recent year available.
 ---
+operationId: getRainfallAverage
 tags:
   - rainfall
 parameters:
@@ -17,7 +18,7 @@ parameters:
     default: 2020
 responses:
   200:
-    description: the average rainfall
+    description: the average rainfall (in mm)
     schema:
       type: number
       example: 623.75

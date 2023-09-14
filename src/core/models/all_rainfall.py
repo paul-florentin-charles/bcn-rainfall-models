@@ -5,12 +5,12 @@ to manipulate rainfall data for every timeframes.
 
 from typing import Optional
 
-from src.classes.monthly_rainfall import MonthlyRainfall
-from src.classes.seasonal_rainfall import SeasonalRainfall
-from src.classes.yearly_rainfall import YearlyRainfall
-from src.enums.months import Month
-from src.enums.seasons import Season
-from src.utils import plotting
+from src.core.models.monthly_rainfall import MonthlyRainfall
+from src.core.models.seasonal_rainfall import SeasonalRainfall
+from src.core.models.yearly_rainfall import YearlyRainfall
+from src.core.utils.enums.months import Month
+from src.core.utils.enums.seasons import Season
+from src.core.utils.functions import plotting
 
 
 class AllRainfall:
