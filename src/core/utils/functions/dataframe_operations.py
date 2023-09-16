@@ -7,7 +7,7 @@ from typing import Optional
 
 import pandas as pd
 
-from core.utils.enums.labels import Label
+from src.core.utils.enums.labels import Label
 
 
 def get_rainfall_within_year_interval(yearly_rainfall: pd.DataFrame,

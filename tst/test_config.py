@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring
 
-from config import Config, CONFIG_FNAME
+from src.config import Config, CONFIG_FNAME
 
 config: Config = Config(path=f"src/{CONFIG_FNAME}")
 

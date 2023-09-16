@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring
 
-from core.utils.functions import plotting
-from core.utils.enums.labels import Label
+from src.core.utils.functions import plotting
+from src.core.utils.enums.labels import Label
 
 from tst.models.test_yearly_rainfall import yearly_rainfall
 

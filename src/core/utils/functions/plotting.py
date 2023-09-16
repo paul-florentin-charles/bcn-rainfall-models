@@ -6,7 +6,7 @@ from typing import Optional
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from core.utils.enums.labels import Label
+from src.core.utils.enums.labels import Label
 
 
 def plot_column_according_to_year(yearly_rainfall: pd.DataFrame,

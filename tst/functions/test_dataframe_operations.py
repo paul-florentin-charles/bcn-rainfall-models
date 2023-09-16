@@ -2,8 +2,8 @@
 
 import pandas as pd
 
-import core.utils.functions.dataframe_operations as df_opr
-from core.utils.enums.labels import Label
+import src.core.utils.functions.dataframe_operations as df_opr
+from src.core.utils.enums.labels import Label
 
 from tst.models.test_yearly_rainfall import yearly_rainfall
 

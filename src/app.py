@@ -11,7 +11,7 @@ from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, request, Response
 
 from api.parameters import Parameter
-from core.models.all_rainfall import AllRainfall
+from src.core.models.all_rainfall import AllRainfall
 from config import Config
 
 cfg = Config()

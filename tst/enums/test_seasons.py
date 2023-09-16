@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring
 
-from core.utils.enums.months import Month
-from core.utils.enums.seasons import Season
+from src.core.utils.enums.months import Month
+from src.core.utils.enums.seasons import Season
 
 
 class TestSeasons:
