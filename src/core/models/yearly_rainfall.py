@@ -57,31 +57,12 @@ class YearlyRainfall:
         to end getting our rainfall values (optional)
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
-        monthly_rainfall: pd.DataFrame = pd.read_csv(self.dataset_url)
 
-        years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
-        if end_month is not None and end_month < start_month:
-            rainfall: pd.Series = pd.concat(
-                (monthly_rainfall.iloc[:, start_month:start_month + 1],
-                 monthly_rainfall.iloc[:, 1:end_month]), axis='columns') \
-                .sum(axis='columns')
-        else:
-            rainfall: pd.Series = monthly_rainfall.iloc[:, start_month:end_month] \
-                .sum(axis='columns')
-
-        yearly_rainfall: pd.DataFrame = pd.concat((years, rainfall), axis='columns') \
-            .set_axis([Label.YEAR.value, Label.RAINFALL.value],
-                      axis='columns')
-
-        yearly_rainfall = df_opr.get_rainfall_within_year_interval(yearly_rainfall,
-                                                                   begin_year=self.starting_year) \
-            .reset_index() \
-            .drop(columns='index')
-
-        yearly_rainfall[Label.RAINFALL.value] = round(yearly_rainfall[Label.RAINFALL.value],
-                                                      self.round_precision)
-
-        return yearly_rainfall
+        return df_opr.retrieve_rainfall_data_with_constraints(pd.read_csv(self.dataset_url),
+                                                              self.starting_year,
+                                                              self.round_precision,
+                                                              start_month,
+                                                              end_month)
 
     def get_yearly_rainfall(self,
                             begin_year: Optional[int] = None,
