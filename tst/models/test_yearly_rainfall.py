@@ -2,12 +2,13 @@
 
 import pandas as pd
 
-from src.core.models.yearly_rainfall import YearlyRainfall
+from src.core.models.all_rainfall import AllRainfall
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 from tst.test_config import config
 
-yearly_rainfall = YearlyRainfall(config.get_dataset_url())
+all_rainfall = AllRainfall(config.get_dataset_url())
+yearly_rainfall = all_rainfall.yearly_rainfall
 
 begin_year: int = 1990
 end_year: int = 2020
