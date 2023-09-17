@@ -23,7 +23,7 @@ app = Flask(__name__)
 swagger = Swagger(app, template_file=f"{cfg.get_api_doc_path()}/template.yaml")
 
 
-@app.route('/api/rainfall/average')
+@app.route(f"{swagger.template['basePath']}/rainfall/average")
 @swag_from(f"{cfg.get_api_doc_path()}/rainfall/average.yaml")
 def average_rainfall() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_average_yearly_rainfall(
@@ -32,7 +32,7 @@ def average_rainfall() -> Response:
     ))
 
 
-@app.route('/api/rainfall/normal')
+@app.route(f"{swagger.template['basePath']}/rainfall/normal")
 @swag_from(f"{cfg.get_api_doc_path()}/rainfall/normal.yaml")
 def normal_rainfall() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_normal(
@@ -40,7 +40,7 @@ def normal_rainfall() -> Response:
     )
 
 
-@app.route('/api/rainfall/relative_distance_to_normal')
+@app.route(f"{swagger.template['basePath']}/rainfall/relative_distance_to_normal")
 @swag_from(f"{cfg.get_api_doc_path()}/rainfall/relative_distance_to_normal.yaml")
 def rainfall_relative_distance_to_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_relative_distance_from_normal(
@@ -50,7 +50,7 @@ def rainfall_relative_distance_to_normal() -> Response:
     ))
 
 
-@app.route('/api/rainfall/standard_deviation')
+@app.route(f"{swagger.template['basePath']}/rainfall/standard_deviation")
 @swag_from(f"{cfg.get_api_doc_path()}/rainfall/standard_deviation.yaml")
 def standard_deviation() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_standard_deviation(
@@ -59,7 +59,7 @@ def standard_deviation() -> Response:
     ))
 
 
-@app.route('/api/year/below_normal')
+@app.route(f"{swagger.template['basePath']}/year/below_normal")
 @swag_from(f"{cfg.get_api_doc_path()}/year/below_normal.yaml")
 def years_below_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_below_normal(
@@ -69,7 +69,7 @@ def years_below_normal() -> Response:
     ))
 
 
-@app.route('/api/year/above_normal')
+@app.route(f"{swagger.template['basePath']}/year/above_normal")
 @swag_from(f"{cfg.get_api_doc_path()}/year/above_normal.yaml")
 def years_above_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_above_normal(

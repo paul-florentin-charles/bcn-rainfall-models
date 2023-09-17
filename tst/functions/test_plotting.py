@@ -3,7 +3,7 @@
 from src.core.utils.functions import plotting
 from src.core.utils.enums.labels import Label
 
-from tst.models.test_yearly_rainfall import yearly_rainfall
+from tst.models.test_yearly_rainfall import yearly_rainfall, all_rainfall
 
 
 class TestPlotting:
@@ -33,16 +33,36 @@ class TestPlotting:
 
     @staticmethod
     def test_bar_monthly_rainfall_averages():
-        pass
+        averages: list = plotting.bar_monthly_rainfall_averages(all_rainfall.monthly_rainfalls)
+
+        assert isinstance(averages, list)
+        assert len(averages) == len(all_rainfall.monthly_rainfalls)
+        for average in averages:
+            assert isinstance(average, float)
 
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():
-        pass
+        slopes: list = plotting.bar_monthly_rainfall_linreg_slopes(all_rainfall.monthly_rainfalls)
+
+        assert isinstance(slopes, list)
+        assert len(slopes) == len(all_rainfall.monthly_rainfalls)
+        for slope in slopes:
+            assert isinstance(slope, float)
 
     @staticmethod
     def test_bar_seasonal_rainfall_averages():
-        pass
+        averages: list = plotting.bar_seasonal_rainfall_averages(all_rainfall.seasonal_rainfalls)
+
+        assert isinstance(averages, list)
+        assert len(averages) == len(all_rainfall.seasonal_rainfalls)
+        for average in averages:
+            assert isinstance(average, float)
 
     @staticmethod
     def test_bar_seasonal_rainfall_linreg_slopes():
-        pass
+        slopes: list = plotting.bar_seasonal_rainfall_linreg_slopes(all_rainfall.seasonal_rainfalls)
+
+        assert isinstance(slopes, list)
+        assert len(slopes) == len(all_rainfall.seasonal_rainfalls)
+        for slope in slopes:
+            assert isinstance(slope, float)

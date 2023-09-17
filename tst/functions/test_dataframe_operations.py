@@ -1,9 +1,11 @@
 # pylint: disable=missing-docstring
 
+from datetime import datetime
 import pandas as pd
 
 import src.core.utils.functions.dataframe_operations as df_opr
 from src.core.utils.enums.labels import Label
+from src.core.utils.enums.months import Month
 
 from tst.models.test_yearly_rainfall import yearly_rainfall
 
@@ -35,3 +37,16 @@ class TestDataframeOperations:
         assert removed
 
         yearly_rainfall.add_savgol_filter()
+
+    @staticmethod
+    def test_retrieve_rainfall_data_with_constraints() -> None:
+        result: pd.DataFrame = df_opr.retrieve_rainfall_data_with_constraints(
+            yearly_rainfall.data,
+            yearly_rainfall.starting_year,
+            yearly_rainfall.round_precision,
+            Month.MAY.value,
+            Month.SEPTEMBER.value
+        )
+
+        assert isinstance(result, pd.DataFrame)
+        assert len(result) <= datetime.now().year - yearly_rainfall.starting_year + 1

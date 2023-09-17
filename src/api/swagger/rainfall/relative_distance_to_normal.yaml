@@ -24,6 +24,8 @@ parameters:
     type: integer
     required: false
     default: 2020
+produces:
+  - application/json
 responses:
   200:
     description: the relative distance to normal as a percentage.
