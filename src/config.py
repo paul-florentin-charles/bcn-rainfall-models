@@ -6,8 +6,6 @@ from typing import Optional
 from yaml import safe_load
 
 CONFIG_FNAME: str = 'config.yaml'
-UTF_8: str = 'utf-8'
-MODE: str = 'rt'
 
 
 class Config:
@@ -19,7 +17,7 @@ class Config:
 
     def __init__(self, path: Optional[str] = CONFIG_FNAME):
         self.path: str = path
-        with open(self.path, mode=MODE, encoding=UTF_8) as stream:
+        with open(self.path, mode='rt', encoding='utf-8') as stream:
             self.yaml_config: dict = safe_load(stream)
 
     def get_dataset_url(self) -> str:

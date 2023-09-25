@@ -16,12 +16,12 @@ class SeasonalRainfall(YearlyRainfall):
     """
 
     def __init__(self,
-                 dataset_url: str,
+                 raw_data: pd.DataFrame,
                  season: Season,
                  start_year: Optional[int] = 1970,
                  round_precision: Optional[int] = 2):
         self.season: Season = season
-        super().__init__(dataset_url, start_year, round_precision)
+        super().__init__(raw_data, start_year, round_precision)
 
     def load_yearly_rainfall(self) -> pd.DataFrame:
         """

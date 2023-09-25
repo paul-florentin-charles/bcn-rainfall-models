@@ -1,9 +1,11 @@
 """
-Provides a costly to instantiate all-in-one class
-to manipulate rainfall data for every timeframes.
+Provides an all-in-one class to manipulate rainfall data for every timeframe.
+At a yearly, monthly and seasonal level.
 """
 
 from typing import Optional
+
+import pandas as pd
 
 from src.core.models.monthly_rainfall import MonthlyRainfall
 from src.core.models.seasonal_rainfall import SeasonalRainfall
@@ -20,7 +22,7 @@ class AllRainfall:
     - MonthlyRainfall data for all months
     - SeasonalRainfall data for all seasons
 
-    Costly to instantiate but contains all necessary data.
+    A bit costly to instantiate but contains all necessary data.
     """
 
     def __init__(self,
@@ -30,18 +32,19 @@ class AllRainfall:
         self.dataset_url: str = dataset_url
         self.starting_year: int = start_year
         self.round_precision: int = round_precision
-        self.yearly_rainfall: YearlyRainfall = YearlyRainfall(dataset_url,
+        self.raw_data: pd.DataFrame = pd.read_csv(dataset_url)
+        self.yearly_rainfall: YearlyRainfall = YearlyRainfall(self.raw_data,
                                                               start_year,
                                                               round_precision)
         self.monthly_rainfalls: list = []
         for month in Month:
-            self.monthly_rainfalls.append(MonthlyRainfall(dataset_url,
+            self.monthly_rainfalls.append(MonthlyRainfall(self.raw_data,
                                                           month,
                                                           start_year,
                                                           round_precision))
         self.seasonal_rainfalls: list = []
         for season in Season:
-            self.seasonal_rainfalls.append(SeasonalRainfall(dataset_url,
+            self.seasonal_rainfalls.append(SeasonalRainfall(self.raw_data,
                                                             season,
                                                             start_year,
                                                             round_precision))
