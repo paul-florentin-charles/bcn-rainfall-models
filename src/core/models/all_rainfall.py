@@ -1,6 +1,6 @@
 """
-Provides a costly to instantiate all-in-one class
-to manipulate rainfall data for every timeframes.
+Provides an all-in-one class to manipulate rainfall data for every timeframe.
+At a yearly, monthly and seasonal level.
 """
 
 from typing import Optional
@@ -22,7 +22,7 @@ class AllRainfall:
     - MonthlyRainfall data for all months
     - SeasonalRainfall data for all seasons
 
-    Costly to instantiate but contains all necessary data.
+    A bit costly to instantiate but contains all necessary data.
     """
 
     def __init__(self,

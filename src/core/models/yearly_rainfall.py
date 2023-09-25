@@ -49,7 +49,7 @@ class YearlyRainfall:
                       start_month: int,
                       end_month: Optional[int] = None) -> pd.DataFrame:
         """
-        Generic function to load Yearly Rainfall data into pandas DataFrame.
+        Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
 
         :param start_month: An integer representing the month
         to start getting our rainfall values (compulsory)
