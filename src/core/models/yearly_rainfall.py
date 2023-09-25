@@ -25,10 +25,10 @@ class YearlyRainfall:
     """
 
     def __init__(self,
-                 dataset_url: str,
+                 raw_data: pd.DataFrame,
                  start_year: Optional[int] = 1970,
                  round_precision: Optional[int] = 2):
-        self.dataset_url: str = dataset_url
+        self.raw_data = raw_data
         self.starting_year: int = start_year
         self.round_precision: int = round_precision
         self.data: pd.DataFrame = self.load_yearly_rainfall()
@@ -58,7 +58,7 @@ class YearlyRainfall:
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
 
-        return df_opr.retrieve_rainfall_data_with_constraints(pd.read_csv(self.dataset_url),
+        return df_opr.retrieve_rainfall_data_with_constraints(self.raw_data,
                                                               self.starting_year,
                                                               self.round_precision,
                                                               start_month,
