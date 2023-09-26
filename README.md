@@ -1,5 +1,6 @@
 # bcn-rainfall-models
 
+[![coverage badge](coverage.svg)](https://github.com/nedbat/coveragepy)
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
 
 🚧 WIP 🚧
