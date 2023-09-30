@@ -79,6 +79,11 @@ class TestYearlyRainfall:
         assert n_years_above_avg <= end_year - begin_year + 1
 
     @staticmethod
+    def test_get_last_year() -> None:
+
+        assert isinstance(yearly_rainfall.get_last_year(), int)
+
+    @staticmethod
     def test_get_relative_distance_from_normal() -> None:
         relative_distance: float = yearly_rainfall.get_relative_distance_from_normal(
             yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
