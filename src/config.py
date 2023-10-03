@@ -3,7 +3,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 from typing import Optional
 
-from yaml import safe_load
+from yaml import safe_load, parser
 
 CONFIG_FNAME: str = 'config.yaml'
 
@@ -17,8 +17,17 @@ class Config:
 
     def __init__(self, path: Optional[str] = CONFIG_FNAME):
         self.path: str = path
-        with open(self.path, mode='rt', encoding='utf-8') as stream:
-            self.yaml_config: dict = safe_load(stream)
+        try:
+            with open(self.path, mode='rt', encoding='utf-8') as stream:
+                self.yaml_config: dict = safe_load(stream)
+        except FileNotFoundError as exc:
+            raise FileNotFoundError(
+                f"Configuration file not found at \"{self.path}\""
+            ) from exc
+        except parser.ParserError as exc:
+            raise parser.ParserError(
+                f"Configuration file at \"{self.path}\" cannot be parsed: not a valid YAML file!"
+            ) from exc
 
     def get_dataset_url(self) -> str:
         """
