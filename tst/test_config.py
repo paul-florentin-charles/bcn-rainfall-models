@@ -1,5 +1,8 @@
 # pylint: disable=missing-docstring
 
+from pytest import raises
+from yaml import parser
+
 from src.config import Config, CONFIG_FNAME
 
 config: Config = Config(path=f"src/{CONFIG_FNAME}")
@@ -25,3 +28,13 @@ class TestConfig:
     def test_get_kmeans_clusters() -> None:
         kmeans_clusters: int = config.get_kmeans_clusters()
         assert isinstance(kmeans_clusters, int)
+
+    @staticmethod
+    def test_config_file_not_found() -> None:
+        with raises(FileNotFoundError):
+            Config(path="/there/is/no/config/file/there/dude.yaml")
+
+    @staticmethod
+    def test_config_file_invalid() -> None:
+        with raises(parser.ParserError):
+            Config(path="README.md")

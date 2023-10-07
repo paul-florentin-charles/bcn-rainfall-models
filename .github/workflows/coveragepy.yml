@@ -22,12 +22,12 @@ jobs:
         pip install -r requirements.txt
         pip install pytest coverage
 
-    - name: Running coverage report with coveragepy
+    - name: Run coverage report with coveragepy
       run: |
         coverage run -m pytest tst
         coverage report
 
-    - name: Coverage Badge
+    - name: Generate coverage badge
       uses: tj-actions/coverage-badge-py@v2
 
     - name: Verify Changed files

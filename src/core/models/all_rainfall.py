@@ -4,6 +4,7 @@ At a yearly, monthly and seasonal level.
 """
 
 from typing import Optional
+from pathlib import Path
 
 import pandas as pd
 
@@ -48,6 +49,40 @@ class AllRainfall:
                                                             season,
                                                             start_year,
                                                             round_precision))
+
+    def export_all_data_to_csv(self, folder_path: Optional[str] = 'csv_data') -> str:
+        """
+        Export all the different data as CSVs into specified folder path.
+
+        :param folder_path: path to folder where to save our CSV files (optional).
+        If not set, defaults to 'csv_data'. Should not end with '/'.
+        :return: Path to folder that contains CSV files.
+        """
+        Path(f"{folder_path}/months").mkdir(parents=True, exist_ok=True)
+        Path(f"{folder_path}/seasons").mkdir(parents=True, exist_ok=True)
+
+        last_year: int = self.yearly_rainfall.get_last_year()
+
+        self.yearly_rainfall.export_as_csv(
+            path=f"{folder_path}/"
+                 f"{self.starting_year}_{last_year}_rainfall.csv"
+        )
+
+        for monthly_rainfall in self.monthly_rainfalls:
+            monthly_rainfall.export_as_csv(
+                path=f"{folder_path}/months/"
+                     f"{self.starting_year}_{last_year}_"
+                     f"{monthly_rainfall.month.name.lower()}_rainfall.csv"
+            )
+
+        for season_rainfall in self.seasonal_rainfalls:
+            season_rainfall.export_as_csv(
+                path=f"{folder_path}/seasons/"
+                     f"{self.starting_year}_{last_year}_"
+                     f"{season_rainfall.season.name.lower()}_rainfall.csv"
+            )
+
+        return folder_path
 
     def bar_rainfall_averages(self, monthly: Optional[bool] = True) -> list:
         """

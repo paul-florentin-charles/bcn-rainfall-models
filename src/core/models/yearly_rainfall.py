@@ -82,12 +82,13 @@ class YearlyRainfall:
                                                         begin_year,
                                                         end_year)
 
-    def export_as_csv(self, path: Optional[str] = None) -> str:
+    def export_as_csv(self, path: Optional[str] = None) -> Union[str, None]:
         """
         Export the actual instance data state as a CSV.
 
         :param path: path to csv file to save our data (optional).
-        :return: CSV data as a string.
+        :return: CSV data as a string if no path is set.
+        None otherwise.
         """
 
         return self.data.to_csv(path_or_buf=path, index=False)
@@ -169,6 +170,15 @@ class YearlyRainfall:
             normal,
             opr.gt
         )
+
+    def get_last_year(self) -> int:
+        """
+        Retrieves the last element of the 'Year' column from the pandas DataFrame.
+
+        :return: The ultimate year of DataFrame.
+        """
+
+        return int(self.data[Label.YEAR].iloc[-1])
 
     def get_relative_distance_from_normal(self,
                                           normal: Optional[float] = None,
