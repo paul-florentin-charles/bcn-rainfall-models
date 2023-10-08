@@ -44,7 +44,7 @@ def normal_rainfall() -> Response:
 @swag_from(f"{cfg.get_api_doc_path()}/rainfall/relative_distance_to_normal.yaml")
 def rainfall_relative_distance_to_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_relative_distance_from_normal(
-        normal=request.args.get(*Parameter.NORMAL.value),
+        normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value),
         end_year=request.args.get(*Parameter.END_YEAR.value)
     ))
@@ -63,7 +63,7 @@ def standard_deviation() -> Response:
 @swag_from(f"{cfg.get_api_doc_path()}/year/below_normal.yaml")
 def years_below_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_below_normal(
-        normal=request.args.get(*Parameter.NORMAL.value),
+        normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value),
         end_year=request.args.get(*Parameter.END_YEAR.value)
     ))
@@ -73,7 +73,7 @@ def years_below_normal() -> Response:
 @swag_from(f"{cfg.get_api_doc_path()}/year/above_normal.yaml")
 def years_above_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_above_normal(
-        normal=request.args.get(*Parameter.NORMAL.value),
+        normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value),
         end_year=request.args.get(*Parameter.END_YEAR.value)
     ))

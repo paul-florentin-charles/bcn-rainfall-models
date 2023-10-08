@@ -1,16 +1,14 @@
 Computes the number of years above normal for a specific year range.
-Only the starting year is compulsory.
-If normal is set to None, it will be computed as a 30 years average
-starting from the starting year set in configuration.
+Normal is computed as a 30 years average starting from the year set via normal_year.
 ---
 operationId: getYearsAboveNormal
 tags:
   - year
 parameters:
-  - name: normal
+  - name: normal_year
     in: query
-    type: number
-    required: false
+    type: integer
+    required: true
   - name: begin_year
     in: query
     type: integer
