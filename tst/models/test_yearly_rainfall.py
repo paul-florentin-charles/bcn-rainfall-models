@@ -10,6 +10,7 @@ from tst.test_config import config
 all_rainfall = AllRainfall(config.get_dataset_url())
 yearly_rainfall = all_rainfall.yearly_rainfall
 
+normal_year: int = 1970
 begin_year: int = 1990
 end_year: int = 2020
 
@@ -59,7 +60,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_get_years_below_average() -> None:
         n_years_below_avg: int = yearly_rainfall.get_years_below_normal(
-            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            normal_year,
             begin_year,
             end_year
         )
@@ -70,7 +71,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_get_years_above_average() -> None:
         n_years_above_avg: int = yearly_rainfall.get_years_above_normal(
-            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            normal_year,
             begin_year,
             end_year
         )
@@ -80,13 +81,12 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_last_year() -> None:
-
         assert isinstance(yearly_rainfall.get_last_year(), int)
 
     @staticmethod
     def test_get_relative_distance_from_normal() -> None:
         relative_distance: float = yearly_rainfall.get_relative_distance_from_normal(
-            yearly_rainfall.get_average_yearly_rainfall(1970, 2000),
+            normal_year,
             begin_year,
             end_year
         )
@@ -96,18 +96,19 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation() -> None:
-        std: float = yearly_rainfall.get_standard_deviation()
+        std: float = yearly_rainfall.get_standard_deviation(yearly_rainfall.starting_year)
 
         assert isinstance(std, float)
 
         yearly_rainfall.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
-        std = yearly_rainfall.get_standard_deviation(label=Label.SAVITZKY_GOLAY_FILTER)
+        std = yearly_rainfall.get_standard_deviation(yearly_rainfall.starting_year,
+                                                     label=Label.SAVITZKY_GOLAY_FILTER)
 
         assert std is None
 
     @staticmethod
     def test_add_percentage_of_normal() -> None:
-        yearly_rainfall.add_percentage_of_normal()
+        yearly_rainfall.add_percentage_of_normal(yearly_rainfall.starting_year)
 
         assert Label.PERCENTAGE_OF_NORMAL in yearly_rainfall.data
 

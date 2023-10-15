@@ -10,15 +10,16 @@ operationId: getRainfallRelativeDistanceToNormal
 tags:
   - rainfall
 parameters:
-  - name: normal
-    in: query
-    type: number
-    required: false
-  - name: begin_year
+  - name: normal_year
     in: query
     type: integer
     required: true
     default: 1970
+  - name: begin_year
+    in: query
+    type: integer
+    required: true
+    default: 1990
   - name: end_year
     in: query
     type: integer
