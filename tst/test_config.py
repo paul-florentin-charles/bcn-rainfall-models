@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring
 
 from pytest import raises
-from yaml import parser
+from yaml.parser import ParserError
 
 from src.config import Config, CONFIG_FNAME
 
@@ -36,5 +36,5 @@ class TestConfig:
 
     @staticmethod
     def test_config_file_invalid() -> None:
-        with raises(parser.ParserError):
+        with raises(ParserError):
             Config(path="README.md")

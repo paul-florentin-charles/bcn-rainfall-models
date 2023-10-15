@@ -1,8 +1,11 @@
 # pylint: disable=missing-docstring
 
 import pandas as pd
+from pytest import raises
 
 from src.core.models.all_rainfall import AllRainfall
+from src.core.models.yearly_rainfall import YearlyRainfall
+from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 from tst.test_config import config
@@ -31,6 +34,13 @@ class TestYearlyRainfall:
         assert len(data.columns) == 2
         assert Label.YEAR in data \
                and Label.RAINFALL in data
+
+    @staticmethod
+    def test_load_rainfall_fails_because_data_format_error() -> None:
+        with raises(DataFormatError):
+            YearlyRainfall(raw_data=pd.DataFrame(),
+                           start_year=config.get_start_year(),
+                           round_precision=config.get_rainfall_precision())
 
     @staticmethod
     def test_get_yearly_rainfall() -> None:
