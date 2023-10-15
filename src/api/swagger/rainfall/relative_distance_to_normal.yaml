@@ -14,11 +14,12 @@ parameters:
     in: query
     type: integer
     required: true
+    default: 1970
   - name: begin_year
     in: query
     type: integer
     required: true
-    default: 1970
+    default: 1990
   - name: end_year
     in: query
     type: integer
