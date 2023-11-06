@@ -13,8 +13,8 @@ from tst.test_config import config
 all_rainfall = AllRainfall(config.get_dataset_url())
 yearly_rainfall = all_rainfall.yearly_rainfall
 
-normal_year: int = 1970
-begin_year: int = 1990
+normal_year: int = 1971
+begin_year: int = 1991
 end_year: int = 2020
 
 

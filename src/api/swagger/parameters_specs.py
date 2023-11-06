@@ -3,7 +3,7 @@ Swagger specifications for route parameters.
 """
 
 normal_year: dict = {
-    "default": 1970,
+    "default": 1971,
     "required": True,
     "type": "integer",
     "name": "normal_year",
@@ -11,7 +11,7 @@ normal_year: dict = {
 }
 
 begin_year: dict = {
-    "default": 1990,
+    "default": 1991,
     "required": True,
     "type": "integer",
     "name": "begin_year",
