@@ -6,7 +6,7 @@ dataset:
   file_name: precipitacionsbarcelonadesde1786.csv
 
 data:
-  start_year: 1970
+  start_year: 1971
   rainfall_precision: 2
   kmeans_clusters: 4
 

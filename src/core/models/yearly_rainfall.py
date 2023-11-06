@@ -16,6 +16,7 @@ from sklearn.metrics import r2_score
 from src.core.utils.decorators import plots
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
+from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.functions import dataframe_operations as df_opr, metrics, plotting
 
 
@@ -26,7 +27,7 @@ class YearlyRainfall:
 
     def __init__(self,
                  raw_data: pd.DataFrame,
-                 start_year: Optional[int] = 1970,
+                 start_year: Optional[int] = 1971,
                  round_precision: Optional[int] = 2):
         self.raw_data: pd.DataFrame = raw_data
         self.starting_year: int = start_year
@@ -58,6 +59,9 @@ class YearlyRainfall:
         to end getting our rainfall values (optional)
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
+        if (not isinstance(self.raw_data, pd.DataFrame)
+                or len(self.raw_data.columns) != 1 + len(Month)):
+            raise DataFormatError("[Year, Jan_rain, Feb_rain, ..., Dec_rain] (pandas DataFrame)")
 
         return df_opr.retrieve_rainfall_data_with_constraints(self.raw_data,
                                                               self.starting_year,

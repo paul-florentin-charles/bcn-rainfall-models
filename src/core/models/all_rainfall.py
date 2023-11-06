@@ -28,7 +28,7 @@ class AllRainfall:
 
     def __init__(self,
                  dataset_url: str,
-                 start_year: Optional[int] = 1970,
+                 start_year: Optional[int] = 1971,
                  round_precision: Optional[int] = 2):
         self.dataset_url: str = dataset_url
         self.starting_year: int = start_year

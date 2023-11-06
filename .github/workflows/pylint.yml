@@ -23,5 +23,6 @@ jobs:
 
     - name: Analyse code with pylint
       run: |
-        pylint $(git ls-files src/'*.py') --disable import-error
+        pylint $(git ls-files src/'*.py' -x src/api/swagger/'*.py') --disable import-error
+        pylint $(git ls-files src/api/swagger/'*.py') --disable import-error,duplicate-code
         pylint $(git ls-files tst/'*.py') --disable import-error,missing-docstring

@@ -38,7 +38,7 @@ class TestMetrics:
 
     @staticmethod
     def test_get_normal() -> None:
-        normal: float = metrics.get_normal(yearly_rainfall.data, begin_year=1990)
+        normal: float = metrics.get_normal(yearly_rainfall.data, begin_year=1991)
 
         assert isinstance(normal, float)
         assert normal >= 0.

@@ -11,6 +11,10 @@ from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, request, Response
 
 from api.parameters import Parameter
+from src.api.swagger.rainfall import (average_specs, normal_specs,
+                                      relative_distance_to_normal_specs,
+                                      standard_deviation_specs)
+from src.api.swagger.year import below_normal_specs, above_normal_specs
 from src.core.models.all_rainfall import AllRainfall
 from config import Config
 
@@ -24,7 +28,7 @@ swagger = Swagger(app, template_file=f"{cfg.get_api_doc_path()}/template.yaml")
 
 
 @app.route(f"{swagger.template['basePath']}/rainfall/average")
-@swag_from(f"{cfg.get_api_doc_path()}/rainfall/average.yaml")
+@swag_from(average_specs.route_specs)
 def average_rainfall() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_average_yearly_rainfall(
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value),
@@ -33,7 +37,7 @@ def average_rainfall() -> Response:
 
 
 @app.route(f"{swagger.template['basePath']}/rainfall/normal")
-@swag_from(f"{cfg.get_api_doc_path()}/rainfall/normal.yaml")
+@swag_from(normal_specs.route_specs)
 def normal_rainfall() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_normal(
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value))
@@ -41,7 +45,7 @@ def normal_rainfall() -> Response:
 
 
 @app.route(f"{swagger.template['basePath']}/rainfall/relative_distance_to_normal")
-@swag_from(f"{cfg.get_api_doc_path()}/rainfall/relative_distance_to_normal.yaml")
+@swag_from(relative_distance_to_normal_specs.route_specs)
 def rainfall_relative_distance_to_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_relative_distance_from_normal(
         normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
@@ -51,7 +55,7 @@ def rainfall_relative_distance_to_normal() -> Response:
 
 
 @app.route(f"{swagger.template['basePath']}/rainfall/standard_deviation")
-@swag_from(f"{cfg.get_api_doc_path()}/rainfall/standard_deviation.yaml")
+@swag_from(standard_deviation_specs.route_specs)
 def standard_deviation() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_standard_deviation(
         begin_year=request.args.get(*Parameter.BEGIN_YEAR.value),
@@ -60,7 +64,7 @@ def standard_deviation() -> Response:
 
 
 @app.route(f"{swagger.template['basePath']}/year/below_normal")
-@swag_from(f"{cfg.get_api_doc_path()}/year/below_normal.yaml")
+@swag_from(below_normal_specs.route_specs)
 def years_below_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_below_normal(
         normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
@@ -70,7 +74,7 @@ def years_below_normal() -> Response:
 
 
 @app.route(f"{swagger.template['basePath']}/year/above_normal")
-@swag_from(f"{cfg.get_api_doc_path()}/year/above_normal.yaml")
+@swag_from(above_normal_specs.route_specs)
 def years_above_normal() -> Response:
     return jsonify(all_rainfall.yearly_rainfall.get_years_above_normal(
         normal_year=request.args.get(*Parameter.NORMAL_YEAR.value),
