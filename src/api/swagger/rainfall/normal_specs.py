@@ -8,7 +8,7 @@ Commonly called rainfall normal.
 """
 
 import src.api.swagger.parameters_specs as param
-
+from src.api.schemas import NormalYearlyRainfall
 
 route_specs: dict = {
     "operationId": "getRainfallNormal",
@@ -19,11 +19,8 @@ route_specs: dict = {
     ],
     "responses": {
         "200": {
-            "description": "the 30 years normal (in mm)",
-            "schema": {
-                "type": "number",
-                "example": 607.28
-            }
+            "description": "The 30 years normal (in mm)",
+            "schema": NormalYearlyRainfall
         }
     },
     "parameters": [
