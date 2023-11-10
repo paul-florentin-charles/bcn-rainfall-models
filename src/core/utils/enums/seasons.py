@@ -1,6 +1,7 @@
 """
 Provides list of Month (Enum) equivalents for all four seasons of the year.
 """
+
 from enum import Enum
 
 from src.core.utils.enums.months import Month

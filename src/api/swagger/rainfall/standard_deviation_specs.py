@@ -9,7 +9,7 @@ If no ending year is precised, computes average until most recent year available
 """
 
 import src.api.swagger.parameters_specs as param
-
+from src.api.schemas import StandardDeviationYearlyRainfall
 
 route_specs: dict = {
     "operationId": "getRainfallStandardDeviation",
@@ -22,11 +22,8 @@ route_specs: dict = {
     ],
     "responses": {
         "200": {
-            "description": "the rainfall standard deviation (in mm)",
-            "schema": {
-                "type": "number",
-                "example": 172.43
-            }
+            "description": "The rainfall standard deviation (in mm)",
+            "schema": StandardDeviationYearlyRainfall
         }
     },
     "parameters": [

@@ -13,7 +13,7 @@ If no ending year is precised, computes the relative distance until most recent 
 """
 
 import src.api.swagger.parameters_specs as param
-
+from src.api.schemas import RelativeDistanceToNormalYearlyRainfall
 
 route_specs: dict = {
     "operationId": "getRainfallRelativeDistanceToNormal",
@@ -30,11 +30,8 @@ route_specs: dict = {
     ],
     "responses": {
         "200": {
-            "description": "the relative distance to normal as a percentage.",
-            "schema": {
-                "type": "number",
-                "example": -25.67
-            }
+            "description": "The relative distance to normal as a percentage.",
+            "schema": RelativeDistanceToNormalYearlyRainfall
         }
     },
     "parameters": [

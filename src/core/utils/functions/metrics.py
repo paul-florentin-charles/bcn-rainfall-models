@@ -72,5 +72,5 @@ def get_normal(yearly_rainfall: pd.DataFrame, begin_year) -> float:
     return get_average_rainfall(
         df_opr.get_rainfall_within_year_interval(yearly_rainfall,
                                                  begin_year,
-                                                 begin_year + 30)
+                                                 begin_year + 29)
     )
