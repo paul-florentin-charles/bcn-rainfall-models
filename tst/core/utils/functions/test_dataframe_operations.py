@@ -8,7 +8,7 @@ import src.core.utils.functions.dataframe_operations as df_opr
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 
-from tst.models.test_yearly_rainfall import yearly_rainfall
+from tst.core.models.test_yearly_rainfall import yearly_rainfall
 
 
 class TestDataframeOperations:

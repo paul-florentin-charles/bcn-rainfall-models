@@ -5,7 +5,7 @@ from operator import lt
 from src.core.utils.functions import metrics
 from src.core.utils.enums.labels import Label
 
-from tst.models.test_yearly_rainfall import yearly_rainfall
+from tst.core.models.test_yearly_rainfall import yearly_rainfall
 
 
 class TestMetrics:

@@ -3,7 +3,7 @@
 from pathlib import Path
 from shutil import rmtree
 
-from tst.models.test_yearly_rainfall import all_rainfall
+from tst.core.models.test_yearly_rainfall import all_rainfall
 
 
 def test_export_all_data_to_csv() -> None:
