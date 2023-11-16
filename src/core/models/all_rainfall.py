@@ -215,9 +215,9 @@ class AllRainfall:
         :return: A list of the Rainfall averages for each month or season.
         """
         if monthly:
-            return plotting.bar_monthly_rainfall_averages(list(self.monthly_rainfalls.values()))
+            return plotting.bar_monthly_rainfall_averages(self.monthly_rainfalls)
 
-        return plotting.bar_seasonal_rainfall_averages(list(self.seasonal_rainfalls.values()))
+        return plotting.bar_seasonal_rainfall_averages(self.seasonal_rainfalls)
 
     def bar_rainfall_linreg_slopes(self, monthly: Optional[bool] = True) -> list:
         """
@@ -228,13 +228,9 @@ class AllRainfall:
         :return: A list of the Rainfall LinReg slopes for each month or season.
         """
         if monthly:
-            return plotting.bar_monthly_rainfall_linreg_slopes(
-                list(self.monthly_rainfalls.values())
-            )
+            return plotting.bar_monthly_rainfall_linreg_slopes(self.monthly_rainfalls)
 
-        return plotting.bar_seasonal_rainfall_linreg_slopes(
-            list(self.seasonal_rainfalls.values())
-        )
+        return plotting.bar_seasonal_rainfall_linreg_slopes(self.seasonal_rainfalls)
 
     def get_entity_for_time_mode(
             self,
