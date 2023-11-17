@@ -2,10 +2,10 @@
 Provides labels for retrieving interesting data within Pandas DataFrame.
 """
 
-from enum import Enum
+from src.core.utils.enums.base_enum import BaseEnum
 
 
-class Label(str, Enum):
+class Label(str, BaseEnum):
     """
     An Enum listing labels in DataFrame columns.
     """

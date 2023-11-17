@@ -3,7 +3,7 @@
 from src.core.utils.functions import plotting
 from src.core.utils.enums.labels import Label
 
-from tst.models.test_yearly_rainfall import yearly_rainfall, all_rainfall
+from tst.core.models.test_yearly_rainfall import yearly_rainfall, all_rainfall
 
 
 class TestPlotting:
