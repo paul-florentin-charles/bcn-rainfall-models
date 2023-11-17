@@ -3,19 +3,14 @@
 import pandas as pd
 from pytest import raises
 
-from src.core.models.all_rainfall import AllRainfall
 from src.core.models.yearly_rainfall import YearlyRainfall
 from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 from tst.test_config import config
+from tst.core.models.test_all_rainfall import all_rainfall, normal_year, begin_year, end_year
 
-all_rainfall = AllRainfall(config.get_dataset_url())
 yearly_rainfall = all_rainfall.yearly_rainfall
-
-normal_year: int = 1971
-begin_year: int = 1991
-end_year: int = 2020
 
 
 class TestYearlyRainfall:

@@ -207,7 +207,7 @@ class AllRainfall:
                                begin_year: int,
                                end_year: Optional[int] = None,
                                month: Optional[str] = None,
-                               season: Optional[str] = None) -> Union[float, None]:
+                               season: Optional[str] = None) -> Union[int, None]:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
 
@@ -238,7 +238,7 @@ class AllRainfall:
                                begin_year: int,
                                end_year: Optional[int] = None,
                                month: Optional[str] = None,
-                               season: Optional[str] = None) -> Union[float, None]:
+                               season: Optional[str] = None) -> Union[int, None]:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
 
