@@ -196,6 +196,68 @@ class AllRainfall:
 
         return entity.get_standard_deviation(begin_year, end_year)
 
+    def get_years_below_normal(self,
+                               time_mode: str,
+                               normal_year: int,
+                               begin_year: int,
+                               end_year: Optional[int] = None,
+                               month: Optional[str] = None,
+                               season: Optional[str] = None) -> Union[float, None]:
+        """
+        Computes the number of years below rainfall normal for a specific year range and time mode.
+
+        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :param month: A string corresponding to the month name.
+        Set if time_mode is 'monthly' (optional)
+        :param season: A string corresponding to the season name.
+        Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
+        Set if time_mode is 'seasonal' (optional)
+        :return: A float representing the relative distance to rainfall normal.
+        """
+        entity = self.get_entity_for_time_mode(time_mode, month, season)
+
+        if entity is None:
+            return entity
+
+        return entity.get_years_below_normal(normal_year, begin_year, end_year)
+
+    def get_years_above_normal(self,
+                               time_mode: str,
+                               normal_year: int,
+                               begin_year: int,
+                               end_year: Optional[int] = None,
+                               month: Optional[str] = None,
+                               season: Optional[str] = None) -> Union[float, None]:
+        """
+        Computes the number of years above rainfall normal for a specific year range and time mode.
+
+        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :param month: A string corresponding to the month name.
+        Set if time_mode is 'monthly' (optional)
+        :param season: A string corresponding to the season name.
+        Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
+        Set if time_mode is 'seasonal' (optional)
+        :return: A float representing the relative distance to rainfall normal.
+        """
+        entity = self.get_entity_for_time_mode(time_mode, month, season)
+
+        if entity is None:
+            return entity
+
+        return entity.get_years_above_normal(normal_year, begin_year, end_year)
+
     def get_last_year(self) -> int:
         """
         Retrieves the last element of the 'Year' column from the pandas DataFrames.

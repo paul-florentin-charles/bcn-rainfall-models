@@ -144,51 +144,63 @@ def rainfall_standard_deviation() -> Response:
 @app.route(f"{swagger.template['basePath']}/year/below_normal")
 @swag_from(below_normal_specs.route_specs)
 def years_below_normal() -> Response:
-    normal_year: int = request.args.get(param.normal_year['name'],
-                                        default=param.normal_year['default'],
-                                        type=int)
-    begin_year: int = request.args.get(param.begin_year['name'],
-                                       default=param.begin_year['default'],
-                                       type=int)
-    end_year: int = request.args.get(param.end_year['name'],
-                                     default=param.end_year['default'],
-                                     type=int)
-    value: float = all_rainfall.yearly_rainfall.get_years_below_normal(
-        normal_year,
-        begin_year,
-        end_year
-    )
+    params: tuple = parse_args(request.args,
+                               param.time_mode,
+                               param.normal_year,
+                               param.begin_year,
+                               param.end_year,
+                               param.month,
+                               param.season)
 
-    return jsonify(sch.YearsBelowNormalSchema().load({
-        "value": value,
-        "begin_year": begin_year,
-        "end_year": end_year,
-    }))
+    to_return: dict = {
+        'name': 'years below rainfall normal',
+        'value': all_rainfall.get_years_below_normal(
+            params[0], params[1], params[2], *params[3:]
+        ),
+        'normal_year': params[1],
+        'begin_year': params[2],
+        'end_year': params[3] if params[3] is not None else all_rainfall.get_last_year(),
+        'time_mode': params[0]
+    }
+
+    if params[0] == TimeMode.MONTHLY.value:
+        to_return['month'] = params[4]
+
+    if params[0] == TimeMode.SEASONAL.value:
+        to_return['season'] = params[5]
+
+    return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
 
 
 @app.route(f"{swagger.template['basePath']}/year/above_normal")
 @swag_from(above_normal_specs.route_specs)
 def years_above_normal() -> Response:
-    normal_year: int = request.args.get(param.normal_year['name'],
-                                        default=param.normal_year['default'],
-                                        type=int)
-    begin_year: int = request.args.get(param.begin_year['name'],
-                                       default=param.begin_year['default'],
-                                       type=int)
-    end_year: int = request.args.get(param.end_year['name'],
-                                     default=param.end_year['default'],
-                                     type=int)
-    value: float = all_rainfall.yearly_rainfall.get_years_above_normal(
-        normal_year,
-        begin_year,
-        end_year
-    )
+    params: tuple = parse_args(request.args,
+                               param.time_mode,
+                               param.normal_year,
+                               param.begin_year,
+                               param.end_year,
+                               param.month,
+                               param.season)
 
-    return jsonify(sch.YearsAboveNormalSchema().load({
-        "value": value,
-        "begin_year": begin_year,
-        "end_year": end_year,
-    }))
+    to_return: dict = {
+        'name': 'years above rainfall normal',
+        'value': all_rainfall.get_years_above_normal(
+            params[0], params[1], params[2], *params[3:]
+        ),
+        'normal_year': params[1],
+        'begin_year': params[2],
+        'end_year': params[3] if params[3] is not None else all_rainfall.get_last_year(),
+        'time_mode': params[0]
+    }
+
+    if params[0] == TimeMode.MONTHLY.value:
+        to_return['month'] = params[4]
+
+    if params[0] == TimeMode.SEASONAL.value:
+        to_return['season'] = params[5]
+
+    return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
 
 
 if __name__ == '__main__':
