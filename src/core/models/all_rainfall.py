@@ -132,7 +132,12 @@ class AllRainfall:
         :return: A float representing the Rainfall normal.
         """
 
-        return self.get_average_rainfall(time_mode, begin_year, begin_year + 29, month, season)
+        entity = self.get_entity_for_time_mode(time_mode, month, season)
+
+        if entity is None:
+            return entity
+
+        return entity.get_normal(begin_year)
 
     def get_relative_distance_from_normal(self,
                                           time_mode: str,
