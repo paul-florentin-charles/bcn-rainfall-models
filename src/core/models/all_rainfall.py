@@ -1,3 +1,5 @@
+# pylint: disable=too-many-arguments
+
 """
 Provides an all-in-one class to manipulate rainfall data for every timeframe.
 At a yearly, monthly and seasonal level.

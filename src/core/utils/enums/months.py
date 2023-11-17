@@ -2,10 +2,10 @@
 Provides integer equivalents for months.
 """
 
-from enum import Enum
+from src.core.utils.enums.base_enum import BaseEnum
 
 
-class Month(Enum):
+class Month(BaseEnum):
     """
     An Enum listing months as integers.
     """

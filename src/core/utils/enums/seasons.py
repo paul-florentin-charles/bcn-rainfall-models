@@ -2,12 +2,11 @@
 Provides list of Month (Enum) equivalents for all four seasons of the year.
 """
 
-from enum import Enum
-
+from src.core.utils.enums.base_enum import BaseEnum
 from src.core.utils.enums.months import Month
 
 
-class Season(list, Enum):
+class Season(list, BaseEnum):
     """
     An enum listing seasons (winter, spring, summer and fall) as lists of Month (Enum).
     """

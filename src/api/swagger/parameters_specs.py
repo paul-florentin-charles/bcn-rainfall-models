@@ -33,7 +33,7 @@ time_mode: dict = {
     "default": TimeMode.YEARLY.value,
     "required": False,
     "type": "string",
-    "enum": [t_mode.value for t_mode in TimeMode],
+    "enum": TimeMode.values(),
     "name": "time_mode",
     "in": "query"
 }
@@ -42,7 +42,7 @@ month: dict = {
     "default": None,
     "required": False,
     "type": "string",
-    "enum": [mth.name for mth in Month],
+    "enum": Month.names(),
     "name": "month",
     "in": "query"
 }
@@ -51,7 +51,7 @@ season: dict = {
     "default": None,
     "required": False,
     "type": "string",
-    "enum": [sn.name for sn in Season],
+    "enum": Season.names(),
     "name": "season",
     "in": "query"
 }
