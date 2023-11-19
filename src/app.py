@@ -28,9 +28,10 @@ all_rainfall = AllRainfall(cfg.get_dataset_url(),
 
 app = Flask(__name__)
 swagger = Swagger(app, template_file=f"{cfg.get_api_doc_path()}/template.yaml")
+base_path: str = swagger.template['basePath']
 
 
-@app.route(f"{swagger.template['basePath']}/rainfall/average")
+@app.route(f"{base_path}/rainfall/average")
 @swag_from(average_specs.route_specs)
 def average_rainfall() -> Response:
     params: tuple = parse_args(request.args,
@@ -57,7 +58,7 @@ def average_rainfall() -> Response:
     return jsonify(sch.RainfallSchema().load(to_return))
 
 
-@app.route(f"{swagger.template['basePath']}/rainfall/normal")
+@app.route(f"{base_path}/rainfall/normal")
 @swag_from(normal_specs.route_specs)
 def normal_rainfall() -> Response:
     params: tuple = parse_args(request.args,
@@ -83,7 +84,7 @@ def normal_rainfall() -> Response:
     return jsonify(sch.RainfallSchema().load(to_return))
 
 
-@app.route(f"{swagger.template['basePath']}/rainfall/relative_distance_to_normal")
+@app.route(f"{base_path}/rainfall/relative_distance_to_normal")
 @swag_from(relative_distance_to_normal_specs.route_specs)
 def rainfall_relative_distance_to_normal() -> Response:
     params: tuple = parse_args(request.args,
@@ -112,7 +113,7 @@ def rainfall_relative_distance_to_normal() -> Response:
     return jsonify(sch.RelativeDistanceToRainfallNormalSchema().load(to_return))
 
 
-@app.route(f"{swagger.template['basePath']}/rainfall/standard_deviation")
+@app.route(f"{base_path}/rainfall/standard_deviation")
 @swag_from(standard_deviation_specs.route_specs)
 def rainfall_standard_deviation() -> Response:
     params: tuple = parse_args(request.args,
@@ -139,7 +140,7 @@ def rainfall_standard_deviation() -> Response:
     return jsonify(sch.RainfallSchema().load(to_return))
 
 
-@app.route(f"{swagger.template['basePath']}/year/below_normal")
+@app.route(f"{base_path}/year/below_normal")
 @swag_from(below_normal_specs.route_specs)
 def years_below_normal() -> Response:
     params: tuple = parse_args(request.args,
@@ -168,7 +169,7 @@ def years_below_normal() -> Response:
     return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
 
 
-@app.route(f"{swagger.template['basePath']}/year/above_normal")
+@app.route(f"{base_path}/year/above_normal")
 @swag_from(above_normal_specs.route_specs)
 def years_above_normal() -> Response:
     params: tuple = parse_args(request.args,

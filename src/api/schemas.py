@@ -35,14 +35,14 @@ class RainfallSchema(BaseSchema):
 
 class RelativeDistanceToRainfallNormalSchema(RainfallSchema):
     """
-    Schema for depicting a relative distance to rainfall normal for a yearly time mode.
+    Schema for depicting a relative distance to rainfall normal.
     """
     normal_year: int = fields.Int()
 
 
 class YearsAboveOrBelowNormalSchema(BaseSchema):
     """
-    Schema for giving the number of years above or below rainfall normal for a yearly time mode.
+    Schema for giving the number of years above or below rainfall normal.
     """
     normal_year: int = fields.Int()
     value: float = fields.Int()
