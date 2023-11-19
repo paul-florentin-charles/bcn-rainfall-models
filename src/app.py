@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-function-docstring
+# pylint: disable=missing-function-docstring,no-value-for-parameter
 
 """
 Run the Flask app from this file.
@@ -42,7 +42,7 @@ def average_rainfall() -> Response:
 
     to_return: dict = {
         'name': 'average rainfall (mm)',
-        'value': all_rainfall.get_average_rainfall(params[0], *params[1:]),
+        'value': all_rainfall.get_average_rainfall(*params),
         'begin_year': params[1],
         'end_year': params[2] if params[2] is not None else all_rainfall.get_last_year(),
         'time_mode': params[0]
@@ -68,7 +68,7 @@ def normal_rainfall() -> Response:
 
     to_return: dict = {
         'name': 'rainfall normal (mm)',
-        'value': all_rainfall.get_normal(params[0], params[1], *params[2:]),
+        'value': all_rainfall.get_normal(*params),
         'begin_year': params[1],
         'end_year': params[1] + 29,
         'time_mode': params[0]
@@ -96,9 +96,7 @@ def rainfall_relative_distance_to_normal() -> Response:
 
     to_return: dict = {
         'name': 'relative distance to rainfall normal (%)',
-        'value': all_rainfall.get_relative_distance_from_normal(
-            params[0], params[1], params[2], *params[3:]
-        ),
+        'value': all_rainfall.get_relative_distance_from_normal(*params),
         'normal_year': params[1],
         'begin_year': params[2],
         'end_year': params[3] if params[3] is not None else all_rainfall.get_last_year(),
@@ -126,7 +124,7 @@ def rainfall_standard_deviation() -> Response:
 
     to_return: dict = {
         'name': 'rainfall standard deviation (mm)',
-        'value': all_rainfall.get_rainfall_standard_deviation(params[0], params[1], *params[2:]),
+        'value': all_rainfall.get_rainfall_standard_deviation(*params),
         'begin_year': params[1],
         'end_year': params[2] if params[2] is not None else all_rainfall.get_last_year(),
         'time_mode': params[0]
@@ -154,9 +152,7 @@ def years_below_normal() -> Response:
 
     to_return: dict = {
         'name': 'years below rainfall normal',
-        'value': all_rainfall.get_years_below_normal(
-            params[0], params[1], params[2], *params[3:]
-        ),
+        'value': all_rainfall.get_years_below_normal(*params),
         'normal_year': params[1],
         'begin_year': params[2],
         'end_year': params[3] if params[3] is not None else all_rainfall.get_last_year(),
@@ -185,9 +181,7 @@ def years_above_normal() -> Response:
 
     to_return: dict = {
         'name': 'years above rainfall normal',
-        'value': all_rainfall.get_years_above_normal(
-            params[0], params[1], params[2], *params[3:]
-        ),
+        'value': all_rainfall.get_years_above_normal(*params),
         'normal_year': params[1],
         'begin_year': params[2],
         'end_year': params[3] if params[3] is not None else all_rainfall.get_last_year(),
