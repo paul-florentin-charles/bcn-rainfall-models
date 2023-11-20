@@ -87,6 +87,32 @@ class AllRainfall:
 
         return folder_path
 
+    def export_as_csv(self,
+                      time_mode: str,
+                      month: Optional[str] = None,
+                      season: Optional[str] = None,
+                      path: Optional[str] = None) -> Union[str, None]:
+        """
+        Export the data state of a specific time mode as a CSV.
+        Could be for a yearly time frame, a specific month or a given season.
+
+        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param month: A string corresponding to the month name.
+        Set if time_mode is 'monthly' (optional)
+        :param season: A string corresponding to the season name.
+        Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
+        Set if time_mode is 'seasonal' (optional)
+        :param path: path to csv file to save our data (optional).
+        :return: CSV data as a string if no path is set.
+        None otherwise.
+        """
+        entity = self.get_entity_for_time_mode(time_mode, month, season)
+
+        if entity is None:
+            return entity
+
+        return entity.export_as_csv(path)
+
     def get_average_rainfall(self,
                              time_mode: str,
                              begin_year: Optional[int] = None,

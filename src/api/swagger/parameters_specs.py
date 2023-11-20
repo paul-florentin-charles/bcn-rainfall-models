@@ -31,7 +31,7 @@ end_year: dict = {
 
 time_mode: dict = {
     "default": TimeMode.YEARLY.value,
-    "required": False,
+    "required": True,
     "type": "string",
     "enum": TimeMode.values(),
     "name": "time_mode",
@@ -53,5 +53,13 @@ season: dict = {
     "type": "string",
     "enum": Season.names(),
     "name": "season",
+    "in": "query"
+}
+
+csv_path: dict = {
+    "default": "data.csv",
+    "required": True,
+    "type": "string",
+    "name": "csv_path",
     "in": "query"
 }

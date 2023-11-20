@@ -8,16 +8,17 @@ Currently developing the Swagger API using flasgger.
 """
 
 from flasgger import Swagger, swag_from
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request, Response, send_file
 
-from src.api.utils import parse_args
-from src.config import Config
 import src.api.schemas as sch
+import src.api.swagger.parameters_specs as param
+from src.api.swagger.csv import minimal_csv_specs
 from src.api.swagger.rainfall import (average_specs, normal_specs,
                                       relative_distance_to_normal_specs,
                                       standard_deviation_specs)
 from src.api.swagger.year import below_normal_specs, above_normal_specs
-import src.api.swagger.parameters_specs as param
+from src.api.utils import parse_args
+from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
 from src.core.utils.enums.time_modes import TimeMode
 
@@ -196,6 +197,20 @@ def years_above_normal() -> Response:
         to_return['season'] = params[5]
 
     return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
+
+
+@app.route(f"{base_path}/csv/minimal_csv")
+@swag_from(minimal_csv_specs.route_specs)
+def minimal_csv() -> Response:
+    params: tuple = parse_args(request.args,
+                               param.time_mode,
+                               param.month,
+                               param.season,
+                               param.csv_path)
+
+    all_rainfall.export_as_csv(*params)
+
+    return send_file(params[-1], mimetype="text/csv", as_attachment=True)
 
 
 if __name__ == '__main__':
