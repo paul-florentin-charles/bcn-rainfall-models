@@ -55,3 +55,11 @@ season: dict = {
     "name": "season",
     "in": "query"
 }
+
+csv_path: dict = {
+    "default": "data.csv",
+    "required": True,
+    "type": "string",
+    "name": "csv_path",
+    "in": "query"
+}
