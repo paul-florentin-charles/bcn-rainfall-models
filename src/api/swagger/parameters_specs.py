@@ -31,7 +31,7 @@ end_year: dict = {
 
 time_mode: dict = {
     "default": TimeMode.YEARLY.value,
-    "required": False,
+    "required": True,
     "type": "string",
     "enum": TimeMode.values(),
     "name": "time_mode",
