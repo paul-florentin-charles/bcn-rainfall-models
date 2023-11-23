@@ -10,9 +10,12 @@ Currently developing the Swagger API using flasgger.
 from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, request, Response, send_file
 
-import src.api.schemas as sch
 import src.api.swagger.parameters_specs as param
+from src.api.schemas import (RainfallSchema,
+                             RelativeDistanceToRainfallNormalSchema,
+                             YearsAboveOrBelowNormalSchema)
 from src.api.swagger.csv import minimal_csv_specs
+from src.api.swagger.media_types import MediaType
 from src.api.swagger.rainfall import (average_specs, normal_specs,
                                       relative_distance_to_normal_specs,
                                       standard_deviation_specs)
@@ -56,7 +59,7 @@ def average_rainfall() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[4]
 
-    return jsonify(sch.RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().load(to_return))
 
 
 @app.route(f"{base_path}/rainfall/normal")
@@ -82,7 +85,7 @@ def normal_rainfall() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[3]
 
-    return jsonify(sch.RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().load(to_return))
 
 
 @app.route(f"{base_path}/rainfall/relative_distance_to_normal")
@@ -111,7 +114,7 @@ def rainfall_relative_distance_to_normal() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[5]
 
-    return jsonify(sch.RelativeDistanceToRainfallNormalSchema().load(to_return))
+    return jsonify(RelativeDistanceToRainfallNormalSchema().load(to_return))
 
 
 @app.route(f"{base_path}/rainfall/standard_deviation")
@@ -138,7 +141,7 @@ def rainfall_standard_deviation() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[4]
 
-    return jsonify(sch.RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().load(to_return))
 
 
 @app.route(f"{base_path}/year/below_normal")
@@ -167,7 +170,7 @@ def years_below_normal() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[5]
 
-    return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
+    return jsonify(YearsAboveOrBelowNormalSchema().load(to_return))
 
 
 @app.route(f"{base_path}/year/above_normal")
@@ -196,7 +199,7 @@ def years_above_normal() -> Response:
     if params[0] == TimeMode.SEASONAL.value:
         to_return['season'] = params[5]
 
-    return jsonify(sch.YearsAboveOrBelowNormalSchema().load(to_return))
+    return jsonify(YearsAboveOrBelowNormalSchema().load(to_return))
 
 
 @app.route(f"{base_path}/csv/minimal_csv")
@@ -210,7 +213,7 @@ def minimal_csv() -> Response:
 
     all_rainfall.export_as_csv(*params)
 
-    return send_file(params[-1], mimetype="text/csv", as_attachment=True)
+    return send_file(params[-1], mimetype=MediaType.TXT_CSV, as_attachment=True)
 
 
 if __name__ == '__main__':

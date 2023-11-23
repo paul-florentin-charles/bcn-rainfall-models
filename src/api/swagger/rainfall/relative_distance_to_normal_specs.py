@@ -14,6 +14,7 @@ If no ending year is precised, computes the relative distance until most recent 
 
 import src.api.swagger.parameters_specs as param
 from src.api.schemas import RelativeDistanceToRainfallNormalSchema
+from src.api.swagger.media_types import MediaType
 
 route_specs: dict = {
     "operationId": "getRainfallRelativeDistanceToNormal",
@@ -38,11 +39,9 @@ route_specs: dict = {
         param.normal_year,
         param.begin_year,
         param.end_year,
-        param.time_mode,
-        param.month,
-        param.season
+        *param.time_params
     ],
     "produces": [
-        "application/json"
+        MediaType.APP_JSON
     ]
 }

@@ -56,6 +56,8 @@ season: dict = {
     "in": "query"
 }
 
+time_params: tuple = (time_mode, month, season)
+
 csv_path: dict = {
     "default": "data.csv",
     "required": True,

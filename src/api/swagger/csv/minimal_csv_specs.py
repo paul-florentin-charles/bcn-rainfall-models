@@ -8,6 +8,7 @@ Could either be for rainfall upon a whole year, a specific month or a given seas
 """
 
 import src.api.swagger.parameters_specs as param
+from src.api.swagger.media_types import MediaType
 
 route_specs: dict = {
     "operationId": "getMinimalCsv",
@@ -20,16 +21,14 @@ route_specs: dict = {
     "responses": {
         "200": {
             "description": "Rainfall data according the year as a CSV",
-            "content": "text/csv"
+            "content": MediaType.TXT_CSV
         }
     },
     "parameters": [
-        param.time_mode,
-        param.month,
-        param.season,
-        param.csv_path
+        param.csv_path,
+        *param.time_params
     ],
     "produces": [
-        "text/csv"
+        MediaType.TXT_CSV
     ]
 }

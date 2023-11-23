@@ -9,6 +9,7 @@ Normal is computed as a 30 years average starting from the year set via normal_y
 
 import src.api.swagger.parameters_specs as param
 from src.api.schemas import YearsAboveOrBelowNormalSchema
+from src.api.swagger.media_types import MediaType
 
 route_specs: dict = {
     "operationId": "getYearsBelowNormal",
@@ -28,11 +29,9 @@ route_specs: dict = {
         param.normal_year,
         param.begin_year,
         param.end_year,
-        param.time_mode,
-        param.month,
-        param.season
+        *param.time_params
     ],
     "produces": [
-        "application/json"
+        MediaType.APP_JSON
     ]
 }
