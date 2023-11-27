@@ -15,11 +15,13 @@ class SeasonalRainfall(YearlyRainfall):
     Provides numerous functions to load, manipulate and export Seasonal Rainfall data.
     """
 
-    def __init__(self,
-                 raw_data: pd.DataFrame,
-                 season: Season,
-                 start_year: Optional[int] = 1971,
-                 round_precision: Optional[int] = 2):
+    def __init__(
+        self,
+        raw_data: pd.DataFrame,
+        season: Season,
+        start_year: Optional[int] = 1971,
+        round_precision: Optional[int] = 2,
+    ):
         self.season: Season = season
         super().__init__(raw_data, start_year, round_precision)
 
@@ -31,4 +33,6 @@ class SeasonalRainfall(YearlyRainfall):
         for instance season according to year.
         """
 
-        return self.load_rainfall(self.season.value[0].value, self.season.value[2].value + 1)
+        return self.load_rainfall(
+            self.season.value[0].value, self.season.value[2].value + 1
+        )

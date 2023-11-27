@@ -8,13 +8,17 @@ from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 from tst.test_config import config
-from tst.core.models.test_all_rainfall import all_rainfall, normal_year, begin_year, end_year
+from tst.core.models.test_all_rainfall import (
+    all_rainfall,
+    normal_year,
+    begin_year,
+    end_year,
+)
 
 yearly_rainfall = all_rainfall.yearly_rainfall
 
 
 class TestYearlyRainfall:
-
     @staticmethod
     def test_load_yearly_rainfall() -> None:
         data: pd.DataFrame = yearly_rainfall.load_yearly_rainfall()
@@ -23,19 +27,21 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_load_rainfall() -> None:
-        data: pd.DataFrame = yearly_rainfall.load_rainfall(start_month=Month.JUNE.value,
-                                                           end_month=Month.OCTOBER.value)
+        data: pd.DataFrame = yearly_rainfall.load_rainfall(
+            start_month=Month.JUNE.value, end_month=Month.OCTOBER.value
+        )
         assert isinstance(data, pd.DataFrame)
         assert len(data.columns) == 2
-        assert Label.YEAR in data \
-               and Label.RAINFALL in data
+        assert Label.YEAR in data and Label.RAINFALL in data
 
     @staticmethod
     def test_load_rainfall_fails_because_data_format_error() -> None:
         with raises(DataFormatError):
-            YearlyRainfall(raw_data=pd.DataFrame(),
-                           start_year=config.get_start_year(),
-                           round_precision=config.get_rainfall_precision())
+            YearlyRainfall(
+                raw_data=pd.DataFrame(),
+                start_year=config.get_start_year(),
+                round_precision=config.get_rainfall_precision(),
+            )
 
     @staticmethod
     def test_get_yearly_rainfall() -> None:
@@ -52,7 +58,9 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_average_yearly_rainfall() -> None:
-        avg_rainfall: float = yearly_rainfall.get_average_yearly_rainfall(begin_year, end_year)
+        avg_rainfall: float = yearly_rainfall.get_average_yearly_rainfall(
+            begin_year, end_year
+        )
 
         assert isinstance(avg_rainfall, float)
 
@@ -65,9 +73,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_get_years_below_average() -> None:
         n_years_below_avg: int = yearly_rainfall.get_years_below_normal(
-            normal_year,
-            begin_year,
-            end_year
+            normal_year, begin_year, end_year
         )
 
         assert isinstance(n_years_below_avg, int)
@@ -76,9 +82,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_get_years_above_average() -> None:
         n_years_above_avg: int = yearly_rainfall.get_years_above_normal(
-            normal_year,
-            begin_year,
-            end_year
+            normal_year, begin_year, end_year
         )
 
         assert isinstance(n_years_above_avg, int)
@@ -91,23 +95,24 @@ class TestYearlyRainfall:
     @staticmethod
     def test_get_relative_distance_from_normal() -> None:
         relative_distance: float = yearly_rainfall.get_relative_distance_from_normal(
-            normal_year,
-            begin_year,
-            end_year
+            normal_year, begin_year, end_year
         )
 
         assert isinstance(relative_distance, float)
-        assert -100. <= relative_distance <= 100.
+        assert -100.0 <= relative_distance <= 100.0
 
     @staticmethod
     def test_get_standard_deviation() -> None:
-        std: float = yearly_rainfall.get_standard_deviation(yearly_rainfall.starting_year)
+        std: float = yearly_rainfall.get_standard_deviation(
+            yearly_rainfall.starting_year
+        )
 
         assert isinstance(std, float)
 
         yearly_rainfall.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
-        std = yearly_rainfall.get_standard_deviation(yearly_rainfall.starting_year,
-                                                     label=Label.SAVITZKY_GOLAY_FILTER)
+        std = yearly_rainfall.get_standard_deviation(
+            yearly_rainfall.starting_year, label=Label.SAVITZKY_GOLAY_FILTER
+        )
 
         assert std is None
 

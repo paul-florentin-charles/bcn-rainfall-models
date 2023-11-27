@@ -11,8 +11,9 @@ from src.core.utils.enums.labels import Label
 from src.core.utils.functions import dataframe_operations as df_opr
 
 
-def get_average_rainfall(yearly_rainfall: pd.DataFrame,
-                         round_precision: Optional[int] = 2) -> float:
+def get_average_rainfall(
+    yearly_rainfall: pd.DataFrame, round_precision: Optional[int] = 2
+) -> float:
     """
     Computes Rainfall average.
 
@@ -22,15 +23,17 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame,
     """
     nb_years: int = len(yearly_rainfall)
     if nb_years == 0:
-        return 0.
+        return 0.0
 
-    return round(yearly_rainfall.sum(axis='rows').loc[Label.RAINFALL.value] / nb_years,
-                 round_precision)
+    return round(
+        yearly_rainfall.sum(axis="rows").loc[Label.RAINFALL.value] / nb_years,
+        round_precision,
+    )
 
 
-def get_years_compared_to_given_rainfall_value(yearly_rainfall: pd.DataFrame,
-                                               rainfall_value: float,
-                                               comparator: Callable) -> int:
+def get_years_compared_to_given_rainfall_value(
+    yearly_rainfall: pd.DataFrame, rainfall_value: float, comparator: Callable
+) -> int:
     """
     Computes the number of years that conform specified comparison
     to the given rainfall value.
@@ -70,7 +73,7 @@ def get_normal(yearly_rainfall: pd.DataFrame, begin_year) -> float:
     """
 
     return get_average_rainfall(
-        df_opr.get_rainfall_within_year_interval(yearly_rainfall,
-                                                 begin_year,
-                                                 begin_year + 29)
+        df_opr.get_rainfall_within_year_interval(
+            yearly_rainfall, begin_year, begin_year + 29
+        )
     )

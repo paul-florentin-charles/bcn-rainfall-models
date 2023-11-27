@@ -11,5 +11,6 @@ class MediaType(str, BaseEnum):
     """
     An Enum listing useful MIME types.
     """
-    APP_JSON: str = mimetypes.types_map['.json']
-    TXT_CSV: str = mimetypes.types_map['.csv']
+
+    APP_JSON: str = mimetypes.types_map[".json"]
+    TXT_CSV: str = mimetypes.types_map[".csv"]

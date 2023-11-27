@@ -9,6 +9,7 @@ class Month(BaseEnum):
     """
     An Enum listing months as integers.
     """
+
     JANUARY: int = 1
     FEBRUARY: int = 2
     MARCH: int = 3

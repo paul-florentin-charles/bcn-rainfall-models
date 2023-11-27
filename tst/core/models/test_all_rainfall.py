@@ -78,7 +78,7 @@ class TestAllRainfall:
             )
 
             assert isinstance(relative_distance, float)
-            assert -100. <= relative_distance <= 100.
+            assert -100.0 <= relative_distance <= 100.0
 
     @staticmethod
     def test_get_standard_deviation() -> None:

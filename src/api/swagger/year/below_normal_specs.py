@@ -15,23 +15,19 @@ route_specs: dict = {
     "operationId": "getYearsBelowNormal",
     "summary": "Computes the number of years below normal for a specific year range.",
     "description": "Normal is computed as a 30 years average "
-                   "starting from the year set via normal_year.",
-    "tags": [
-        "year"
-    ],
+    "starting from the year set via normal_year.",
+    "tags": ["year"],
     "responses": {
         "200": {
             "description": "The number of years below normal",
-            "schema": YearsAboveOrBelowNormalSchema
+            "schema": YearsAboveOrBelowNormalSchema,
         }
     },
     "parameters": [
         param.normal_year,
         param.begin_year,
         param.end_year,
-        *param.time_params
+        *param.time_params,
     ],
-    "produces": [
-        MediaType.APP_JSON
-    ]
+    "produces": [MediaType.APP_JSON],
 }

@@ -4,7 +4,6 @@ from src.core.utils.enums.months import Month
 
 
 class TestMonths:
-
     @staticmethod
     def test_months_count() -> None:
         assert len(Month) == 12

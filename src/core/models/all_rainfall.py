@@ -29,31 +29,31 @@ class AllRainfall:
     A bit costly to instantiate but contains all necessary data.
     """
 
-    def __init__(self,
-                 dataset_url: str,
-                 start_year: Optional[int] = 1971,
-                 round_precision: Optional[int] = 2):
+    def __init__(
+        self,
+        dataset_url: str,
+        start_year: Optional[int] = 1971,
+        round_precision: Optional[int] = 2,
+    ):
         self.dataset_url: str = dataset_url
         self.starting_year: int = start_year
         self.round_precision: int = round_precision
         self.raw_data: pd.DataFrame = pd.read_csv(dataset_url)
-        self.yearly_rainfall: YearlyRainfall = YearlyRainfall(self.raw_data,
-                                                              start_year,
-                                                              round_precision)
+        self.yearly_rainfall: YearlyRainfall = YearlyRainfall(
+            self.raw_data, start_year, round_precision
+        )
         self.monthly_rainfalls: dict = {}
         for month in Month:
-            self.monthly_rainfalls[month.name] = MonthlyRainfall(self.raw_data,
-                                                                 month,
-                                                                 start_year,
-                                                                 round_precision)
+            self.monthly_rainfalls[month.name] = MonthlyRainfall(
+                self.raw_data, month, start_year, round_precision
+            )
         self.seasonal_rainfalls: dict = {}
         for season in Season:
-            self.seasonal_rainfalls[season.name] = SeasonalRainfall(self.raw_data,
-                                                                    season,
-                                                                    start_year,
-                                                                    round_precision)
+            self.seasonal_rainfalls[season.name] = SeasonalRainfall(
+                self.raw_data, season, start_year, round_precision
+            )
 
-    def export_all_data_to_csv(self, folder_path: Optional[str] = 'csv_data') -> str:
+    def export_all_data_to_csv(self, folder_path: Optional[str] = "csv_data") -> str:
         """
         Export all the different data as CSVs into specified folder path.
 
@@ -67,31 +67,32 @@ class AllRainfall:
         last_year: int = self.yearly_rainfall.get_last_year()
 
         self.yearly_rainfall.export_as_csv(
-            path=f"{folder_path}/"
-                 f"{self.starting_year}_{last_year}_rainfall.csv"
+            path=f"{folder_path}/" f"{self.starting_year}_{last_year}_rainfall.csv"
         )
 
         for monthly_rainfall in self.monthly_rainfalls.values():
             monthly_rainfall.export_as_csv(
                 path=f"{folder_path}/months/"
-                     f"{self.starting_year}_{last_year}_"
-                     f"{monthly_rainfall.month.name.lower()}_rainfall.csv"
+                f"{self.starting_year}_{last_year}_"
+                f"{monthly_rainfall.month.name.lower()}_rainfall.csv"
             )
 
         for season_rainfall in self.seasonal_rainfalls.values():
             season_rainfall.export_as_csv(
                 path=f"{folder_path}/seasons/"
-                     f"{self.starting_year}_{last_year}_"
-                     f"{season_rainfall.season.name.lower()}_rainfall.csv"
+                f"{self.starting_year}_{last_year}_"
+                f"{season_rainfall.season.name.lower()}_rainfall.csv"
             )
 
         return folder_path
 
-    def export_as_csv(self,
-                      time_mode: str,
-                      month: Optional[str] = None,
-                      season: Optional[str] = None,
-                      path: Optional[str] = None) -> Union[str, None]:
+    def export_as_csv(
+        self,
+        time_mode: str,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+        path: Optional[str] = None,
+    ) -> Union[str, None]:
         """
         Export the data state of a specific time mode as a CSV.
         Could be for a yearly time frame, a specific month or a given season.
@@ -113,12 +114,14 @@ class AllRainfall:
 
         return entity.export_as_csv(path)
 
-    def get_average_rainfall(self,
-                             time_mode: str,
-                             begin_year: Optional[int] = None,
-                             end_year: Optional[int] = None,
-                             month: Optional[str] = None,
-                             season: Optional[str] = None) -> Union[float, None]:
+    def get_average_rainfall(
+        self,
+        time_mode: str,
+        begin_year: Optional[int] = None,
+        end_year: Optional[int] = None,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[float, None]:
         """
         Computes Rainfall average for a specific year range and time mode.
 
@@ -141,11 +144,13 @@ class AllRainfall:
 
         return entity.get_average_yearly_rainfall(begin_year, end_year)
 
-    def get_normal(self,
-                   time_mode: str,
-                   begin_year: int,
-                   month: Optional[str] = None,
-                   season: Optional[str] = None) -> Union[float, None]:
+    def get_normal(
+        self,
+        time_mode: str,
+        begin_year: int,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[float, None]:
         """
         Computes Rainfall normal from a specific year and time mode.
 
@@ -167,13 +172,15 @@ class AllRainfall:
 
         return entity.get_normal(begin_year)
 
-    def get_relative_distance_from_normal(self,
-                                          time_mode: str,
-                                          normal_year: int,
-                                          begin_year: int,
-                                          end_year: Optional[int] = None,
-                                          month: Optional[str] = None,
-                                          season: Optional[str] = None) -> Union[float, None]:
+    def get_relative_distance_from_normal(
+        self,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: Optional[int] = None,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[float, None]:
         """
         Computes relative distance to Rainfall normal for a specific year range and time mode.
 
@@ -196,14 +203,18 @@ class AllRainfall:
         if entity is None:
             return entity
 
-        return entity.get_relative_distance_from_normal(normal_year, begin_year, end_year)
+        return entity.get_relative_distance_from_normal(
+            normal_year, begin_year, end_year
+        )
 
-    def get_rainfall_standard_deviation(self,
-                                        time_mode: str,
-                                        begin_year: int,
-                                        end_year: Optional[int] = None,
-                                        month: Optional[str] = None,
-                                        season: Optional[str] = None) -> Union[float, None]:
+    def get_rainfall_standard_deviation(
+        self,
+        time_mode: str,
+        begin_year: int,
+        end_year: Optional[int] = None,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[float, None]:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
         for a specific year range and time mode.
@@ -229,13 +240,15 @@ class AllRainfall:
 
         return entity.get_standard_deviation(begin_year, end_year)
 
-    def get_years_below_normal(self,
-                               time_mode: str,
-                               normal_year: int,
-                               begin_year: int,
-                               end_year: Optional[int] = None,
-                               month: Optional[str] = None,
-                               season: Optional[str] = None) -> Union[int, None]:
+    def get_years_below_normal(
+        self,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: Optional[int] = None,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[int, None]:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
 
@@ -260,13 +273,15 @@ class AllRainfall:
 
         return entity.get_years_below_normal(normal_year, begin_year, end_year)
 
-    def get_years_above_normal(self,
-                               time_mode: str,
-                               normal_year: int,
-                               begin_year: int,
-                               end_year: Optional[int] = None,
-                               month: Optional[str] = None,
-                               season: Optional[str] = None) -> Union[int, None]:
+    def get_years_above_normal(
+        self,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: Optional[int] = None,
+        month: Optional[str] = None,
+        season: Optional[str] = None,
+    ) -> Union[int, None]:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
 
@@ -328,10 +343,7 @@ class AllRainfall:
         return plotting.bar_seasonal_rainfall_linreg_slopes(self.seasonal_rainfalls)
 
     def get_entity_for_time_mode(
-            self,
-            time_mode: str,
-            month: Optional[str],
-            season: Optional[str]
+        self, time_mode: str, month: Optional[str], season: Optional[str]
     ) -> Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None]:
         """
         Retrieve current entity for specified time mode,

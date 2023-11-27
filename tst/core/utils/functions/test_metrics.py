@@ -12,17 +12,17 @@ class TestMetrics:
     @staticmethod
     def test_get_average_rainfall() -> None:
         precision: int = 3
-        avg_rainfall: float = metrics.get_average_rainfall(yearly_rainfall.data, precision)
+        avg_rainfall: float = metrics.get_average_rainfall(
+            yearly_rainfall.data, precision
+        )
 
         assert isinstance(avg_rainfall, float)
-        assert len(str(avg_rainfall).split('.')[1]) <= precision
+        assert len(str(avg_rainfall).split(".")[1]) <= precision
 
     @staticmethod
     def test_get_years_compared_to_given_rainfall_value() -> None:
         nb_years: int = metrics.get_years_compared_to_given_rainfall_value(
-            yearly_rainfall.data,
-            metrics.get_average_rainfall(yearly_rainfall.data),
-            lt
+            yearly_rainfall.data, metrics.get_average_rainfall(yearly_rainfall.data), lt
         )
 
         assert nb_years <= len(yearly_rainfall.data)
@@ -41,4 +41,4 @@ class TestMetrics:
         normal: float = metrics.get_normal(yearly_rainfall.data, begin_year=1991)
 
         assert isinstance(normal, float)
-        assert normal >= 0.
+        assert normal >= 0.0
