@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 """
 /rainfall/relative_distance_to_normal
 

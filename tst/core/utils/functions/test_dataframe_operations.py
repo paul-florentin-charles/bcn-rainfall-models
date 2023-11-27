@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from datetime import datetime
 
 import pandas as pd

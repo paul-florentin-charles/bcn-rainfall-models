@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from pathlib import Path
 from shutil import rmtree
 

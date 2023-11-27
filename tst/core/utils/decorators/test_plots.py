@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 import matplotlib.pyplot as plt
 import numpy.random as nprand
 

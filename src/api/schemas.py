@@ -1,5 +1,3 @@
-# pylint: disable=too-few-public-methods
-
 """
 Provides a bunch of Marshmallow Schemas to validate rainfall data processed through the API.
 """

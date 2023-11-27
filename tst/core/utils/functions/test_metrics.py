@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from operator import lt
 
 from src.core.utils.functions import metrics

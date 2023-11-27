@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 """
 /year/above_normal
 

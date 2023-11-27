@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 import pandas as pd
 from pytest import raises
 

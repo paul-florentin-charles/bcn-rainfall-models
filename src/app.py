@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-function-docstring,no-value-for-parameter
 
 """
 Run the Flask app from this file.

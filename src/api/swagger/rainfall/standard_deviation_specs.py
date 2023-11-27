@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 """
 /rainfall/standard_deviation
 

@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 """
 /csv/minimal_csv
 
