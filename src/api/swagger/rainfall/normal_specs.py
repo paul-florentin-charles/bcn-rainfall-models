@@ -13,10 +13,10 @@ route_specs: dict = {
     "operationId": "getRainfallNormal",
     "summary": "Retrieve 30 years rainfall average for Barcelona after a given year.",
     "description": "Commonly called rainfall normal",
-    "tags": ["rainfall"],
+    "tags": ["Rainfall"],
     "responses": {
         "200": {"description": "The 30 years normal (in mm)", "schema": RainfallSchema}
     },
     "parameters": [param.begin_year, *param.time_params],
-    "produces": [MediaType.APP_JSON],
+    "produces": MediaType.APP_JSON,
 }

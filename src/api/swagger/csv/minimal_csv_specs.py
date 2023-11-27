@@ -21,5 +21,5 @@ route_specs: dict = {
         }
     },
     "parameters": [param.csv_path, *param.time_params],
-    "produces": [MediaType.TXT_CSV],
+    "produces": MediaType.TXT_CSV,
 }
