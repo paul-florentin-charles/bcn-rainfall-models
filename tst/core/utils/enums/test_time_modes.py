@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from src.core.utils.enums.time_modes import TimeMode
 
 

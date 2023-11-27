@@ -9,6 +9,7 @@ class TimeMode(str, BaseEnum):
     """
     An enum listing time modes (yearly, monthly and seasonal) represented by strings.
     """
-    YEARLY: str = 'yearly'
-    SEASONAL: str = 'seasonal'
-    MONTHLY: str = 'monthly'
+
+    YEARLY: str = "yearly"
+    SEASONAL: str = "seasonal"
+    MONTHLY: str = "monthly"

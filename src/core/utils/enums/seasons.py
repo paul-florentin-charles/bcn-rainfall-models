@@ -10,6 +10,7 @@ class Season(list, BaseEnum):
     """
     An enum listing seasons (winter, spring, summer and fall) as lists of Month (Enum).
     """
+
     WINTER: list = [Month.DECEMBER, Month.JANUARY, Month.FEBRUARY]
     SPRING: list = [Month.MARCH, Month.APRIL, Month.MAY]
     SUMMER: list = [Month.JUNE, Month.JULY, Month.AUGUST]

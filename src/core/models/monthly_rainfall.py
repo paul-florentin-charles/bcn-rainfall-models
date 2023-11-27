@@ -15,11 +15,13 @@ class MonthlyRainfall(YearlyRainfall):
     Provides numerous functions to load, manipulate and export Monthly Rainfall data.
     """
 
-    def __init__(self,
-                 raw_data: pd.DataFrame,
-                 month: Month,
-                 start_year: Optional[int] = 1971,
-                 round_precision: Optional[int] = 2):
+    def __init__(
+        self,
+        raw_data: pd.DataFrame,
+        month: Month,
+        start_year: Optional[int] = 1971,
+        round_precision: Optional[int] = 2,
+    ):
         self.month: Month = month
         super().__init__(raw_data, start_year, round_precision)
 

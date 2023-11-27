@@ -10,7 +10,7 @@ normal_year: dict = {
     "required": True,
     "type": "integer",
     "name": "normal_year",
-    "in": "query"
+    "in": "query",
 }
 
 begin_year: dict = {
@@ -18,7 +18,7 @@ begin_year: dict = {
     "required": True,
     "type": "integer",
     "name": "begin_year",
-    "in": "query"
+    "in": "query",
 }
 
 end_year: dict = {
@@ -26,7 +26,7 @@ end_year: dict = {
     "required": False,
     "type": "integer",
     "name": "end_year",
-    "in": "query"
+    "in": "query",
 }
 
 time_mode: dict = {
@@ -35,7 +35,7 @@ time_mode: dict = {
     "type": "string",
     "enum": TimeMode.values(),
     "name": "time_mode",
-    "in": "query"
+    "in": "query",
 }
 
 month: dict = {
@@ -44,7 +44,7 @@ month: dict = {
     "type": "string",
     "enum": Month.names(),
     "name": "month",
-    "in": "query"
+    "in": "query",
 }
 
 season: dict = {
@@ -53,13 +53,15 @@ season: dict = {
     "type": "string",
     "enum": Season.names(),
     "name": "season",
-    "in": "query"
+    "in": "query",
 }
+
+time_params: tuple = (time_mode, month, season)
 
 csv_path: dict = {
     "default": "data.csv",
     "required": True,
     "type": "string",
     "name": "csv_path",
-    "in": "query"
+    "in": "query",
 }

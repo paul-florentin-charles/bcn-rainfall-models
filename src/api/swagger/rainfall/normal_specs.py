@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 """
 /rainfall/normal
 
@@ -9,27 +7,16 @@ Commonly called rainfall normal.
 
 import src.api.swagger.parameters_specs as param
 from src.api.schemas import RainfallSchema
+from src.api.swagger.media_types import MediaType
 
 route_specs: dict = {
     "operationId": "getRainfallNormal",
     "summary": "Retrieve 30 years rainfall average for Barcelona after a given year.",
     "description": "Commonly called rainfall normal",
-    "tags": [
-        "rainfall"
-    ],
+    "tags": ["rainfall"],
     "responses": {
-        "200": {
-            "description": "The 30 years normal (in mm)",
-            "schema": RainfallSchema
-        }
+        "200": {"description": "The 30 years normal (in mm)", "schema": RainfallSchema}
     },
-    "parameters": [
-        param.begin_year,
-        param.time_mode,
-        param.month,
-        param.season
-    ],
-    "produces": [
-        "application/json"
-    ]
+    "parameters": [param.begin_year, *param.time_params],
+    "produces": [MediaType.APP_JSON],
 }

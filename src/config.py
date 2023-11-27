@@ -5,7 +5,7 @@ from typing import Optional
 
 from yaml import safe_load, parser
 
-CONFIG_FNAME: str = 'config.yaml'
+CONFIG_FNAME: str = "config.yaml"
 
 
 class Config:
@@ -18,15 +18,15 @@ class Config:
     def __init__(self, path: Optional[str] = CONFIG_FNAME):
         self.path: str = path
         try:
-            with open(self.path, mode='rt', encoding='utf-8') as stream:
+            with open(self.path, mode="rt", encoding="utf-8") as stream:
                 self.yaml_config: dict = safe_load(stream)
         except FileNotFoundError as exc:
             raise FileNotFoundError(
-                f"Configuration file not found at \"{self.path}\""
+                f'Configuration file not found at "{self.path}"'
             ) from exc
         except parser.ParserError as exc:
             raise parser.ParserError(
-                f"Configuration file at \"{self.path}\" cannot be parsed: not a valid YAML file!"
+                f'Configuration file at "{self.path}" cannot be parsed: not a valid YAML file!'
             ) from exc
 
     def get_dataset_url(self) -> str:
@@ -35,9 +35,9 @@ class Config:
 
         :return: The dataset URL as a String.
         """
-        dataset_url: str = self.yaml_config['base_url']
+        dataset_url: str = self.yaml_config["base_url"]
 
-        yaml_dataset_config: dict = self.yaml_config['dataset']
+        yaml_dataset_config: dict = self.yaml_config["dataset"]
         dataset_url += f"/dataset/{yaml_dataset_config['id']}"
         dataset_url += f"/resource/{yaml_dataset_config['resource_id']}"
         dataset_url += f"/download/{yaml_dataset_config['file_name']}"
@@ -51,7 +51,7 @@ class Config:
         :return: A year as an Integer.
         """
 
-        return self.yaml_config['data']['start_year']
+        return self.yaml_config["data"]["start_year"]
 
     def get_rainfall_precision(self) -> int:
         """
@@ -60,7 +60,7 @@ class Config:
         :return: A rounding precision as an Integer.
         """
 
-        return self.yaml_config['data']['rainfall_precision']
+        return self.yaml_config["data"]["rainfall_precision"]
 
     def get_kmeans_clusters(self) -> int:
         """
@@ -69,7 +69,7 @@ class Config:
         :return: A number of clusters as an Integer.
         """
 
-        return self.yaml_config['data']['kmeans_clusters']
+        return self.yaml_config["data"]["kmeans_clusters"]
 
     def get_api_doc_path(self) -> str:
         """
@@ -78,4 +78,4 @@ class Config:
         :return: The path to API Swagger documentation as a String
         """
 
-        return self.yaml_config['api']['doc_path']
+        return self.yaml_config["api"]["doc_path"]

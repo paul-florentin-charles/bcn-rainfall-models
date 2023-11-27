@@ -11,5 +11,7 @@ class DataFormatError(Exception):
 
     def __init__(self, data_format: str):
         self.data_format = data_format
-        self.message = f"Data given is incorrectly formatted. Should be: {self.data_format}"
+        self.message = (
+            f"Data given is incorrectly formatted. Should be: {self.data_format}"
+        )
         super().__init__(self.message)

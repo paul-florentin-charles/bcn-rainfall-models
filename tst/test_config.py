@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from pytest import raises
 from yaml.parser import ParserError
 

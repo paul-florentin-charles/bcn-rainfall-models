@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring
-
 from datetime import datetime
 
 import pandas as pd
@@ -16,10 +14,10 @@ class TestDataframeOperations:
     def test_get_rainfall_within_year_interval() -> None:
         begin_year: int = 1995
         end_year: int = 2015
-        cropped_yearly_rainfall: pd.DataFrame = df_opr.get_rainfall_within_year_interval(
-            yearly_rainfall.data,
-            begin_year,
-            end_year
+        cropped_yearly_rainfall: pd.DataFrame = (
+            df_opr.get_rainfall_within_year_interval(
+                yearly_rainfall.data, begin_year, end_year
+            )
         )
 
         assert len(cropped_yearly_rainfall) <= end_year - begin_year + 1
@@ -32,7 +30,9 @@ class TestDataframeOperations:
         assert not removed
 
         yearly_rainfall.add_savgol_filter()
-        removed = df_opr.remove_column(yearly_rainfall.data, Label.SAVITZKY_GOLAY_FILTER)
+        removed = df_opr.remove_column(
+            yearly_rainfall.data, Label.SAVITZKY_GOLAY_FILTER
+        )
 
         assert Label.SAVITZKY_GOLAY_FILTER not in yearly_rainfall.data.columns
         assert removed
@@ -46,7 +46,7 @@ class TestDataframeOperations:
             yearly_rainfall.starting_year,
             yearly_rainfall.round_precision,
             Month.MAY.value,
-            Month.SEPTEMBER.value
+            Month.SEPTEMBER.value,
         )
 
         assert isinstance(result, pd.DataFrame)

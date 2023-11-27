@@ -18,9 +18,11 @@ def parse_args(args: MultiDict[str, str], *params: dict) -> tuple:
     to_return: list = []
     for param in params:
         to_return.append(
-            args.get(param['name'],
-                     default=param['default'],
-                     type=swagger_type_to_python_type(param['type']))
+            args.get(
+                param["name"],
+                default=param["default"],
+                type=swagger_type_to_python_type(param["type"]),
+            )
         )
 
     return tuple(to_return)
@@ -34,11 +36,11 @@ def swagger_type_to_python_type(swagger_type: str) -> Union[type, None]:
     :return: Python type if recognized. None otherwise.
     """
     python_type = None
-    if swagger_type == 'integer':
+    if swagger_type == "integer":
         python_type = int
-    elif swagger_type == 'number':
+    elif swagger_type == "number":
         python_type = float
-    elif swagger_type == 'string':
+    elif swagger_type == "string":
         python_type = str
 
     return python_type
