@@ -14,7 +14,7 @@ route_specs: dict = {
     "summary": "Computes the number of years above normal for a specific year range.",
     "description": "Normal is computed as a 30 years average "
     "starting from the year set via normal_year.",
-    "tags": ["year"],
+    "tags": ["Year"],
     "responses": {
         "200": {
             "description": "the number of years above normal",
@@ -27,5 +27,5 @@ route_specs: dict = {
         param.end_year,
         *param.time_params,
     ],
-    "produces": [MediaType.APP_JSON],
+    "produces": MediaType.APP_JSON,
 }

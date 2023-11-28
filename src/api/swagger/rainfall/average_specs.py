@@ -16,10 +16,10 @@ route_specs: dict = {
     "description": "Only the starting year is compulsory.\n"
     "If no ending year is precised, "
     "computes average until most recent year available.",
-    "tags": ["rainfall"],
+    "tags": ["Rainfall"],
     "responses": {
         "200": {"description": "The average rainfall (in mm)", "schema": RainfallSchema}
     },
     "parameters": [param.begin_year, param.end_year, *param.time_params],
-    "produces": [MediaType.APP_JSON],
+    "produces": MediaType.APP_JSON,
 }

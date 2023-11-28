@@ -24,7 +24,7 @@ route_specs: dict = {
     "Only the starting year is compulsory.\n"
     "If no ending year is precised, "
     "computes the relative distance until most recent year available.",
-    "tags": ["rainfall"],
+    "tags": ["Rainfall"],
     "responses": {
         "200": {
             "description": "The relative distance to normal as a percentage.",
@@ -37,5 +37,5 @@ route_specs: dict = {
         param.end_year,
         *param.time_params,
     ],
-    "produces": [MediaType.APP_JSON],
+    "produces": MediaType.APP_JSON,
 }
