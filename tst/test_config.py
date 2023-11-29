@@ -3,7 +3,7 @@ from yaml.parser import ParserError
 
 from src.config import Config, CONFIG_FNAME
 
-config: Config = Config(path=f"src/{CONFIG_FNAME}")
+config: Config = Config(path=CONFIG_FNAME)
 
 
 class TestConfig:

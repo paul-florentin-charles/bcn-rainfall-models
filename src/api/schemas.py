@@ -1,7 +1,7 @@
 """
 Provides a bunch of Marshmallow Schemas to validate rainfall data processed through the API.
 """
-
+from http import HTTPStatus
 from typing import Optional, Union
 
 from flasgger import Schema, fields
@@ -51,3 +51,9 @@ class YearsAboveOrBelowNormalSchema(BaseSchema):
 
     normal_year: int = fields.Int(load_default=param.normal_year["default"])
     value: float = fields.Int()
+
+
+class ApiError(Schema):
+    code: int = fields.Int(dump_default=HTTPStatus.BAD_REQUEST.value)
+    name: str = fields.Str()
+    message: str = fields.Str()
