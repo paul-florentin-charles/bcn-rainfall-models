@@ -29,6 +29,7 @@ from src.api.swagger.year import below_normal_specs, above_normal_specs
 from src.api.utils import parse_args, manage_time_mode_errors
 from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
+from src.core.utils.enums.time_modes import TimeMode
 
 cfg = Config()
 all_rainfall = AllRainfall(
@@ -66,11 +67,11 @@ def average_rainfall() -> Response:
             "end_year": params[2]
             if params[2] is not None
             else all_rainfall.get_last_year(),
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/rainfall/normal")
@@ -92,11 +93,11 @@ def normal_rainfall() -> Response:
             "value": all_rainfall.get_normal(*params),
             "begin_year": params[1],
             "end_year": params[1] + 29,
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/rainfall/relative_distance_to_normal")
@@ -127,11 +128,11 @@ def rainfall_relative_distance_to_normal() -> Response:
             "end_year": params[3]
             if params[3] is not None
             else all_rainfall.get_last_year(),
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(RelativeDistanceToRainfallNormalSchema().load(to_return))
+    return jsonify(RelativeDistanceToRainfallNormalSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/rainfall/standard_deviation")
@@ -160,11 +161,11 @@ def rainfall_standard_deviation() -> Response:
             "end_year": params[2]
             if params[2] is not None
             else all_rainfall.get_last_year(),
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(RainfallSchema().load(to_return))
+    return jsonify(RainfallSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/year/below_normal")
@@ -195,11 +196,11 @@ def years_below_normal() -> Response:
             "end_year": params[3]
             if params[3] is not None
             else all_rainfall.get_last_year(),
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(YearsAboveOrBelowNormalSchema().load(to_return))
+    return jsonify(YearsAboveOrBelowNormalSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/year/above_normal")
@@ -230,11 +231,11 @@ def years_above_normal() -> Response:
             "end_year": params[3]
             if params[3] is not None
             else all_rainfall.get_last_year(),
-            "time_mode": params[0],
+            "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(YearsAboveOrBelowNormalSchema().load(to_return))
+    return jsonify(YearsAboveOrBelowNormalSchema().dump(to_return))
 
 
 @app.route(f"{base_path}/csv/minimal_csv")

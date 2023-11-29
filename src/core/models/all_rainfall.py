@@ -95,12 +95,12 @@ class AllRainfall:
         Export the data state of a specific time mode as a CSV.
         Could be for a yearly time frame, a specific month or a given season.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string if no path is set.
         None otherwise.
@@ -123,16 +123,16 @@ class AllRainfall:
         """
         Computes Rainfall average for a specific year range and time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param begin_year: An integer representing the year
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: A float representing the average Rainfall.
         """
         entity = self.get_entity_for_time_mode(time_mode, month, season)
@@ -152,14 +152,14 @@ class AllRainfall:
         """
         Computes Rainfall normal from a specific year and time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param begin_year: An integer representing the year
         to start computing rainfall normal.
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: A float representing the Rainfall normal.
         """
 
@@ -182,7 +182,7 @@ class AllRainfall:
         """
         Computes relative distance to Rainfall normal for a specific year range and time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param normal_year: An integer representing the year
         to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
@@ -190,10 +190,10 @@ class AllRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: A float representing the relative distance to rainfall normal.
         """
         entity = self.get_entity_for_time_mode(time_mode, month, season)
@@ -218,16 +218,16 @@ class AllRainfall:
         for a specific year range and time mode.
         By default, it uses the 'Rainfall' column.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param begin_year: An integer representing the year
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
@@ -250,7 +250,7 @@ class AllRainfall:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param normal_year: An integer representing the year
         to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
@@ -258,10 +258,10 @@ class AllRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: A float representing the relative distance to rainfall normal.
         """
         entity = self.get_entity_for_time_mode(time_mode, month, season)
@@ -283,7 +283,7 @@ class AllRainfall:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param normal_year: An integer representing the year
         to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
@@ -291,10 +291,10 @@ class AllRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-        Set if time_mode is 'seasonal' (optional)
+        Set if time_mode is 'SEASONAL' (optional)
         :return: A float representing the relative distance to rainfall normal.
         """
         entity = self.get_entity_for_time_mode(time_mode, month, season)
@@ -348,21 +348,22 @@ class AllRainfall:
         amongst instances of YearlyRainfall, MonthlyRainfall or SeasonsalRainfall.
         Month or Season should be specified according to time mode.
 
-        :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+        :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param month: A string corresponding to the month name.
-        Set if time_mode is 'monthly' (optional)
+        Set if time_mode is 'MONTHLY' (optional)
         :param season: A string corresponding to the season name.
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
+        Set if time_mode is 'SEASONAL' (optional)
         :return: Corresponding entity as a class instance.
         None if time mode is unknown.
         """
         entity: Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None] = None
 
-        if time_mode.casefold() == TimeMode.YEARLY.value.casefold():
+        if time_mode.casefold() == TimeMode.YEARLY:
             entity = self.yearly_rainfall
-        elif time_mode.casefold() == TimeMode.MONTHLY.value.casefold():
-            entity = self.monthly_rainfalls[month.upper()]
-        elif time_mode.casefold() == TimeMode.SEASONAL.value.casefold():
-            entity = self.seasonal_rainfalls[season.upper()]
+        elif time_mode.casefold() == TimeMode.MONTHLY:
+            entity = self.monthly_rainfalls[month]
+        elif time_mode.casefold() == TimeMode.SEASONAL:
+            entity = self.seasonal_rainfalls[season]
 
         return entity

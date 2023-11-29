@@ -7,6 +7,8 @@ from flask import Response
 from werkzeug.datastructures.structures import MultiDict
 
 from src.api.error_wrappers import bad_request
+from src.core.utils.enums.months import Month
+from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
 
@@ -58,24 +60,24 @@ def manage_time_mode_errors(
     If time mode is set to seasonal and season is None.
 
     :param response_dict: Dict where to store response fields.
-    :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal']
+    :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
     :param month: A string corresponding to the month name.
-    Set if time_mode is 'monthly' (optional)
+    Set if time_mode is 'MONTHLY' (optional)
     :param season: A string corresponding to the season name.
     Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-    Set if time_mode is 'seasonal' (optional)
+    Set if time_mode is 'SEASONAL' (optional)
     :return: Either a Flask Response if there is an error or the updated dictionary.
     """
-    if time_mode == TimeMode.MONTHLY.value:
+    if time_mode == TimeMode.MONTHLY.name:
         if month is None:
             return bad_request("Month cannot be null.")
 
-        response_dict["month"] = month.lower()
+        response_dict["month"] = Month[month]
 
-    if time_mode == TimeMode.SEASONAL.value:
+    if time_mode == TimeMode.SEASONAL.name:
         if season is None:
             return bad_request("Season cannot be null.")
 
-        response_dict["season"] = season.lower()
+        response_dict["season"] = Season[season]
 
     return response_dict
