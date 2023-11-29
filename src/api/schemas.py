@@ -54,6 +54,10 @@ class YearsAboveOrBelowNormalSchema(BaseSchema):
 
 
 class ApiError(Schema):
+    """
+    Generic schema to depict any error.
+    """
+
     code: int = fields.Int(dump_default=HTTPStatus.BAD_REQUEST.value)
-    name: str = fields.Str()
+    name: str = fields.Str(dump_default=HTTPStatus.BAD_REQUEST.phrase)
     message: str = fields.Str()

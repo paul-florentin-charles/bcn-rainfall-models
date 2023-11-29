@@ -18,6 +18,6 @@ def bad_request(message: str) -> Response:
     """
 
     return make_response(
-        ApiError().dump({"name": HTTPStatus.BAD_REQUEST.phrase, "message": message}),
+        ApiError().dump({"message": message}),
         HTTPStatus.BAD_REQUEST.value,
     )
