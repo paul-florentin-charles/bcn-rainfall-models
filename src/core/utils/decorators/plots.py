@@ -1,7 +1,7 @@
 """
 Provides decorators for plotting with Matplotlib.
 """
-
+from functools import wraps
 from typing import Callable, Optional
 
 import matplotlib.pyplot as plt
@@ -17,6 +17,7 @@ def legend(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)") -> Callabl
     """
 
     def decorator(func: Callable):
+        @wraps(func)
         def wrapper(*args):
             func(*args)
             plt.xlabel(Label.YEAR.value)

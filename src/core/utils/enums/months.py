@@ -5,7 +5,7 @@ Provides integer equivalents for months.
 from src.core.utils.enums.base_enum import BaseEnum
 
 
-class Month(BaseEnum):
+class Month(int, BaseEnum):
     """
     An Enum listing months as integers.
     """

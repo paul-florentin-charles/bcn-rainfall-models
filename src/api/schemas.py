@@ -6,6 +6,8 @@ from typing import Optional, Union
 
 from flasgger import Schema, fields
 
+from src.core.utils.enums.months import Month
+from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 import src.api.swagger.parameters_specs as param
 
@@ -21,9 +23,9 @@ class BaseSchema(Schema):
     value: Union[float, int] = fields.Number()
     begin_year: int = fields.Int(load_default=param.begin_year["default"])
     end_year: Optional[int] = fields.Int(allow_none=True)
-    time_mode: str = fields.Str(load_default=TimeMode.YEARLY.value)
-    month: Optional[str] = fields.Str(allow_none=True)
-    season: Optional[str] = fields.Str(allow_none=True)
+    time_mode: TimeMode = fields.Enum(TimeMode, load_default=TimeMode.YEARLY)
+    month: Optional[Month] = fields.Enum(Month, allow_none=True)
+    season: Optional[Season] = fields.Enum(Season, allow_none=True)
 
 
 class RainfallSchema(BaseSchema):
