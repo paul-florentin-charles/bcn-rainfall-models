@@ -1,10 +1,9 @@
 """
 Collection of utility functions for API purposes.
 """
-from http import HTTPStatus
 from typing import Union, Optional
 
-from flask import make_response, jsonify, Response
+from flask import Response
 from werkzeug.datastructures.structures import MultiDict
 
 from src.api.error_wrappers import bad_request

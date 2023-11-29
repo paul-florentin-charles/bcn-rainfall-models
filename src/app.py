@@ -29,7 +29,6 @@ from src.api.swagger.year import below_normal_specs, above_normal_specs
 from src.api.utils import parse_args, manage_time_mode_errors
 from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
-from src.core.utils.enums.time_modes import TimeMode
 
 cfg = Config()
 all_rainfall = AllRainfall(
