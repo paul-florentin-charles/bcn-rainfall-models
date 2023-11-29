@@ -1,10 +1,15 @@
 # bcn-rainfall-models
 
- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![coverage badge](coverage.svg)](https://github.com/nedbat/coveragepy)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 🚧 WIP 🚧
+
+## Requirements
+
+- Python 3
+- Pip
 
 ## Get started
 
@@ -18,7 +23,6 @@
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 pip3 install -r requirements.txt
-cd src
 python3 app.py
 ```
 
@@ -27,6 +31,5 @@ python3 app.py
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 python3 -m pip install -r requirements.txt
-cd src
 python3 app.py
 ```
