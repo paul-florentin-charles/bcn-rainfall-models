@@ -6,6 +6,7 @@ Normal is computed as a 30 years average starting from the year set via normal_y
 """
 
 import src.api.swagger.parameters_specs as param
+import src.api.swagger.error_specs as error
 from src.api.schemas import YearsAboveOrBelowNormalSchema
 from src.api.swagger.media_types import MediaType
 
@@ -19,7 +20,8 @@ route_specs: dict = {
         "200": {
             "description": "the number of years above normal",
             "schema": YearsAboveOrBelowNormalSchema,
-        }
+        },
+        "400": error.bad_request_specs,
     },
     "parameters": [
         param.normal_year,

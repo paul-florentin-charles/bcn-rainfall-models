@@ -37,7 +37,7 @@ all_rainfall = AllRainfall(
 )
 
 app = Flask(__name__)
-swagger = Swagger(app, template_file=f"src/{cfg.get_api_doc_path()}/template.yaml")
+swagger = Swagger(app, template_file=f"{cfg.get_api_doc_path()}/template.yaml")
 base_path: str = swagger.template["basePath"]
 
 

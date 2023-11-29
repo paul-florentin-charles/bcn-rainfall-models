@@ -6,6 +6,8 @@ from http import HTTPStatus
 
 from flask import Response, make_response
 
+from src.api.schemas import ApiError
+
 
 def bad_request(message: str) -> Response:
     """
@@ -15,4 +17,7 @@ def bad_request(message: str) -> Response:
     :return: A Flask Response containing the error.
     """
 
-    return make_response({"message": message}, HTTPStatus.BAD_REQUEST.value)
+    return make_response(
+        ApiError().dump({"name": HTTPStatus.BAD_REQUEST.phrase, "message": message}),
+        HTTPStatus.BAD_REQUEST.value,
+    )
