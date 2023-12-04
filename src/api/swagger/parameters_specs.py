@@ -65,3 +65,11 @@ csv_path: dict = {
     "name": "csv_path",
     "in": "query",
 }
+
+svg_path: dict = {
+    "default": "graph.svg",
+    "required": True,
+    "type": "string",
+    "name": "svg_path",
+    "in": "query",
+}

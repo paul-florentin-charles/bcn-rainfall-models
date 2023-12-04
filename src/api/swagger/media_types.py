@@ -14,3 +14,4 @@ class MediaType(str, BaseEnum):
 
     APP_JSON: str = mimetypes.types_map[".json"]
     TXT_CSV: str = mimetypes.types_map[".csv"]
+    IMG_SVG: str = mimetypes.types_map[".svg"]

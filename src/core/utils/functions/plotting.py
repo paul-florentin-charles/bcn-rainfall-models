@@ -86,12 +86,15 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
     return True
 
 
-def bar_monthly_rainfall_averages(monthly_rainfalls: dict) -> list:
+def bar_monthly_rainfall_averages(
+    monthly_rainfalls: dict, label: Optional[str] = "Average rainfall (mm)"
+) -> list:
     """
     Plots a bar graphic displaying average rainfall for each month passed through the dict.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
+    :param label: A string to use as a label for bar graphic. (optional)
     :return: A list of the Rainfall averages for each month.
     """
     month_labels, averages = [], []
@@ -99,7 +102,7 @@ def bar_monthly_rainfall_averages(monthly_rainfalls: dict) -> list:
         month_labels.append(monthly_rainfall.month.name[:3])
         averages.append(monthly_rainfall.get_average_yearly_rainfall())
 
-    plt.bar(month_labels, averages, label="Average rainfall (mm)")
+    plt.bar(month_labels, averages, label=label)
     plt.legend()
 
     return averages
@@ -124,12 +127,15 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
     return slopes
 
 
-def bar_seasonal_rainfall_averages(seasonal_rainfalls: dict) -> list:
+def bar_seasonal_rainfall_averages(
+    seasonal_rainfalls: dict, label: Optional[str] = "Average rainfall (mm)"
+) -> list:
     """
     Plots a bar graphic displaying average rainfall for each season passed through the dict.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
+    :param label: A string to use as a label for bar graphic. (optional)
     :return: A list of the Rainfall averages for each season.
     """
     season_labels, averages = [], []
@@ -137,7 +143,7 @@ def bar_seasonal_rainfall_averages(seasonal_rainfalls: dict) -> list:
         season_labels.append(seasonal_rainfall.season.name)
         averages.append(seasonal_rainfall.get_average_yearly_rainfall())
 
-    plt.bar(season_labels, averages, label="Average rainfall (mm)")
+    plt.bar(season_labels, averages, label=label)
     plt.legend()
 
     return averages
