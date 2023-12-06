@@ -8,6 +8,7 @@ Currently developing the Swagger API using flasgger.
 
 from typing import Union
 
+import matplotlib.pyplot as plt
 from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, request, Response, send_file
 
@@ -18,6 +19,7 @@ from src.api.schemas import (
     YearsAboveOrBelowNormalSchema,
 )
 from src.api.swagger.csv import minimal_csv_specs
+from src.api.swagger.graph import monthly_averages_specs, seasonal_averages_specs
 from src.api.swagger.media_types import MediaType
 from src.api.swagger.rainfall import (
     average_specs,
@@ -242,7 +244,7 @@ def years_above_normal() -> Response:
 @swag_from(minimal_csv_specs.route_specs)
 def minimal_csv() -> Response:
     params: tuple = parse_args(
-        request.args, param.time_mode, param.month, param.season, param.csv_path
+        request.args, param.time_mode, param.month, param.season, param.file_name
     )
 
     error: Union[Response, dict] = manage_time_mode_errors(
@@ -254,6 +256,30 @@ def minimal_csv() -> Response:
     all_rainfall.export_as_csv(*params)
 
     return send_file(params[-1], mimetype=MediaType.TXT_CSV, as_attachment=True)
+
+
+@app.route(f"{base_path}/graph/monthly_averages")
+@swag_from(monthly_averages_specs.route_specs)
+def monthly_averages() -> Response:
+    params: tuple = parse_args(request.args, param.file_name)
+
+    all_rainfall.bar_rainfall_averages()
+    plt.savefig(params[0])
+    plt.close()
+
+    return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)
+
+
+@app.route(f"{base_path}/graph/seasonal_averages")
+@swag_from(seasonal_averages_specs.route_specs)
+def seasonal_averages() -> Response:
+    params: tuple = parse_args(request.args, param.file_name)
+
+    all_rainfall.bar_rainfall_averages(monthly=False)
+    plt.savefig(params[0])
+    plt.close()
+
+    return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)
 
 
 if __name__ == "__main__":

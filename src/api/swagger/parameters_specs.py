@@ -58,10 +58,11 @@ season: dict = {
 
 time_params: tuple = (time_mode, month, season)
 
-csv_path: dict = {
-    "default": "data.csv",
+file_name: dict = {
+    "default": None,
     "required": True,
     "type": "string",
-    "name": "csv_path",
+    "name": "file_name",
+    "description": "Name of the file to be retrieved",
     "in": "query",
 }

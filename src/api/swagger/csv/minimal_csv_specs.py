@@ -22,6 +22,6 @@ route_specs: dict = {
         },
         "400": error.bad_request_specs,
     },
-    "parameters": [param.csv_path, *param.time_params],
+    "parameters": [param.file_name, *param.time_params],
     "produces": MediaType.TXT_CSV,
 }
