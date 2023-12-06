@@ -244,7 +244,7 @@ def years_above_normal() -> Response:
 @swag_from(minimal_csv_specs.route_specs)
 def minimal_csv() -> Response:
     params: tuple = parse_args(
-        request.args, param.time_mode, param.month, param.season, param.csv_path
+        request.args, param.time_mode, param.month, param.season, param.file_name
     )
 
     error: Union[Response, dict] = manage_time_mode_errors(
@@ -261,7 +261,7 @@ def minimal_csv() -> Response:
 @app.route(f"{base_path}/graph/monthly_averages")
 @swag_from(monthly_averages_specs.route_specs)
 def monthly_averages() -> Response:
-    params: tuple = parse_args(request.args, param.svg_path)
+    params: tuple = parse_args(request.args, param.file_name)
 
     all_rainfall.bar_rainfall_averages()
     plt.savefig(params[0])
@@ -273,7 +273,7 @@ def monthly_averages() -> Response:
 @app.route(f"{base_path}/graph/seasonal_averages")
 @swag_from(seasonal_averages_specs.route_specs)
 def seasonal_averages() -> Response:
-    params: tuple = parse_args(request.args, param.svg_path)
+    params: tuple = parse_args(request.args, param.file_name)
 
     all_rainfall.bar_rainfall_averages(monthly=False)
     plt.savefig(params[0])

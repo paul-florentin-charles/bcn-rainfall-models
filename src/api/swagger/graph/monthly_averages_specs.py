@@ -17,6 +17,6 @@ route_specs: dict = {
             "content": MediaType.IMG_SVG,
         },
     },
-    "parameters": [param.svg_path],
+    "parameters": [param.file_name],
     "produces": MediaType.IMG_SVG,
 }
