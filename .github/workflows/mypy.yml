@@ -1,4 +1,4 @@
-name: MyPy
+name: MyPyx
 
 on: push
 
@@ -18,7 +18,7 @@ jobs:
         run: pip install mypy
 
       - name: Install stubs
-        run: mypy --install-types
+        run: mypy --install-types .
 
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@releases/v1
