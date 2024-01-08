@@ -8,10 +8,10 @@ from typing import Optional, Union, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy import signal  # type: ignore
-from sklearn.cluster import KMeans  # type: ignore
-from sklearn.linear_model import LinearRegression  # type: ignore
-from sklearn.metrics import r2_score  # type: ignore
+from scipy import signal
+from sklearn.cluster import KMeans
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 
 from src.core.utils.decorators import plots
 from src.core.utils.enums.labels import Label
