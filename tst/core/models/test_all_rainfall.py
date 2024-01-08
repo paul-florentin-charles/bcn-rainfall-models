@@ -31,7 +31,7 @@ class TestAllRainfall:
     @staticmethod
     def test_get_average_rainfall() -> None:
         for t_mode in TimeMode.values():
-            avg_rainfall: float = all_rainfall.get_average_rainfall(
+            avg_rainfall = all_rainfall.get_average_rainfall(
                 t_mode, begin_year, end_year, month, season
             )
 
@@ -40,14 +40,14 @@ class TestAllRainfall:
     @staticmethod
     def test_get_normal() -> None:
         for t_mode in TimeMode.values():
-            normal: float = all_rainfall.get_normal(t_mode, begin_year, month, season)
+            normal = all_rainfall.get_normal(t_mode, begin_year, month, season)
 
             assert isinstance(normal, float)
 
     @staticmethod
     def test_get_years_below_normal() -> None:
         for t_mode in TimeMode.values():
-            n_years_below_avg: int = all_rainfall.get_years_below_normal(
+            n_years_below_avg = all_rainfall.get_years_below_normal(
                 t_mode, normal_year, begin_year, end_year, month, season
             )
 
@@ -57,7 +57,7 @@ class TestAllRainfall:
     @staticmethod
     def test_get_years_above_normal() -> None:
         for t_mode in TimeMode.values():
-            n_years_above_avg: int = all_rainfall.get_years_above_normal(
+            n_years_above_avg = all_rainfall.get_years_above_normal(
                 t_mode, normal_year, begin_year, end_year, month, season
             )
 
@@ -71,7 +71,7 @@ class TestAllRainfall:
     @staticmethod
     def test_get_relative_distance_from_normal() -> None:
         for t_mode in TimeMode.values():
-            relative_distance: float = all_rainfall.get_relative_distance_from_normal(
+            relative_distance = all_rainfall.get_relative_distance_from_normal(
                 t_mode, normal_year, begin_year, end_year, month, season
             )
 
@@ -81,7 +81,7 @@ class TestAllRainfall:
     @staticmethod
     def test_get_standard_deviation() -> None:
         for t_mode in TimeMode.values():
-            std: float = all_rainfall.get_rainfall_standard_deviation(
+            std = all_rainfall.get_rainfall_standard_deviation(
                 t_mode, begin_year, end_year, month, season
             )
 

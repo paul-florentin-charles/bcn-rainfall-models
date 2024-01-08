@@ -26,7 +26,7 @@ def get_average_rainfall(
         return 0.0
 
     return round(
-        yearly_rainfall.sum(axis="rows").loc[Label.RAINFALL.value] / nb_years,
+        yearly_rainfall.sum(axis="rows").loc[Label.RAINFALL.value] / nb_years,  # type: ignore
         round_precision,
     )
 

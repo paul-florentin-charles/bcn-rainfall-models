@@ -2,14 +2,14 @@
 Provides decorators for plotting with Matplotlib.
 """
 from functools import wraps
-from typing import Callable, Optional
+from typing import Callable
 
 import matplotlib.pyplot as plt
 
 from src.core.utils.enums.labels import Label
 
 
-def legend(ylabel: Optional[str] = f"{Label.RAINFALL.value} in (mm)") -> Callable:
+def legend(ylabel=f"{Label.RAINFALL.value} in (mm)") -> Callable:
     """
     Add labels to x-axis and y-axis and enable legend plot.
 
