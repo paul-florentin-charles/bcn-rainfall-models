@@ -9,7 +9,7 @@ Currently developing the Swagger API using flasgger.
 from typing import Union
 
 import matplotlib.pyplot as plt
-from flasgger import Swagger, swag_from
+from flasgger import Swagger, swag_from  # type: ignore
 from flask import Flask, jsonify, request, Response, send_file
 
 import src.api.swagger.parameters_specs as param

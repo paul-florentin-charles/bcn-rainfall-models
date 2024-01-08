@@ -3,15 +3,15 @@ Provides a rich class to manipulate Yearly Rainfall data.
 """
 
 import operator as opr
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy import signal
-from sklearn.cluster import KMeans
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from scipy import signal  # type: ignore
+from sklearn.cluster import KMeans  # type: ignore
+from sklearn.linear_model import LinearRegression  # type: ignore
+from sklearn.metrics import r2_score  # type: ignore
 
 from src.core.utils.decorators import plots
 from src.core.utils.enums.labels import Label
@@ -28,13 +28,13 @@ class YearlyRainfall:
     def __init__(
         self,
         raw_data: pd.DataFrame,
-        start_year: Optional[int] = 1971,
-        round_precision: Optional[int] = 2,
+        start_year=1971,
+        round_precision=2,
     ):
-        self.raw_data: pd.DataFrame = raw_data
-        self.starting_year: int = start_year
-        self.round_precision: int = round_precision
-        self.data: pd.DataFrame = self.load_yearly_rainfall()
+        self.raw_data = raw_data
+        self.starting_year = start_year
+        self.round_precision = round_precision
+        self.data = self.load_yearly_rainfall()
 
     def __str__(self):
         return self.data.to_string()
@@ -264,15 +264,15 @@ class YearlyRainfall:
             self.data[Label.RAINFALL.value] / normal * 100.0, self.round_precision
         )
 
-    def add_linear_regression(self) -> (float, float):
+    def add_linear_regression(self) -> Tuple[float, float]:
         """
         Compute and add Linear Regression of Rainfall according to Year
         to our pandas DataFrame.
 
         :return: a tuple containing two floats (r2 score, slope).
         """
-        years: np.ndarray = self.data[Label.YEAR.value].values.reshape(-1, 1)
-        rainfalls: np.ndarray = self.data[Label.RAINFALL.value].values
+        years = self.data[Label.YEAR.value].values.reshape(-1, 1)  # type: ignore
+        rainfalls = self.data[Label.RAINFALL.value].values
 
         reg: LinearRegression = LinearRegression()
         reg.fit(years, rainfalls)

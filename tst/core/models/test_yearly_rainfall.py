@@ -50,7 +50,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_export_as_csv() -> None:
-        csv_as_str: str = yearly_rainfall.export_as_csv()
+        csv_as_str = yearly_rainfall.export_as_csv()
 
         assert isinstance(csv_as_str, str)
 
@@ -101,9 +101,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation() -> None:
-        std: float = yearly_rainfall.get_standard_deviation(
-            yearly_rainfall.starting_year
-        )
+        std = yearly_rainfall.get_standard_deviation(yearly_rainfall.starting_year)
 
         assert isinstance(std, float)
 

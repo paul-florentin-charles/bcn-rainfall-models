@@ -4,7 +4,7 @@ Provides a bunch of Marshmallow Schemas to validate rainfall data processed thro
 from http import HTTPStatus
 from typing import Optional, Union
 
-from flasgger import Schema, fields
+from flasgger import Schema, fields  # type: ignore
 
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season

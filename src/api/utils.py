@@ -40,7 +40,7 @@ def swagger_type_to_python_type(swagger_type: str) -> Union[type, None]:
     :param swagger_type: Swagger type as a string.
     :return: Python type if recognized. None otherwise.
     """
-    python_type = None
+    python_type: Union[type, None] = None
     if swagger_type == "integer":
         python_type = int
     elif swagger_type == "number":

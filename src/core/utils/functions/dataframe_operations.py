@@ -85,13 +85,11 @@ def retrieve_rainfall_data_with_constraints(
             axis="columns",
         ).sum(axis="columns")
     else:
-        rainfall: pd.Series = monthly_rainfall.iloc[:, start_month:end_month].sum(
-            axis="columns"
-        )
+        rainfall = monthly_rainfall.iloc[:, start_month:end_month].sum(axis="columns")
 
-    yearly_rainfall: pd.DataFrame = pd.concat(
-        (years, rainfall), axis="columns"
-    ).set_axis([Label.YEAR.value, Label.RAINFALL.value], axis="columns")
+    yearly_rainfall = pd.concat((years, rainfall), axis="columns").set_axis(
+        [Label.YEAR.value, Label.RAINFALL.value], axis="columns"
+    )
 
     yearly_rainfall = (
         get_rainfall_within_year_interval(yearly_rainfall, begin_year=starting_year)

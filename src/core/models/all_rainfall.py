@@ -30,8 +30,8 @@ class AllRainfall:
     def __init__(
         self,
         dataset_url: str,
-        start_year: Optional[int] = 1971,
-        round_precision: Optional[int] = 2,
+        start_year=1971,
+        round_precision=2,
     ):
         self.dataset_url: str = dataset_url
         self.starting_year: int = start_year
@@ -51,11 +51,11 @@ class AllRainfall:
                 self.raw_data, season, start_year, round_precision
             )
 
-    def export_all_data_to_csv(self, folder_path: Optional[str] = "csv_data") -> str:
+    def export_all_data_to_csv(self, folder_path="csv_data") -> str:
         """
         Export all the different data as CSVs into specified folder path.
 
-        :param folder_path: path to folder where to save our CSV files (optional).
+        :param folder_path: path to folder where to save our CSV files.
         If not set, defaults to 'csv_data'. Should not end with '/'.
         :return: Path to folder that contains CSV files.
         """
