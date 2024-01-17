@@ -2,6 +2,9 @@ from pathlib import Path
 from shutil import rmtree
 
 from src.core.models.all_rainfall import AllRainfall
+from src.core.models.monthly_rainfall import MonthlyRainfall
+from src.core.models.seasonal_rainfall import SeasonalRainfall
+from src.core.models.yearly_rainfall import YearlyRainfall
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
@@ -86,3 +89,22 @@ class TestAllRainfall:
             )
 
             assert isinstance(std, float)
+
+    @staticmethod
+    def test_get_entity_for_time_mode() -> None:
+        assert isinstance(
+            all_rainfall.get_entity_for_time_mode(TimeMode.YEARLY), YearlyRainfall
+        )
+        assert isinstance(
+            all_rainfall.get_entity_for_time_mode(
+                TimeMode.SEASONAL, season=Season.SPRING.name
+            ),
+            SeasonalRainfall,
+        )
+        assert isinstance(
+            all_rainfall.get_entity_for_time_mode(
+                TimeMode.MONTHLY, month=Month.OCTOBER.name
+            ),
+            MonthlyRainfall,
+        )
+        assert all_rainfall.get_entity_for_time_mode("unknown_time_mode") is None

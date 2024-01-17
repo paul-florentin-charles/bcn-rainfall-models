@@ -342,7 +342,7 @@ class AllRainfall:
         return plotting.bar_seasonal_rainfall_linreg_slopes(self.seasonal_rainfalls)
 
     def get_entity_for_time_mode(
-        self, time_mode: str, month: Optional[str], season: Optional[str]
+        self, time_mode: str, month: Optional[str] = None, season: Optional[str] = None
     ) -> Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None]:
         """
         Retrieve current entity for specified time mode,

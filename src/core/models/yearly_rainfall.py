@@ -60,6 +60,8 @@ class YearlyRainfall:
         :param end_month: An integer representing the month
         to end getting our rainfall values (optional)
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
+        :raise DataFormatError: If raw_data attribute of instance doesn't have exactly 13 columns.
+        1 for the year; 12 for every monthly rainfall.
         """
         if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
