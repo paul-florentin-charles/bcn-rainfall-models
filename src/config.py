@@ -2,7 +2,7 @@
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
-from yaml import safe_load, parser
+from yaml import safe_load, parser  # type: ignore
 
 CONFIG_FNAME: str = "config.yaml"
 
@@ -42,6 +42,15 @@ class Config:
         dataset_url += f"/download/{yaml_dataset_config['file_name']}"
 
         return dataset_url
+
+    def get_dataset_path(self) -> str:
+        """
+        Return the path to the local copy of the dataset.
+
+        :return: The dataset path as a string.
+        """
+
+        return self.yaml_config["dataset"]["local_file_path"]
 
     def get_start_year(self) -> int:
         """
