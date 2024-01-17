@@ -29,14 +29,14 @@ class AllRainfall:
 
     def __init__(
         self,
-        dataset_url: str,
+        dataset_url_or_path: str,
         start_year=1971,
         round_precision=2,
     ):
-        self.dataset_url: str = dataset_url
+        self.dataset_url: str = dataset_url_or_path
         self.starting_year: int = start_year
         self.round_precision: int = round_precision
-        self.raw_data: pd.DataFrame = pd.read_csv(dataset_url)
+        self.raw_data: pd.DataFrame = pd.read_csv(dataset_url_or_path)
         self.yearly_rainfall: YearlyRainfall = YearlyRainfall(
             self.raw_data, start_year, round_precision
         )
