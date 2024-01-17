@@ -52,7 +52,10 @@ def swagger_type_to_python_type(swagger_type: str) -> Union[type, None]:
 
 
 def manage_time_mode_errors(
-    response_dict: dict, time_mode: str, month: Optional[str], season: Optional[str]
+    response_dict: dict,
+    time_mode: str,
+    month: Optional[str] = None,
+    season: Optional[str] = None,
 ) -> Union[Response, dict]:
     """
     Manage errors related to time mode issues.
