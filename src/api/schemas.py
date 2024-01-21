@@ -1,15 +1,17 @@
 """
 Provides a bunch of Marshmallow Schemas to validate rainfall data processed through the API.
 """
+from __future__ import annotations
+
 from http import HTTPStatus
-from typing import Optional, Union
+from typing import Union
 
 from flasgger import Schema, fields
 
+import src.api.swagger.parameters_specs as param
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
-import src.api.swagger.parameters_specs as param
 
 
 class BaseSchema(Schema):
@@ -22,10 +24,10 @@ class BaseSchema(Schema):
     name: str = fields.Str()
     value: Union[float, int] = fields.Number()
     begin_year: int = fields.Int(load_default=param.begin_year["default"])
-    end_year: Optional[int] = fields.Int(allow_none=True)
+    end_year: int | None = fields.Int(allow_none=True)
     time_mode: TimeMode = fields.Enum(TimeMode, load_default=TimeMode.YEARLY)
-    month: Optional[Month] = fields.Enum(Month, allow_none=True)
-    season: Optional[Season] = fields.Enum(Season, allow_none=True)
+    month: Month | None = fields.Enum(Month, allow_none=True)
+    season: Season | None = fields.Enum(Season, allow_none=True)
 
 
 class RainfallSchema(BaseSchema):

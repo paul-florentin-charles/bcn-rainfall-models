@@ -1,8 +1,7 @@
 """
 Provides a rich class to manipulate Seasonal Rainfall data.
 """
-
-from typing import Optional
+from __future__ import annotations
 
 import pandas as pd
 
@@ -19,8 +18,8 @@ class SeasonalRainfall(YearlyRainfall):
         self,
         raw_data: pd.DataFrame,
         season: Season,
-        start_year: Optional[int] = 1971,
-        round_precision: Optional[int] = 2,
+        start_year: int | None = 1971,
+        round_precision: int | None = 2,
     ):
         self.season: Season = season
         super().__init__(raw_data, start_year, round_precision)

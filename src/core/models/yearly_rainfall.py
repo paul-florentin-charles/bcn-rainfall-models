@@ -1,9 +1,10 @@
 """
 Provides a rich class to manipulate Yearly Rainfall data.
 """
+from __future__ import annotations
 
 import operator as opr
-from typing import Optional, Union, Tuple
+from typing import Union, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,10 +14,10 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
+from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.decorators import plots
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
-from src.core.utils.custom_exceptions import DataFormatError
 from src.core.utils.functions import dataframe_operations as df_opr, metrics, plotting
 
 
@@ -49,7 +50,7 @@ class YearlyRainfall:
         return self.load_rainfall(Month.JANUARY.value)
 
     def load_rainfall(
-        self, start_month: int, end_month: Optional[int] = None
+        self, start_month: int, end_month: int | None = None
     ) -> pd.DataFrame:
         """
         Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
@@ -79,7 +80,7 @@ class YearlyRainfall:
         )
 
     def get_yearly_rainfall(
-        self, begin_year: Optional[int] = None, end_year: Optional[int] = None
+        self, begin_year: int | None = None, end_year: int | None = None
     ) -> pd.DataFrame:
         """
         Retrieves Yearly Rainfall within a specific year range.
@@ -94,7 +95,7 @@ class YearlyRainfall:
 
         return df_opr.get_rainfall_within_year_interval(self.data, begin_year, end_year)
 
-    def export_as_csv(self, path: Optional[str] = None) -> Union[str, None]:
+    def export_as_csv(self, path: str | None = None) -> Union[str, None]:
         """
         Export the actual instance data state as a CSV.
 
@@ -106,7 +107,7 @@ class YearlyRainfall:
         return self.data.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(
-        self, begin_year: Optional[int] = None, end_year: Optional[int] = None
+        self, begin_year: int | None = None, end_year: int | None = None
     ) -> float:
         """
         Computes Rainfall average for a specific year range.
@@ -134,7 +135,7 @@ class YearlyRainfall:
         return metrics.get_normal(self.data, begin_year)
 
     def get_years_below_normal(
-        self, normal_year: int, begin_year: int, end_year: Optional[int] = None
+        self, normal_year: int, begin_year: int, end_year: int | None = None
     ) -> int:
         """
         Computes the number of years below normal for a specific year range.
@@ -155,7 +156,7 @@ class YearlyRainfall:
         )
 
     def get_years_above_normal(
-        self, normal_year: int, begin_year: int, end_year: Optional[int] = None
+        self, normal_year: int, begin_year: int, end_year: int | None = None
     ) -> int:
         """
         Computes the number of years above normal for a specific year range.
@@ -185,7 +186,7 @@ class YearlyRainfall:
         return int(self.data[Label.YEAR].iloc[-1])
 
     def get_relative_distance_from_normal(
-        self, normal_year: int, begin_year: int, end_year: Optional[int] = None
+        self, normal_year: int, begin_year: int, end_year: int | None = None
     ) -> float:
         """
         Computes the relative distance between above and below normal years
@@ -221,8 +222,8 @@ class YearlyRainfall:
     def get_standard_deviation(
         self,
         begin_year: int,
-        end_year: Optional[int] = None,
-        label: Optional[Label] = Label.RAINFALL,
+        end_year: int | None = None,
+        label: Label | None = Label.RAINFALL,
     ) -> Union[float, None]:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
@@ -246,7 +247,7 @@ class YearlyRainfall:
         )
 
     def add_percentage_of_normal(
-        self, begin_year: int, end_year: Optional[int] = None
+        self, begin_year: int, end_year: int | None = None
     ) -> None:
         """
         Add the percentage of rainfall compared with normal
@@ -304,7 +305,7 @@ class YearlyRainfall:
             self.data[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision
         )
 
-    def add_kmeans(self, kmeans_clusters: Optional[int] = 4) -> int:
+    def add_kmeans(self, kmeans_clusters: int | None = 4) -> int:
         """
         Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
@@ -380,7 +381,7 @@ class YearlyRainfall:
         return True
 
     @plots.legend(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
-    def plot_normal(self, display_clusters: Optional[bool] = False) -> bool:
+    def plot_normal(self, display_clusters: bool | None = False) -> bool:
         """
         Plot Rainfall normals data according to year.
 

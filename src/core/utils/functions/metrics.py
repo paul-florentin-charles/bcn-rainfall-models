@@ -2,8 +2,9 @@
 Provides functions to compute interesting and reusable generic metrics
 over DataFrame containing rainfall data over years.
 """
+from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable
 
 import pandas as pd
 
@@ -12,7 +13,7 @@ from src.core.utils.functions import dataframe_operations as df_opr
 
 
 def get_average_rainfall(
-    yearly_rainfall: pd.DataFrame, round_precision: Optional[int] = 2
+    yearly_rainfall: pd.DataFrame, round_precision: int | None = 2
 ) -> float:
     """
     Computes Rainfall average.

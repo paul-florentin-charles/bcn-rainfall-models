@@ -2,9 +2,10 @@
 Provides an all-in-one class to manipulate rainfall data for every timeframe.
 At a yearly, monthly and seasonal level.
 """
+from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import pandas as pd
 
@@ -87,9 +88,9 @@ class AllRainfall:
     def export_as_csv(
         self,
         time_mode: str,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
-        path: Optional[str] = None,
+        month: str | None = None,
+        season: str | None = None,
+        path: str | None = None,
     ) -> Union[str, None]:
         """
         Export the data state of a specific time mode as a CSV.
@@ -115,10 +116,10 @@ class AllRainfall:
     def get_average_rainfall(
         self,
         time_mode: str,
-        begin_year: Optional[int] = None,
-        end_year: Optional[int] = None,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        begin_year: int | None = None,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[float, None]:
         """
         Computes Rainfall average for a specific year range and time mode.
@@ -146,8 +147,8 @@ class AllRainfall:
         self,
         time_mode: str,
         begin_year: int,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[float, None]:
         """
         Computes Rainfall normal from a specific year and time mode.
@@ -175,9 +176,9 @@ class AllRainfall:
         time_mode: str,
         normal_year: int,
         begin_year: int,
-        end_year: Optional[int] = None,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[float, None]:
         """
         Computes relative distance to Rainfall normal for a specific year range and time mode.
@@ -209,9 +210,9 @@ class AllRainfall:
         self,
         time_mode: str,
         begin_year: int,
-        end_year: Optional[int] = None,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[float, None]:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
@@ -243,9 +244,9 @@ class AllRainfall:
         time_mode: str,
         normal_year: int,
         begin_year: int,
-        end_year: Optional[int] = None,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[int, None]:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
@@ -276,9 +277,9 @@ class AllRainfall:
         time_mode: str,
         normal_year: int,
         begin_year: int,
-        end_year: Optional[int] = None,
-        month: Optional[str] = None,
-        season: Optional[str] = None,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
     ) -> Union[int, None]:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
@@ -314,7 +315,7 @@ class AllRainfall:
 
         return self.yearly_rainfall.get_last_year()
 
-    def bar_rainfall_averages(self, monthly: Optional[bool] = True) -> list:
+    def bar_rainfall_averages(self, monthly: bool | None = True) -> list:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
@@ -328,7 +329,7 @@ class AllRainfall:
 
         return plotting.bar_seasonal_rainfall_averages(self.seasonal_rainfalls, label)
 
-    def bar_rainfall_linreg_slopes(self, monthly: Optional[bool] = True) -> list:
+    def bar_rainfall_linreg_slopes(self, monthly: bool | None = True) -> list:
         """
         Plots a bar graphic displaying linear regression slope for each month or each season.
 
@@ -342,7 +343,7 @@ class AllRainfall:
         return plotting.bar_seasonal_rainfall_linreg_slopes(self.seasonal_rainfalls)
 
     def get_entity_for_time_mode(
-        self, time_mode: str, month: Optional[str] = None, season: Optional[str] = None
+        self, time_mode: str, month: str | None = None, season: str | None = None
     ) -> Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None]:
         """
         Retrieve current entity for specified time mode,
