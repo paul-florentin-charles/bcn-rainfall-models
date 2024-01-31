@@ -2,8 +2,7 @@
 Provides functions to do operations on DataFrame objects
 containing rainfall data over years.
 """
-
-from typing import Optional
+from __future__ import annotations
 
 import pandas as pd
 
@@ -12,8 +11,8 @@ from src.core.utils.enums.labels import Label
 
 def get_rainfall_within_year_interval(
     yearly_rainfall: pd.DataFrame,
-    begin_year: Optional[int] = None,
-    end_year: Optional[int] = None,
+    begin_year: int | None = None,
+    end_year: int | None = None,
 ) -> pd.DataFrame:
     """
     Retrieves Yearly Rainfall within a specific year range.
@@ -60,7 +59,7 @@ def retrieve_rainfall_data_with_constraints(
     starting_year: int,
     round_precision: int,
     start_month: int,
-    end_month: Optional[int] = None,
+    end_month: int | None = None,
 ) -> pd.DataFrame:
     """
     Apply transformations to a pandas DataFrame depicting Yearly Rainfall data

@@ -2,8 +2,9 @@
 Provides functions to compute interesting and reusable generic metrics
 over DataFrame containing rainfall data over years.
 """
+from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable
 
 import pandas as pd
 
@@ -11,9 +12,7 @@ from src.core.utils.enums.labels import Label
 from src.core.utils.functions import dataframe_operations as df_opr
 
 
-def get_average_rainfall(
-    yearly_rainfall: pd.DataFrame, round_precision: Optional[int] = 2
-) -> float:
+def get_average_rainfall(yearly_rainfall: pd.DataFrame, round_precision=2) -> float:
     """
     Computes Rainfall average.
 
@@ -63,17 +62,19 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
     return max(yearly_rainfall[Label.KMEANS.value]) + 1
 
 
-def get_normal(yearly_rainfall: pd.DataFrame, begin_year) -> float:
+def get_normal(yearly_rainfall: pd.DataFrame, begin_year, round_precision=2) -> float:
     """
     Computes average rainfall over 30 years time frame.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: A year to start the time frame.
+    :param round_precision: A float representing the rainfall precision (optional).
     :return: A float storing the normal.
     """
 
     return get_average_rainfall(
         df_opr.get_rainfall_within_year_interval(
             yearly_rainfall, begin_year, begin_year + 29
-        )
+        ),
+        round_precision,
     )

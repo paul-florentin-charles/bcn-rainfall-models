@@ -1,7 +1,9 @@
 """
 Provides useful functions for plotting rainfall data in all shapes.
 """
-from typing import Optional, Union
+from __future__ import annotations
+
+from typing import Union
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -10,7 +12,7 @@ from src.core.utils.enums.labels import Label
 
 
 def plot_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, color: Optional[str] = None
+    yearly_rainfall: pd.DataFrame, label: Label, color: str | None = None
 ) -> bool:
     """
     Plot specified column data according to year.
@@ -87,7 +89,7 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
 
 
 def bar_monthly_rainfall_averages(
-    monthly_rainfalls: dict, label: Optional[str] = "Average rainfall (mm)"
+    monthly_rainfalls: dict, label: str | None = "Average rainfall (mm)"
 ) -> list:
     """
     Plots a bar graphic displaying average rainfall for each month passed through the dict.
@@ -128,7 +130,7 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
 
 
 def bar_seasonal_rainfall_averages(
-    seasonal_rainfalls: dict, label: Optional[str] = "Average rainfall (mm)"
+    seasonal_rainfalls: dict, label: str | None = "Average rainfall (mm)"
 ) -> list:
     """
     Plots a bar graphic displaying average rainfall for each season passed through the dict.

@@ -264,7 +264,7 @@ def monthly_averages() -> Response:
     params: tuple = parse_args(request.args, param.file_name)
 
     all_rainfall.bar_rainfall_averages()
-    plt.savefig(params[0])
+    plt.savefig(params[0], format="svg")
     plt.close()
 
     return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)
@@ -276,7 +276,7 @@ def seasonal_averages() -> Response:
     params: tuple = parse_args(request.args, param.file_name)
 
     all_rainfall.bar_rainfall_averages(monthly=False)
-    plt.savefig(params[0])
+    plt.savefig(params[0], format="svg")
     plt.close()
 
     return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)

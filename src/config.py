@@ -4,7 +4,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 
 from yaml import safe_load, parser  # type: ignore
 
-CONFIG_FNAME: str = "config.yaml"
+CONFIG_FNAME: str = "config.yml"
 
 
 class Config:
@@ -35,13 +35,15 @@ class Config:
         :return: The dataset URL as a String.
         """
         dataset_url: str = self.yaml_config["base_url"]
-
         yaml_dataset_config: dict = self.yaml_config["dataset"]
-        dataset_url += f"/dataset/{yaml_dataset_config['id']}"
-        dataset_url += f"/resource/{yaml_dataset_config['resource_id']}"
-        dataset_url += f"/download/{yaml_dataset_config['file_name']}"
 
-        return dataset_url
+        return dataset_url + "/".join(
+            [
+                f"/dataset/{yaml_dataset_config['id']}",
+                f"resource/{yaml_dataset_config['resource_id']}",
+                f"download/{yaml_dataset_config['file_name']}",
+            ]
+        )
 
     def get_dataset_path(self) -> str:
         """

@@ -1,7 +1,9 @@
 """
 Collection of utility functions for API purposes.
 """
-from typing import Union, Optional
+from __future__ import annotations
+
+from typing import Union
 
 from flask import Response
 from werkzeug.datastructures.structures import MultiDict
@@ -52,7 +54,10 @@ def swagger_type_to_python_type(swagger_type: str) -> Union[type, None]:
 
 
 def manage_time_mode_errors(
-    response_dict: dict, time_mode: str, month: Optional[str], season: Optional[str]
+    response_dict: dict,
+    time_mode: str,
+    month: str | None = None,
+    season: str | None = None,
 ) -> Union[Response, dict]:
     """
     Manage errors related to time mode issues.
