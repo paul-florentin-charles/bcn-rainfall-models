@@ -18,8 +18,8 @@ class SeasonalRainfall(YearlyRainfall):
         self,
         raw_data: pd.DataFrame,
         season: Season,
-        start_year: int | None = 1971,
-        round_precision: int | None = 2,
+        start_year=1971,
+        round_precision=2,
     ):
         self.season: Season = season
         super().__init__(raw_data, start_year, round_precision)

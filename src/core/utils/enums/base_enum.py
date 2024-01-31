@@ -17,7 +17,7 @@ class BaseEnum(Enum):
 
         :return: A list made of the Enum names.
         """
-        return list(map(lambda enum: enum.name, cls))
+        return [enum.name for enum in cls]
 
     @classmethod
     def values(cls):
@@ -26,4 +26,4 @@ class BaseEnum(Enum):
 
         :return: A list made of the Enum values.
         """
-        return list(map(lambda enum: enum.value, cls))
+        return [enum.value for enum in cls]

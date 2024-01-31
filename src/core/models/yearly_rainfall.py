@@ -123,16 +123,17 @@ class YearlyRainfall:
             self.get_yearly_rainfall(begin_year, end_year), self.round_precision
         )
 
-    def get_normal(self, begin_year) -> float:
+    def get_normal(self, begin_year, round_precision=2) -> float:
         """
         Computes Rainfall average over 30 years time frame.
 
         :param begin_year: An integer representing the year
         to start from to compute our normal.
+        :param round_precision: A float representing the rainfall precision (optional).
         :return: A float storing the normal.
         """
 
-        return metrics.get_normal(self.data, begin_year)
+        return metrics.get_normal(self.data, begin_year, round_precision)
 
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int | None = None

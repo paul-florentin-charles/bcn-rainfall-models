@@ -14,7 +14,7 @@ from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
 
-class BaseSchema(Schema):
+class BaseRainfallSchema(Schema):
     """
     Base schema for depicting a value linked to rainfall data.
     It could be either float values or integer values (rainfall/years).
@@ -30,7 +30,7 @@ class BaseSchema(Schema):
     season: Season | None = fields.Enum(Season, allow_none=True)
 
 
-class RainfallSchema(BaseSchema):
+class RainfallSchema(BaseRainfallSchema):
     """
     Schema for depicting a float value in mm (rainfall value).
     """
@@ -46,7 +46,7 @@ class RelativeDistanceToRainfallNormalSchema(RainfallSchema):
     normal_year: int = fields.Int(load_default=param.normal_year["default"])
 
 
-class YearsAboveOrBelowNormalSchema(BaseSchema):
+class YearsAboveOrBelowNormalSchema(BaseRainfallSchema):
     """
     Schema for giving the number of years above or below rainfall normal.
     """

@@ -169,7 +169,7 @@ class AllRainfall:
         if entity is None:
             return entity
 
-        return entity.get_normal(begin_year)
+        return entity.get_normal(begin_year, self.round_precision)
 
     def get_relative_distance_from_normal(
         self,
