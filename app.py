@@ -5,8 +5,7 @@
 Run the Flask app from this file.
 Currently developing the Swagger API using flasgger.
 """
-
-from typing import Union
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
 from flasgger import Swagger, swag_from
@@ -55,7 +54,7 @@ def average_rainfall() -> Response:
         param.season,
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[3], params[4]
     )
     if isinstance(to_return, Response):
@@ -83,7 +82,7 @@ def normal_rainfall() -> Response:
         request.args, param.time_mode, param.begin_year, param.month, param.season
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[2], params[3]
     )
     if isinstance(to_return, Response):
@@ -115,7 +114,7 @@ def rainfall_relative_distance_to_normal() -> Response:
         param.season,
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[4], params[5]
     )
     if isinstance(to_return, Response):
@@ -149,7 +148,7 @@ def rainfall_standard_deviation() -> Response:
         param.season,
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[3], params[4]
     )
     if isinstance(to_return, Response):
@@ -183,7 +182,7 @@ def years_below_normal() -> Response:
         param.season,
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[4], params[5]
     )
     if isinstance(to_return, Response):
@@ -218,7 +217,7 @@ def years_above_normal() -> Response:
         param.season,
     )
 
-    to_return: Union[Response, dict] = manage_time_mode_errors(
+    to_return: Response | dict = manage_time_mode_errors(
         {}, params[0], params[4], params[5]
     )
     if isinstance(to_return, Response):
@@ -247,7 +246,7 @@ def minimal_csv() -> Response:
         request.args, param.time_mode, param.month, param.season, param.file_name
     )
 
-    error: Union[Response, dict] = manage_time_mode_errors(
+    error: Response | dict = manage_time_mode_errors(
         {}, params[0], params[1], params[2]
     )
     if isinstance(error, Response):

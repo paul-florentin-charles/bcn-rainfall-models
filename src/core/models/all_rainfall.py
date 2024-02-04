@@ -5,7 +5,6 @@ At a yearly, monthly and seasonal level.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
 
@@ -66,21 +65,25 @@ class AllRainfall:
         last_year: int = self.yearly_rainfall.get_last_year()
 
         self.yearly_rainfall.export_as_csv(
-            path=f"{folder_path}/" f"{self.starting_year}_{last_year}_rainfall.csv"
+            path=Path(folder_path, f"{self.starting_year}_{last_year}_rainfall.csv")
         )
 
         for monthly_rainfall in self.monthly_rainfalls.values():
             monthly_rainfall.export_as_csv(
-                path=f"{folder_path}/months/"
-                f"{self.starting_year}_{last_year}_"
-                f"{monthly_rainfall.month.name.lower()}_rainfall.csv"
+                path=Path(
+                    folder_path,
+                    "months",
+                    f"{self.starting_year}_{last_year}_{monthly_rainfall.month.name.lower()}_rainfall.csv",
+                )
             )
 
         for season_rainfall in self.seasonal_rainfalls.values():
             season_rainfall.export_as_csv(
-                path=f"{folder_path}/seasons/"
-                f"{self.starting_year}_{last_year}_"
-                f"{season_rainfall.season.name.lower()}_rainfall.csv"
+                path=Path(
+                    folder_path,
+                    "seasons",
+                    f"{self.starting_year}_{last_year}_{season_rainfall.season.name.lower()}_rainfall.csv",
+                )
             )
 
         return folder_path
@@ -90,8 +93,8 @@ class AllRainfall:
         time_mode: str,
         month: str | None = None,
         season: str | None = None,
-        path: str | None = None,
-    ) -> Union[str, None]:
+        path: str | Path | None = None,
+    ) -> str | None:
         """
         Export the data state of a specific time mode as a CSV.
         Could be for a yearly time frame, a specific month or a given season.
@@ -120,7 +123,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[float, None]:
+    ) -> float | None:
         """
         Computes Rainfall average for a specific year range and time mode.
 
@@ -149,7 +152,7 @@ class AllRainfall:
         begin_year: int,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[float, None]:
+    ) -> float | None:
         """
         Computes Rainfall normal from a specific year and time mode.
 
@@ -179,7 +182,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[float, None]:
+    ) -> float | None:
         """
         Computes relative distance to Rainfall normal for a specific year range and time mode.
 
@@ -213,7 +216,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[float, None]:
+    ) -> float | None:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
         for a specific year range and time mode.
@@ -247,7 +250,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[int, None]:
+    ) -> int | None:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
 
@@ -280,7 +283,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> Union[int, None]:
+    ) -> int | None:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
 
@@ -344,7 +347,7 @@ class AllRainfall:
 
     def get_entity_for_time_mode(
         self, time_mode: str, month: str | None = None, season: str | None = None
-    ) -> Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None]:
+    ) -> YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None:
         """
         Retrieve current entity for specified time mode,
         amongst instances of YearlyRainfall, MonthlyRainfall or SeasonsalRainfall.
@@ -359,7 +362,7 @@ class AllRainfall:
         :return: Corresponding entity as a class instance.
         None if time mode is unknown.
         """
-        entity: Union[YearlyRainfall, MonthlyRainfall, SeasonalRainfall, None] = None
+        entity: YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None = None
 
         if time_mode.casefold() == TimeMode.YEARLY:
             entity = self.yearly_rainfall

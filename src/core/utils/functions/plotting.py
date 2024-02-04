@@ -3,8 +3,6 @@ Provides useful functions for plotting rainfall data in all shapes.
 """
 from __future__ import annotations
 
-from typing import Union
-
 import pandas as pd
 from matplotlib import pyplot as plt
 
@@ -55,7 +53,7 @@ def scatter_column_according_to_year(
     ):
         return False
 
-    label_value: Union[str, None] = label.value if display_label else None
+    label_value: str | None = label.value if display_label else None
     plt.scatter(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],

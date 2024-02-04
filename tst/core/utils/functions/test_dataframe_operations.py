@@ -5,7 +5,6 @@ import pandas as pd
 import src.core.utils.functions.dataframe_operations as df_opr
 from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
-
 from tst.core.models.test_yearly_rainfall import yearly_rainfall
 
 
@@ -38,6 +37,19 @@ class TestDataframeOperations:
         assert removed
 
         yearly_rainfall.add_savgol_filter()
+
+    @staticmethod
+    def test_concat_columns() -> None:
+        result = df_opr.concat_columns(
+            [
+                pd.DataFrame(data={"col1": [1, 2, 3]}),
+                pd.DataFrame(data={"col2": [4, 5, 6]}),
+            ]
+        )
+
+        assert isinstance(result, pd.DataFrame)
+        assert all(column in result.columns for column in ["col1", "col2"])
+        assert len(result) == 3
 
     @staticmethod
     def test_retrieve_rainfall_data_with_constraints() -> None:

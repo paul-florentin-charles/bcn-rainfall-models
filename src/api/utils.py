@@ -3,8 +3,6 @@ Collection of utility functions for API purposes.
 """
 from __future__ import annotations
 
-from typing import Union
-
 from flask import Response
 from werkzeug.datastructures.structures import MultiDict
 
@@ -35,14 +33,14 @@ def parse_args(args: MultiDict[str, str], *params: dict) -> tuple:
     return tuple(to_return)
 
 
-def swagger_type_to_python_type(swagger_type: str) -> Union[type, None]:
+def swagger_type_to_python_type(swagger_type: str) -> type | None:
     """
     Convert a Swagger known type into a Python type.
 
     :param swagger_type: Swagger type as a string.
     :return: Python type if recognized. None otherwise.
     """
-    python_type: Union[type, None] = None
+    python_type: type | None = None
     if swagger_type == "integer":
         python_type = int
     elif swagger_type == "number":
@@ -58,7 +56,7 @@ def manage_time_mode_errors(
     time_mode: str,
     month: str | None = None,
     season: str | None = None,
-) -> Union[Response, dict]:
+) -> Response | dict:
     """
     Manage errors related to time mode issues.
     If time mode is set to monthly and month is None.

@@ -4,6 +4,8 @@ containing rainfall data over years.
 """
 from __future__ import annotations
 
+from typing import List
+
 import pandas as pd
 
 from src.core.utils.enums.labels import Label
@@ -54,6 +56,17 @@ def remove_column(yearly_rainfall: pd.DataFrame, label: Label) -> bool:
     return True
 
 
+def concat_columns(data_frames: List[pd.DataFrame]) -> pd.DataFrame:
+    """
+    Concatenate pandas DataFrame objects along the column axis.
+
+    :param data_frames: List of pandas DataFrame of same dimension along the row axis.
+    :return: The concatenation result as a pandas DataFrame.
+    """
+
+    return pd.concat(tuple(data_frames), axis="columns")
+
+
 def retrieve_rainfall_data_with_constraints(
     monthly_rainfall: pd.DataFrame,
     starting_year: int,
@@ -76,17 +89,16 @@ def retrieve_rainfall_data_with_constraints(
     """
     years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
     if end_month is not None and end_month < start_month:
-        rainfall: pd.Series = pd.concat(
-            (
+        rainfall: pd.DataFrame = concat_columns(
+            [
                 monthly_rainfall.iloc[:, start_month : start_month + 1],
                 monthly_rainfall.iloc[:, 1:end_month],
-            ),
-            axis="columns",
-        ).sum(axis="columns")
+            ]
+        )
     else:
-        rainfall = monthly_rainfall.iloc[:, start_month:end_month].sum(axis="columns")
+        rainfall = monthly_rainfall.iloc[:, start_month:end_month]
 
-    yearly_rainfall = pd.concat((years, rainfall), axis="columns").set_axis(
+    yearly_rainfall = concat_columns([years, rainfall.sum(axis="columns")]).set_axis(
         [Label.YEAR.value, Label.RAINFALL.value], axis="columns"
     )
 
