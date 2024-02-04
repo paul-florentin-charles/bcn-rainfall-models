@@ -4,7 +4,6 @@ Provides a bunch of Marshmallow Schemas to validate rainfall data processed thro
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Union
 
 from flasgger import Schema, fields
 
@@ -22,7 +21,7 @@ class BaseRainfallSchema(Schema):
     """
 
     name: str = fields.Str()
-    value: Union[float, int] = fields.Number()
+    value: float | int = fields.Number()
     begin_year: int = fields.Int(load_default=param.begin_year["default"])
     end_year: int | None = fields.Int(allow_none=True)
     time_mode: TimeMode = fields.Enum(TimeMode, load_default=TimeMode.YEARLY)

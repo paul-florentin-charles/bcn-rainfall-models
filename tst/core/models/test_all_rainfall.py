@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 from shutil import rmtree
 
@@ -24,12 +26,15 @@ season: str = Season.SPRING.name
 class TestAllRainfall:
     @staticmethod
     def test_export_all_data_to_csv() -> None:
-        folder_path: str = all_rainfall.export_all_data_to_csv()
+        folder_path: str | None = None
+        try:
+            folder_path = all_rainfall.export_all_data_to_csv()
 
-        assert isinstance(folder_path, str)
-        assert Path(folder_path).exists()
-
-        rmtree(folder_path)
+            assert isinstance(folder_path, str)
+            assert Path(folder_path).exists()
+        finally:
+            if folder_path:
+                rmtree(folder_path, ignore_errors=True)
 
     @staticmethod
     def test_get_average_rainfall() -> None:

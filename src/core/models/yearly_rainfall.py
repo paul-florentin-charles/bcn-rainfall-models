@@ -4,7 +4,7 @@ Provides a rich class to manipulate Yearly Rainfall data.
 from __future__ import annotations
 
 import operator as opr
-from typing import Union, Tuple
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -95,7 +95,7 @@ class YearlyRainfall:
 
         return df_opr.get_rainfall_within_year_interval(self.data, begin_year, end_year)
 
-    def export_as_csv(self, path: str | None = None) -> Union[str, None]:
+    def export_as_csv(self, path: str | None = None) -> str | None:
         """
         Export the actual instance data state as a CSV.
 
@@ -225,7 +225,7 @@ class YearlyRainfall:
         begin_year: int,
         end_year: int | None = None,
         label: Label | None = Label.RAINFALL,
-    ) -> Union[float, None]:
+    ) -> float | None:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
         and for an optional time range.
