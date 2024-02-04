@@ -65,30 +65,24 @@ class AllRainfall:
         last_year: int = self.yearly_rainfall.get_last_year()
 
         self.yearly_rainfall.export_as_csv(
-            path="/".join(
-                [folder_path, f"{self.starting_year}_{last_year}_rainfall.csv"]
-            )
+            path=Path(folder_path, f"{self.starting_year}_{last_year}_rainfall.csv")
         )
 
         for monthly_rainfall in self.monthly_rainfalls.values():
             monthly_rainfall.export_as_csv(
-                path="/".join(
-                    [
-                        folder_path,
-                        "months",
-                        f"{self.starting_year}_{last_year}_{monthly_rainfall.month.name.lower()}_rainfall.csv",
-                    ]
+                path=Path(
+                    folder_path,
+                    "months",
+                    f"{self.starting_year}_{last_year}_{monthly_rainfall.month.name.lower()}_rainfall.csv",
                 )
             )
 
         for season_rainfall in self.seasonal_rainfalls.values():
             season_rainfall.export_as_csv(
-                path="/".join(
-                    [
-                        folder_path,
-                        "seasons",
-                        f"{self.starting_year}_{last_year}_{season_rainfall.season.name.lower()}_rainfall.csv",
-                    ]
+                path=Path(
+                    folder_path,
+                    "seasons",
+                    f"{self.starting_year}_{last_year}_{season_rainfall.season.name.lower()}_rainfall.csv",
                 )
             )
 
@@ -99,7 +93,7 @@ class AllRainfall:
         time_mode: str,
         month: str | None = None,
         season: str | None = None,
-        path: str | None = None,
+        path: str | Path | None = None,
     ) -> str | None:
         """
         Export the data state of a specific time mode as a CSV.

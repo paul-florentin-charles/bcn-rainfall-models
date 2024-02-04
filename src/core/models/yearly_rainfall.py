@@ -4,6 +4,7 @@ Provides a rich class to manipulate Yearly Rainfall data.
 from __future__ import annotations
 
 import operator as opr
+from pathlib import Path
 from typing import Tuple
 
 import matplotlib.pyplot as plt
@@ -95,7 +96,7 @@ class YearlyRainfall:
 
         return df_opr.get_rainfall_within_year_interval(self.data, begin_year, end_year)
 
-    def export_as_csv(self, path: str | None = None) -> str | None:
+    def export_as_csv(self, path: str | Path | None = None) -> str | None:
         """
         Export the actual instance data state as a CSV.
 
