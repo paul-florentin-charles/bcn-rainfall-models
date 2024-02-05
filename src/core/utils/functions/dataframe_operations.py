@@ -56,7 +56,7 @@ def remove_column(yearly_rainfall: pd.DataFrame, label: Label) -> bool:
     return True
 
 
-def concat_columns(data_frames: List[pd.DataFrame]) -> pd.DataFrame:
+def concat_columns(data_frames: List[pd.DataFrame | pd.Series]) -> pd.DataFrame:
     """
     Concatenate pandas DataFrame objects along the column axis.
 
