@@ -33,23 +33,25 @@ class AllRainfall:
         start_year=1971,
         round_precision=2,
     ):
-        self.dataset_url: str = dataset_url_or_path
-        self.starting_year: int = start_year
-        self.round_precision: int = round_precision
+        self.dataset_url = dataset_url_or_path
+        self.starting_year = start_year
+        self.round_precision = round_precision
         self.raw_data: pd.DataFrame = pd.read_csv(dataset_url_or_path)
-        self.yearly_rainfall: YearlyRainfall = YearlyRainfall(
+        self.yearly_rainfall = YearlyRainfall(
             self.raw_data, start_year, round_precision
         )
-        self.monthly_rainfalls: dict = {}
-        for month in Month:
-            self.monthly_rainfalls[month.name] = MonthlyRainfall(
+        self.monthly_rainfalls = {
+            month.name: MonthlyRainfall(
                 self.raw_data, month, start_year, round_precision
             )
-        self.seasonal_rainfalls: dict = {}
-        for season in Season:
-            self.seasonal_rainfalls[season.name] = SeasonalRainfall(
+            for month in Month
+        }
+        self.seasonal_rainfalls = {
+            season.name: SeasonalRainfall(
                 self.raw_data, season, start_year, round_precision
             )
+            for season in Season
+        }
 
     def export_all_data_to_csv(self, folder_path="csv_data") -> str:
         """
@@ -360,15 +362,16 @@ class AllRainfall:
         Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
         Set if time_mode is 'SEASONAL' (optional)
         :return: Corresponding entity as a class instance.
-        None if time mode is unknown.
+        None if time mode is unknown, time mode is 'MONTHLY' and month is None
+        or time mode is 'SEASONAL' and season is None.
         """
         entity: YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None = None
 
         if time_mode.casefold() == TimeMode.YEARLY:
             entity = self.yearly_rainfall
-        elif time_mode.casefold() == TimeMode.MONTHLY:
+        elif time_mode.casefold() == TimeMode.MONTHLY and month:
             entity = self.monthly_rainfalls[month]
-        elif time_mode.casefold() == TimeMode.SEASONAL:
+        elif time_mode.casefold() == TimeMode.SEASONAL and season:
             entity = self.seasonal_rainfalls[season]
 
         return entity
