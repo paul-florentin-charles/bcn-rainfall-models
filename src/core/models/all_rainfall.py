@@ -320,7 +320,12 @@ class AllRainfall:
 
         return self.yearly_rainfall.get_last_year()
 
-    def bar_rainfall_averages(self, monthly: bool | None = True) -> list:
+    def bar_rainfall_averages(
+        self,
+        monthly: bool | None = True,
+        begin_year: int | None = None,
+        end_year: int | None = None,
+    ) -> list:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
@@ -328,11 +333,15 @@ class AllRainfall:
         if False, plots seasonal rainfall averages.
         :return: A list of the Rainfall averages for each month or season.
         """
-        label: str = f"Average rainfall (mm) between {self.starting_year} and {self.get_last_year()}"
+        label: str = f"Average rainfall (mm) between {begin_year or self.starting_year} and {self.get_last_year()}"
         if monthly:
-            return plotting.bar_monthly_rainfall_averages(self.monthly_rainfalls, label)
+            return plotting.bar_monthly_rainfall_averages(
+                self.monthly_rainfalls, label, begin_year, end_year
+            )
 
-        return plotting.bar_seasonal_rainfall_averages(self.seasonal_rainfalls, label)
+        return plotting.bar_seasonal_rainfall_averages(
+            self.seasonal_rainfalls, label, begin_year, end_year
+        )
 
     def bar_rainfall_linreg_slopes(self, monthly: bool | None = True) -> list:
         """

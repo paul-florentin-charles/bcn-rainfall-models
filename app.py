@@ -260,9 +260,11 @@ def minimal_csv() -> Response:
 @app.route(f"{base_path}/graph/monthly_averages")
 @swag_from(monthly_averages_specs.route_specs)
 def monthly_averages() -> Response:
-    params: tuple = parse_args(request.args, param.file_name)
+    params: tuple = parse_args(
+        request.args, param.file_name, param.begin_year, param.end_year
+    )
 
-    all_rainfall.bar_rainfall_averages()
+    all_rainfall.bar_rainfall_averages(begin_year=params[1], end_year=params[2])
     plt.savefig(params[0], format="svg")
     plt.close()
 
@@ -274,7 +276,9 @@ def monthly_averages() -> Response:
 def seasonal_averages() -> Response:
     params: tuple = parse_args(request.args, param.file_name)
 
-    all_rainfall.bar_rainfall_averages(monthly=False)
+    all_rainfall.bar_rainfall_averages(
+        monthly=False, begin_year=params[1], end_year=params[2]
+    )
     plt.savefig(params[0], format="svg")
     plt.close()
 
