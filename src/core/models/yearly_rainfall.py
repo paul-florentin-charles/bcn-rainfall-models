@@ -205,14 +205,14 @@ class YearlyRainfall:
         if end_year is None:
             end_year = self.get_last_year()
 
-        gap: int = end_year - begin_year + 1
+        gap = end_year - begin_year + 1
         if gap == 0:
             return 0.0
 
-        n_years_above_normal: int = self.get_years_above_normal(
+        n_years_above_normal = self.get_years_above_normal(
             normal_year, begin_year, end_year
         )
-        n_years_below_normal: int = self.get_years_below_normal(
+        n_years_below_normal = self.get_years_below_normal(
             normal_year, begin_year, end_year
         )
 
@@ -261,7 +261,7 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :return: None
         """
-        normal: float = self.get_average_yearly_rainfall(begin_year, end_year)
+        normal = self.get_average_yearly_rainfall(begin_year, end_year)
         if normal == 0.0:
             return
 
@@ -279,7 +279,7 @@ class YearlyRainfall:
         years = self.data[Label.YEAR.value].values.reshape(-1, 1)  # type: ignore
         rainfalls = self.data[Label.RAINFALL.value].values
 
-        reg: LinearRegression = LinearRegression()
+        reg = LinearRegression()
         reg.fit(years, rainfalls)
         self.data[Label.LINEAR_REGRESSION.value] = reg.predict(years)
         self.data[Label.LINEAR_REGRESSION.value] = round(
@@ -319,7 +319,7 @@ class YearlyRainfall:
             [Label.YEAR.value, Label.RAINFALL.value]
         ].values
 
-        kmeans: KMeans = KMeans(n_init=10, n_clusters=kmeans_clusters)
+        kmeans = KMeans(n_init=10, n_clusters=kmeans_clusters)
         kmeans.fit(fit_data)
         self.data[Label.KMEANS.value] = kmeans.predict(fit_data)
 
@@ -344,11 +344,7 @@ class YearlyRainfall:
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        success: bool = plotting.bar_column_according_to_year(self.data, Label.RAINFALL)
-        if not success:
-            return False
-
-        return True
+        return plotting.bar_column_according_to_year(self.data, Label.RAINFALL)
 
     @plots.legend()
     def plot_linear_regression(self) -> bool:
@@ -358,13 +354,9 @@ class YearlyRainfall:
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        success: bool = plotting.plot_column_according_to_year(
+        return plotting.plot_column_according_to_year(
             self.data, Label.LINEAR_REGRESSION, "red"
         )
-        if not success:
-            return False
-
-        return True
 
     @plots.legend()
     def plot_savgol_filter(self) -> bool:
@@ -374,25 +366,22 @@ class YearlyRainfall:
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        success: bool = plotting.plot_column_according_to_year(
+        return plotting.plot_column_according_to_year(
             self.data, Label.SAVITZKY_GOLAY_FILTER, "orange"
         )
-        if not success:
-            return False
-
-        return True
 
     @plots.legend(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
-    def plot_normal(self, display_clusters: bool | None = False) -> bool:
+    def plot_normal(self, display_clusters=False) -> bool:
         """
         Plot Rainfall normals data according to year.
 
-        :param display_clusters: The number of clusters to display
+        :param display_clusters: Whether to display clusters computed with k-means or not.
+        Defaults to False (optional).
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
         plt.axhline(y=100.0, color="orange", linestyle="dashed", label="Normal")
 
-        success: bool = False
+        success = False
         if not display_clusters:
             success = plotting.scatter_column_according_to_year(
                 self.data, Label.PERCENTAGE_OF_NORMAL
@@ -408,7 +397,4 @@ class YearlyRainfall:
                 if not success:
                     return False
 
-        if not success:
-            return False
-
-        return True
+        return success

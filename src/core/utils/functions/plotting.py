@@ -53,11 +53,10 @@ def scatter_column_according_to_year(
     ):
         return False
 
-    label_value: str | None = label.value if display_label else None
     plt.scatter(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],
-        label=label_value,
+        label=label.value if display_label else None,
     )
 
     return True
