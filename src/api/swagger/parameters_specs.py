@@ -1,11 +1,13 @@
 """
 Swagger specifications for route parameters.
 """
+from typing import Dict, Any
+
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
-normal_year: dict = {
+normal_year: Dict[str, Any] = {
     "default": 1971,
     "required": True,
     "type": "integer",
@@ -13,7 +15,7 @@ normal_year: dict = {
     "in": "query",
 }
 
-begin_year: dict = {
+begin_year: Dict[str, Any] = {
     "default": 1991,
     "required": True,
     "type": "integer",
@@ -21,7 +23,7 @@ begin_year: dict = {
     "in": "query",
 }
 
-end_year: dict = {
+end_year: Dict[str, Any] = {
     "default": None,
     "required": False,
     "type": "integer",
@@ -29,7 +31,7 @@ end_year: dict = {
     "in": "query",
 }
 
-time_mode: dict = {
+time_mode: Dict[str, Any] = {
     "default": TimeMode.YEARLY.name,
     "required": True,
     "type": "string",
@@ -38,7 +40,7 @@ time_mode: dict = {
     "in": "query",
 }
 
-month: dict = {
+month: Dict[str, Any] = {
     "default": None,
     "required": False,
     "type": "string",
@@ -47,7 +49,7 @@ month: dict = {
     "in": "query",
 }
 
-season: dict = {
+season: Dict[str, Any] = {
     "default": None,
     "required": False,
     "type": "string",
@@ -56,9 +58,9 @@ season: dict = {
     "in": "query",
 }
 
-time_params: tuple = (time_mode, month, season)
+time_params = (time_mode, month, season)
 
-file_name: dict = {
+file_name: Dict[str, Any] = {
     "default": None,
     "required": True,
     "type": "string",

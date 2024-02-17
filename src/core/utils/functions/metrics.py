@@ -17,10 +17,10 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, round_precision=2) -> fl
     Computes Rainfall average.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
-    :param round_precision: A float representing the rainfall precision (optional).
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float representing the average Rainfall.
     """
-    nb_years: int = len(yearly_rainfall)
+    nb_years = len(yearly_rainfall)
     if nb_years == 0:
         return 0.0
 
@@ -68,7 +68,7 @@ def get_normal(yearly_rainfall: pd.DataFrame, begin_year, round_precision=2) -> 
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: A year to start the time frame.
-    :param round_precision: A float representing the rainfall precision (optional).
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float storing the normal.
     """
 

@@ -10,9 +10,9 @@ class Label(str, BaseEnum):
     An Enum listing labels in DataFrame columns.
     """
 
-    YEAR: str = "Year"
-    RAINFALL: str = "Rainfall"
-    PERCENTAGE_OF_NORMAL: str = "Percentage of normal"
-    LINEAR_REGRESSION: str = "Linear regression"
-    SAVITZKY_GOLAY_FILTER: str = "Savitzky–Golay filter"
-    KMEANS: str = "K-Means"
+    YEAR = "Year"
+    RAINFALL = "Rainfall"
+    PERCENTAGE_OF_NORMAL = "Percentage of normal"
+    LINEAR_REGRESSION = "Linear regression"
+    SAVITZKY_GOLAY_FILTER = "Savitzky–Golay filter"
+    KMEANS = "K-Means"

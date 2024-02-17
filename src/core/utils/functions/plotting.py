@@ -37,7 +37,7 @@ def plot_column_according_to_year(
 
 
 def scatter_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, display_label: bool = True
+    yearly_rainfall: pd.DataFrame, label: Label, display_label=True
 ) -> bool:
     """
     Scatter specified column data according to year.
@@ -53,11 +53,10 @@ def scatter_column_according_to_year(
     ):
         return False
 
-    label_value: str | None = label.value if display_label else None
     plt.scatter(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],
-        label=label_value,
+        label=label.value if display_label else None,
     )
 
     return True
@@ -88,7 +87,7 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
 
 def bar_monthly_rainfall_averages(
     monthly_rainfalls: dict,
-    label: str | None = "Average rainfall (mm)",
+    label="Average rainfall (mm)",
     begin_year: int | None = None,
     end_year: int | None = None,
 ) -> list:
@@ -98,6 +97,7 @@ def bar_monthly_rainfall_averages(
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :param label: A string to use as a label for bar graphic. (optional)
+    Defaults to "Average rainfall (mm)".
     :param begin_year: An integer representing the year
     to start getting our rainfall values (optional).
     :param end_year: An integer representing the year
@@ -140,7 +140,7 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
 
 def bar_seasonal_rainfall_averages(
     seasonal_rainfalls: dict,
-    label: str | None = "Average rainfall (mm)",
+    label="Average rainfall (mm)",
     begin_year: int | None = None,
     end_year: int | None = None,
 ) -> list:
@@ -150,6 +150,7 @@ def bar_seasonal_rainfall_averages(
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :param label: A string to use as a label for bar graphic. (optional)
+    Defaults to "Average rainfall (mm)".
     :param begin_year: An integer representing the year
     to start getting our rainfall values (optional).
     :param end_year: An integer representing the year

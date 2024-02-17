@@ -322,18 +322,22 @@ class AllRainfall:
 
     def bar_rainfall_averages(
         self,
-        monthly: bool | None = True,
+        monthly=True,
         begin_year: int | None = None,
         end_year: int | None = None,
     ) -> list:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
-        :param monthly: if True, plots monthly rainfall averages.
-        if False, plots seasonal rainfall averages.
+        :param monthly: If True, plots monthly rainfall averages.
+        If False, plots seasonal rainfall averages. Defaults to True (optional).
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values. (optional).
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
         :return: A list of the Rainfall averages for each month or season.
         """
-        label: str = f"Average rainfall (mm) between {begin_year or self.starting_year} and {self.get_last_year()}"
+        label = f"Average rainfall (mm) between {begin_year or self.starting_year} and {self.get_last_year()}"
         if monthly:
             return plotting.bar_monthly_rainfall_averages(
                 self.monthly_rainfalls, label, begin_year, end_year
@@ -343,12 +347,12 @@ class AllRainfall:
             self.seasonal_rainfalls, label, begin_year, end_year
         )
 
-    def bar_rainfall_linreg_slopes(self, monthly: bool | None = True) -> list:
+    def bar_rainfall_linreg_slopes(self, monthly=True) -> list:
         """
         Plots a bar graphic displaying linear regression slope for each month or each season.
 
         :param monthly: if True, plots monthly rainfall LinReg slopes.
-        if False, plots seasonal rainfall LinReg slopes.
+        if False, plots seasonal rainfall LinReg slopes. Defaults to True (optional).
         :return: A list of the Rainfall LinReg slopes for each month or season.
         """
         if monthly:

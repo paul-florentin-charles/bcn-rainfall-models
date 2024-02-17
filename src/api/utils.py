@@ -20,17 +20,15 @@ def parse_args(args: MultiDict[str, str], *params: dict) -> tuple:
     :param params: Desired parameters to parse as a list of swagger-conformed dicts.
     :return: Tuple containing retrieved values from query parameters.
     """
-    to_return: list = []
-    for param in params:
-        to_return.append(
-            args.get(
-                param["name"],
-                default=param["default"],
-                type=swagger_type_to_python_type(param["type"]),
-            )
-        )
 
-    return tuple(to_return)
+    return tuple(
+        args.get(
+            param["name"],
+            default=param["default"],
+            type=swagger_type_to_python_type(param["type"]),
+        )
+        for param in params
+    )
 
 
 def swagger_type_to_python_type(swagger_type: str) -> type | None:

@@ -10,6 +10,7 @@ from src.api.swagger.media_types import MediaType
 route_specs: dict = {
     "operationId": "getMonthlyAverages",
     "summary": "Retrieve monthly averages of data as an SVG.",
+    "description": "If no end year is set, will default to most recent data year (usually last year).",
     "tags": ["Graph"],
     "responses": {
         "200": {

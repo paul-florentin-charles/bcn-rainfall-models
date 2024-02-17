@@ -45,7 +45,7 @@ base_path: str = swagger.template["basePath"]
 @app.route(f"{base_path}/rainfall/average")
 @swag_from(average_specs.route_specs)
 def average_rainfall() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args,
         param.time_mode,
         param.begin_year,
@@ -54,9 +54,7 @@ def average_rainfall() -> Response:
         param.season,
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[3], params[4]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[3], params[4])
     if isinstance(to_return, Response):
         return to_return
 
@@ -65,9 +63,7 @@ def average_rainfall() -> Response:
             "name": "average rainfall (mm)",
             "value": all_rainfall.get_average_rainfall(*params),
             "begin_year": params[1],
-            "end_year": params[2]
-            if params[2] is not None
-            else all_rainfall.get_last_year(),
+            "end_year": params[2] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
@@ -78,13 +74,11 @@ def average_rainfall() -> Response:
 @app.route(f"{base_path}/rainfall/normal")
 @swag_from(normal_specs.route_specs)
 def normal_rainfall() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args, param.time_mode, param.begin_year, param.month, param.season
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[2], params[3]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[2], params[3])
     if isinstance(to_return, Response):
         return to_return
 
@@ -104,7 +98,7 @@ def normal_rainfall() -> Response:
 @app.route(f"{base_path}/rainfall/relative_distance_to_normal")
 @swag_from(relative_distance_to_normal_specs.route_specs)
 def rainfall_relative_distance_to_normal() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args,
         param.time_mode,
         param.normal_year,
@@ -114,9 +108,7 @@ def rainfall_relative_distance_to_normal() -> Response:
         param.season,
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[4], params[5]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
     if isinstance(to_return, Response):
         return to_return
 
@@ -126,9 +118,7 @@ def rainfall_relative_distance_to_normal() -> Response:
             "value": all_rainfall.get_relative_distance_from_normal(*params),
             "normal_year": params[1],
             "begin_year": params[2],
-            "end_year": params[3]
-            if params[3] is not None
-            else all_rainfall.get_last_year(),
+            "end_year": params[3] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
@@ -139,7 +129,7 @@ def rainfall_relative_distance_to_normal() -> Response:
 @app.route(f"{base_path}/rainfall/standard_deviation")
 @swag_from(standard_deviation_specs.route_specs)
 def rainfall_standard_deviation() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args,
         param.time_mode,
         param.begin_year,
@@ -148,9 +138,7 @@ def rainfall_standard_deviation() -> Response:
         param.season,
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[3], params[4]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[3], params[4])
     if isinstance(to_return, Response):
         return to_return
 
@@ -159,9 +147,7 @@ def rainfall_standard_deviation() -> Response:
             "name": "rainfall standard deviation (mm)",
             "value": all_rainfall.get_rainfall_standard_deviation(*params),
             "begin_year": params[1],
-            "end_year": params[2]
-            if params[2] is not None
-            else all_rainfall.get_last_year(),
+            "end_year": params[2] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
@@ -172,7 +158,7 @@ def rainfall_standard_deviation() -> Response:
 @app.route(f"{base_path}/year/below_normal")
 @swag_from(below_normal_specs.route_specs)
 def years_below_normal() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args,
         param.time_mode,
         param.normal_year,
@@ -182,9 +168,7 @@ def years_below_normal() -> Response:
         param.season,
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[4], params[5]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
     if isinstance(to_return, Response):
         return to_return
 
@@ -194,9 +178,7 @@ def years_below_normal() -> Response:
             "value": all_rainfall.get_years_below_normal(*params),
             "normal_year": params[1],
             "begin_year": params[2],
-            "end_year": params[3]
-            if params[3] is not None
-            else all_rainfall.get_last_year(),
+            "end_year": params[3] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
@@ -207,7 +189,7 @@ def years_below_normal() -> Response:
 @app.route(f"{base_path}/year/above_normal")
 @swag_from(above_normal_specs.route_specs)
 def years_above_normal() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args,
         param.time_mode,
         param.normal_year,
@@ -217,9 +199,7 @@ def years_above_normal() -> Response:
         param.season,
     )
 
-    to_return: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[4], params[5]
-    )
+    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
     if isinstance(to_return, Response):
         return to_return
 
@@ -229,9 +209,7 @@ def years_above_normal() -> Response:
             "value": all_rainfall.get_years_above_normal(*params),
             "normal_year": params[1],
             "begin_year": params[2],
-            "end_year": params[3]
-            if params[3] is not None
-            else all_rainfall.get_last_year(),
+            "end_year": params[3] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
@@ -242,13 +220,11 @@ def years_above_normal() -> Response:
 @app.route(f"{base_path}/csv/minimal_csv")
 @swag_from(minimal_csv_specs.route_specs)
 def minimal_csv() -> Response:
-    params: tuple = parse_args(
+    params = parse_args(
         request.args, param.time_mode, param.month, param.season, param.file_name
     )
 
-    error: Response | dict = manage_time_mode_errors(
-        {}, params[0], params[1], params[2]
-    )
+    error = manage_time_mode_errors({}, params[0], params[1], params[2])
     if isinstance(error, Response):
         return error
 
@@ -260,9 +236,7 @@ def minimal_csv() -> Response:
 @app.route(f"{base_path}/graph/monthly_averages")
 @swag_from(monthly_averages_specs.route_specs)
 def monthly_averages() -> Response:
-    params: tuple = parse_args(
-        request.args, param.file_name, param.begin_year, param.end_year
-    )
+    params = parse_args(request.args, param.file_name, param.begin_year, param.end_year)
 
     all_rainfall.bar_rainfall_averages(begin_year=params[1], end_year=params[2])
     plt.savefig(params[0], format="svg")
@@ -274,9 +248,7 @@ def monthly_averages() -> Response:
 @app.route(f"{base_path}/graph/seasonal_averages")
 @swag_from(seasonal_averages_specs.route_specs)
 def seasonal_averages() -> Response:
-    params: tuple = parse_args(
-        request.args, param.file_name, param.begin_year, param.end_year
-    )
+    params = parse_args(request.args, param.file_name, param.begin_year, param.end_year)
 
     all_rainfall.bar_rainfall_averages(
         monthly=False, begin_year=params[1], end_year=params[2]
