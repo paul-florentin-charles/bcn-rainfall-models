@@ -331,6 +331,10 @@ class AllRainfall:
 
         :param monthly: if True, plots monthly rainfall averages.
         if False, plots seasonal rainfall averages.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
         :return: A list of the Rainfall averages for each month or season.
         """
         label: str = f"Average rainfall (mm) between {begin_year or self.starting_year} and {self.get_last_year()}"
