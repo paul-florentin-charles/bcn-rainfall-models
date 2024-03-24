@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import operator as opr
 from pathlib import Path
-from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -269,7 +268,7 @@ class YearlyRainfall:
             self.data[Label.RAINFALL.value] / normal * 100.0, self.round_precision
         )
 
-    def add_linear_regression(self) -> Tuple[float, float]:
+    def add_linear_regression(self) -> tuple[float, float]:
         """
         Compute and add Linear Regression of Rainfall according to Year
         to our pandas DataFrame.
