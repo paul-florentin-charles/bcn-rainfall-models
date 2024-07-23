@@ -49,12 +49,12 @@ def swagger_type_to_python_type(swagger_type: str) -> type | None:
     return python_type
 
 
-def manage_time_mode_errors(
+def return_time_mode_error_or_fill_response_dict(
     response_dict: dict,
     time_mode: str,
     month: str | None = None,
     season: str | None = None,
-) -> Response | dict:
+) -> Response | None:
     """
     Manage errors related to time mode issues.
     If time mode is set to monthly and month is None.
@@ -67,7 +67,7 @@ def manage_time_mode_errors(
     :param season: A string corresponding to the season name.
     Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
     Set if time_mode is 'SEASONAL' (optional)
-    :return: Either a Flask Response if there is an error or the updated dictionary.
+    :return: Either a Flask Response if there is an error or None.
     """
     if time_mode == TimeMode.MONTHLY.name:
         if month is None:
@@ -81,4 +81,4 @@ def manage_time_mode_errors(
 
         response_dict["season"] = Season[season]
 
-    return response_dict
+    return None
