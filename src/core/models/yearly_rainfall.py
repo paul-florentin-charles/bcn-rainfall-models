@@ -80,20 +80,22 @@ class YearlyRainfall:
         )
 
     def get_yearly_rainfall(
-        self, begin_year: int | None = None, end_year: int | None = None
+        self, begin_year: int, end_year: int | None = None
     ) -> pd.DataFrame:
         """
         Retrieves Yearly Rainfall within a specific year range.
 
         :param begin_year: An integer representing the year
-        to start getting our rainfall values (optional).
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
 
-        return df_opr.get_rainfall_within_year_interval(self.data, begin_year, end_year)
+        return df_opr.get_rainfall_within_year_interval(
+            self.data, begin_year=begin_year, end_year=end_year
+        )
 
     def export_as_csv(self, path: str | Path | None = None) -> str | None:
         """
@@ -107,13 +109,13 @@ class YearlyRainfall:
         return self.data.to_csv(path_or_buf=path, index=False)
 
     def get_average_yearly_rainfall(
-        self, begin_year: int | None = None, end_year: int | None = None
+        self, begin_year: int, end_year: int | None = None
     ) -> float:
         """
         Computes Rainfall average for a specific year range.
 
         :param begin_year: An integer representing the year
-        to start getting our rainfall values (optional).
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :return: A float representing the average Rainfall.

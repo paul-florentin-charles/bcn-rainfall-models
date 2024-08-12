@@ -3,89 +3,89 @@ from src.core.utils.enums.months import Month
 
 class TestMonths:
     @staticmethod
-    def test_months_count() -> None:
+    def test_months_count():
         assert len(Month) == 12
 
     @staticmethod
-    def test_january() -> None:
-        month: Month = Month.JANUARY
+    def test_january():
+        month = Month.JANUARY
 
         assert isinstance(month.value, int)
         assert month.value == 1
 
     @staticmethod
-    def test_february() -> None:
-        month: Month = Month.FEBRUARY
+    def test_february():
+        month = Month.FEBRUARY
 
         assert isinstance(month.value, int)
         assert month.value == 2
 
     @staticmethod
-    def test_march() -> None:
-        month: Month = Month.MARCH
+    def test_march():
+        month = Month.MARCH
 
         assert isinstance(month.value, int)
         assert month.value == 3
 
     @staticmethod
-    def test_april() -> None:
-        month: Month = Month.APRIL
+    def test_april():
+        month = Month.APRIL
 
         assert isinstance(month.value, int)
         assert month.value == 4
 
     @staticmethod
-    def test_may() -> None:
-        month: Month = Month.MAY
+    def test_may():
+        month = Month.MAY
 
         assert isinstance(month.value, int)
         assert month.value == 5
 
     @staticmethod
-    def test_june() -> None:
-        month: Month = Month.JUNE
+    def test_june():
+        month = Month.JUNE
 
         assert isinstance(month.value, int)
         assert month.value == 6
 
     @staticmethod
-    def test_july() -> None:
-        month: Month = Month.JULY
+    def test_july():
+        month = Month.JULY
 
         assert isinstance(month.value, int)
         assert month.value == 7
 
     @staticmethod
-    def test_august() -> None:
-        month: Month = Month.AUGUST
+    def test_august():
+        month = Month.AUGUST
 
         assert isinstance(month.value, int)
         assert month.value == 8
 
     @staticmethod
-    def test_september() -> None:
-        month: Month = Month.SEPTEMBER
+    def test_september():
+        month = Month.SEPTEMBER
 
         assert isinstance(month.value, int)
         assert month.value == 9
 
     @staticmethod
-    def test_october() -> None:
-        month: Month = Month.OCTOBER
+    def test_october():
+        month = Month.OCTOBER
 
         assert isinstance(month.value, int)
         assert month.value == 10
 
     @staticmethod
-    def test_november() -> None:
-        month: Month = Month.NOVEMBER
+    def test_november():
+        month = Month.NOVEMBER
 
         assert isinstance(month.value, int)
         assert month.value == 11
 
     @staticmethod
-    def test_december() -> None:
-        month: Month = Month.DECEMBER
+    def test_december():
+        month = Month.DECEMBER
 
         assert isinstance(month.value, int)
         assert month.value == 12

@@ -1,42 +1,39 @@
 from operator import lt
 
-from src.core.utils.functions import metrics
 from src.core.utils.enums.labels import Label
-
-from tst.core.models.test_yearly_rainfall import yearly_rainfall
+from src.core.utils.functions import metrics
+from tst.core.models.test_yearly_rainfall import YEARLY_RAINFALL
 
 
 class TestMetrics:
     @staticmethod
-    def test_get_average_rainfall() -> None:
-        precision: int = 3
-        avg_rainfall: float = metrics.get_average_rainfall(
-            yearly_rainfall.data, precision
-        )
+    def test_get_average_rainfall():
+        precision = 3
+        avg_rainfall = metrics.get_average_rainfall(YEARLY_RAINFALL.data, precision)
 
         assert isinstance(avg_rainfall, float)
         assert len(str(avg_rainfall).split(".")[1]) <= precision
 
     @staticmethod
-    def test_get_years_compared_to_given_rainfall_value() -> None:
-        nb_years: int = metrics.get_years_compared_to_given_rainfall_value(
-            yearly_rainfall.data, metrics.get_average_rainfall(yearly_rainfall.data), lt
+    def test_get_years_compared_to_given_rainfall_value():
+        nb_years = metrics.get_years_compared_to_given_rainfall_value(
+            YEARLY_RAINFALL.data, metrics.get_average_rainfall(YEARLY_RAINFALL.data), lt
         )
 
-        assert nb_years <= len(yearly_rainfall.data)
+        assert nb_years <= len(YEARLY_RAINFALL.data)
 
     @staticmethod
-    def test_get_clusters_number() -> None:
-        nb_clusters: int = metrics.get_clusters_number(yearly_rainfall.data)
+    def test_get_clusters_number():
+        nb_clusters = metrics.get_clusters_number(YEARLY_RAINFALL.data)
 
-        if Label.KMEANS not in yearly_rainfall.data:
+        if Label.KMEANS not in YEARLY_RAINFALL.data:
             assert nb_clusters == 0
         else:
             assert nb_clusters > 0
 
     @staticmethod
-    def test_get_normal() -> None:
-        normal: float = metrics.get_normal(yearly_rainfall.data, begin_year=1991)
+    def test_get_normal():
+        normal = metrics.get_normal(YEARLY_RAINFALL.data, begin_year=1991)
 
         assert isinstance(normal, float)
         assert normal >= 0.0

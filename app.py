@@ -65,7 +65,13 @@ def average_rainfall() -> Response:
     to_return.update(
         {
             "name": "average rainfall (mm)",
-            "value": all_rainfall.get_average_rainfall(*params),
+            "value": all_rainfall.get_average_rainfall(
+                params[0],
+                begin_year=params[1],
+                end_year=params[2],
+                month=params[3],
+                season=params[4],
+            ),
             "begin_year": params[1],
             "end_year": params[2] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
