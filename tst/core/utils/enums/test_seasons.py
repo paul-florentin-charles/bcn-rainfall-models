@@ -4,12 +4,12 @@ from src.core.utils.enums.seasons import Season
 
 class TestSeasons:
     @staticmethod
-    def test_seasons_count() -> None:
+    def test_seasons_count():
         assert len(Season) == 4
 
     @staticmethod
-    def test_winter() -> None:
-        season: Season = Season.WINTER
+    def test_winter():
+        season = Season.WINTER
 
         assert isinstance(season.value, list)
         assert len(season.value) == 3
@@ -17,8 +17,8 @@ class TestSeasons:
             assert isinstance(month, Month)
 
     @staticmethod
-    def test_spring() -> None:
-        season: Season = Season.SPRING
+    def test_spring():
+        season = Season.SPRING
 
         assert isinstance(season.value, list)
         assert len(season.value) == 3
@@ -26,8 +26,8 @@ class TestSeasons:
             assert isinstance(month, Month)
 
     @staticmethod
-    def test_summer() -> None:
-        season: Season = Season.SUMMER
+    def test_summer():
+        season = Season.SUMMER
 
         assert isinstance(season.value, list)
         assert len(season.value) == 3
@@ -35,8 +35,8 @@ class TestSeasons:
             assert isinstance(month, Month)
 
     @staticmethod
-    def test_fall() -> None:
-        season: Season = Season.FALL
+    def test_fall():
+        season = Season.FALL
 
         assert isinstance(season.value, list)
         assert len(season.value) == 3

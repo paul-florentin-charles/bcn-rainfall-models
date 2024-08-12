@@ -7,9 +7,11 @@ Currently developing the Swagger API using flasgger.
 """
 from __future__ import annotations
 
+from typing import Any
+
 import matplotlib.pyplot as plt
 from flasgger import Swagger, swag_from
-from flask import Flask, jsonify, request, Response, send_file
+from flask import Flask, request, Response, send_file
 
 import src.api.swagger.parameters_specs as param
 from src.api.schemas import (
@@ -27,7 +29,7 @@ from src.api.swagger.rainfall import (
     standard_deviation_specs,
 )
 from src.api.swagger.year import below_normal_specs, above_normal_specs
-from src.api.utils import parse_args, manage_time_mode_errors
+from src.api.utils import parse_args, return_time_mode_error_or_fill_response_dict
 from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
 from src.core.utils.enums.time_modes import TimeMode
@@ -54,21 +56,29 @@ def average_rainfall() -> Response:
         param.season,
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[3], params[4])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[3], params[4]
+    ):
+        return error
 
     to_return.update(
         {
             "name": "average rainfall (mm)",
-            "value": all_rainfall.get_average_rainfall(*params),
+            "value": all_rainfall.get_average_rainfall(
+                params[0],
+                begin_year=params[1],
+                end_year=params[2],
+                month=params[3],
+                season=params[4],
+            ),
             "begin_year": params[1],
             "end_year": params[2] or all_rainfall.get_last_year(),
             "time_mode": TimeMode[params[0]],
         }
     )
 
-    return jsonify(RainfallSchema().dump(to_return))
+    return RainfallSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/rainfall/normal")
@@ -78,9 +88,11 @@ def normal_rainfall() -> Response:
         request.args, param.time_mode, param.begin_year, param.month, param.season
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[2], params[3])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[2], params[3]
+    ):
+        return error
 
     to_return.update(
         {
@@ -92,7 +104,7 @@ def normal_rainfall() -> Response:
         }
     )
 
-    return jsonify(RainfallSchema().dump(to_return))
+    return RainfallSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/rainfall/relative_distance_to_normal")
@@ -108,9 +120,11 @@ def rainfall_relative_distance_to_normal() -> Response:
         param.season,
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[4], params[5]
+    ):
+        return error
 
     to_return.update(
         {
@@ -123,7 +137,7 @@ def rainfall_relative_distance_to_normal() -> Response:
         }
     )
 
-    return jsonify(RelativeDistanceToRainfallNormalSchema().dump(to_return))
+    return RelativeDistanceToRainfallNormalSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/rainfall/standard_deviation")
@@ -138,9 +152,11 @@ def rainfall_standard_deviation() -> Response:
         param.season,
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[3], params[4])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[3], params[4]
+    ):
+        return error
 
     to_return.update(
         {
@@ -152,7 +168,7 @@ def rainfall_standard_deviation() -> Response:
         }
     )
 
-    return jsonify(RainfallSchema().dump(to_return))
+    return RainfallSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/year/below_normal")
@@ -168,9 +184,11 @@ def years_below_normal() -> Response:
         param.season,
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[4], params[5]
+    ):
+        return error
 
     to_return.update(
         {
@@ -183,7 +201,7 @@ def years_below_normal() -> Response:
         }
     )
 
-    return jsonify(YearsAboveOrBelowNormalSchema().dump(to_return))
+    return YearsAboveOrBelowNormalSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/year/above_normal")
@@ -199,9 +217,11 @@ def years_above_normal() -> Response:
         param.season,
     )
 
-    to_return = manage_time_mode_errors({}, params[0], params[4], params[5])
-    if isinstance(to_return, Response):
-        return to_return
+    to_return: dict[str, Any] = {}
+    if error := return_time_mode_error_or_fill_response_dict(
+        to_return, params[0], params[4], params[5]
+    ):
+        return error
 
     to_return.update(
         {
@@ -214,7 +234,7 @@ def years_above_normal() -> Response:
         }
     )
 
-    return jsonify(YearsAboveOrBelowNormalSchema().dump(to_return))
+    return YearsAboveOrBelowNormalSchema().dump(to_return)
 
 
 @app.route(f"{base_path}/csv/minimal_csv")
@@ -224,8 +244,9 @@ def minimal_csv() -> Response:
         request.args, param.time_mode, param.month, param.season, param.file_name
     )
 
-    error = manage_time_mode_errors({}, params[0], params[1], params[2])
-    if isinstance(error, Response):
+    if error := return_time_mode_error_or_fill_response_dict(
+        {}, params[0], params[1], params[2]
+    ):
         return error
 
     all_rainfall.export_as_csv(*params)

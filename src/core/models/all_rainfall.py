@@ -121,7 +121,8 @@ class AllRainfall:
     def get_average_rainfall(
         self,
         time_mode: str,
-        begin_year: int | None = None,
+        *,
+        begin_year: int,
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
@@ -131,7 +132,7 @@ class AllRainfall:
 
         :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
         :param begin_year: An integer representing the year
-        to start getting our rainfall values (optional).
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
@@ -322,29 +323,35 @@ class AllRainfall:
 
     def bar_rainfall_averages(
         self,
-        monthly=True,
-        begin_year: int | None = None,
+        begin_year: int,
         end_year: int | None = None,
+        monthly=True,
     ) -> list:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
-        :param monthly: If True, plots monthly rainfall averages.
-        If False, plots seasonal rainfall averages. Defaults to True (optional).
         :param begin_year: An integer representing the year
-        to start getting our rainfall values. (optional).
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
+        :param monthly: If True, plots monthly rainfall averages.
+        If False, plots seasonal rainfall averages. Defaults to True (optional).
         :return: A list of the Rainfall averages for each month or season.
         """
         label = f"Average rainfall (mm) between {begin_year or self.starting_year} and {self.get_last_year()}"
         if monthly:
             return plotting.bar_monthly_rainfall_averages(
-                self.monthly_rainfalls, label, begin_year, end_year
+                list(self.monthly_rainfalls.values()),
+                begin_year=begin_year,
+                end_year=end_year,
+                label=label,
             )
 
         return plotting.bar_seasonal_rainfall_averages(
-            self.seasonal_rainfalls, label, begin_year, end_year
+            list(self.seasonal_rainfalls.values()),
+            begin_year=begin_year,
+            end_year=end_year,
+            label=label,
         )
 
     def bar_rainfall_linreg_slopes(self, monthly=True) -> list:
@@ -356,9 +363,13 @@ class AllRainfall:
         :return: A list of the Rainfall LinReg slopes for each month or season.
         """
         if monthly:
-            return plotting.bar_monthly_rainfall_linreg_slopes(self.monthly_rainfalls)
+            return plotting.bar_monthly_rainfall_linreg_slopes(
+                list(self.monthly_rainfalls.values())
+            )
 
-        return plotting.bar_seasonal_rainfall_linreg_slopes(self.seasonal_rainfalls)
+        return plotting.bar_seasonal_rainfall_linreg_slopes(
+            list(self.seasonal_rainfalls.values())
+        )
 
     def get_entity_for_time_mode(
         self, time_mode: str, month: str | None = None, season: str | None = None

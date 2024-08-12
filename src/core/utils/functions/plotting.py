@@ -86,26 +86,27 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
 
 
 def bar_monthly_rainfall_averages(
-    monthly_rainfalls: dict,
-    label="Average rainfall (mm)",
-    begin_year: int | None = None,
+    monthly_rainfalls: list,
+    *,
+    begin_year: int,
     end_year: int | None = None,
+    label="Average rainfall (mm)",
 ) -> list:
     """
     Plots a bar graphic displaying average rainfall for each month passed through the dict.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
-    :param label: A string to use as a label for bar graphic. (optional)
-    Defaults to "Average rainfall (mm)".
     :param begin_year: An integer representing the year
-    to start getting our rainfall values (optional).
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values (optional).
+    :param label: A string to use as a label for bar graphic. (optional)
+    Defaults to "Average rainfall (mm)".
     :return: A list of the Rainfall averages for each month.
     """
     month_labels, averages = [], []
-    for monthly_rainfall in monthly_rainfalls.values():
+    for monthly_rainfall in monthly_rainfalls:
         month_labels.append(monthly_rainfall.month.name[:3])
         averages.append(
             monthly_rainfall.get_average_yearly_rainfall(
@@ -119,7 +120,7 @@ def bar_monthly_rainfall_averages(
     return averages
 
 
-def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
+def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: list) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each month passed through the dict.
 
@@ -128,7 +129,7 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
     :return: A list of the Rainfall LinReg slopes for each month.
     """
     month_labels, slopes = [], []
-    for monthly_rainfall in monthly_rainfalls.values():
+    for monthly_rainfall in monthly_rainfalls:
         month_labels.append(monthly_rainfall.month.name[:3])
         slopes.append(monthly_rainfall.add_linear_regression()[1])
 
@@ -139,26 +140,27 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: dict) -> list:
 
 
 def bar_seasonal_rainfall_averages(
-    seasonal_rainfalls: dict,
-    label="Average rainfall (mm)",
-    begin_year: int | None = None,
+    seasonal_rainfalls: list,
+    *,
+    begin_year: int,
     end_year: int | None = None,
+    label="Average rainfall (mm)",
 ) -> list:
     """
     Plots a bar graphic displaying average rainfall for each season passed through the dict.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
-    :param label: A string to use as a label for bar graphic. (optional)
-    Defaults to "Average rainfall (mm)".
     :param begin_year: An integer representing the year
-    to start getting our rainfall values (optional).
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values (optional).
+    :param label: A string to use as a label for bar graphic. (optional)
+    Defaults to "Average rainfall (mm)".
     :return: A list of the Rainfall averages for each season.
     """
     season_labels, averages = [], []
-    for seasonal_rainfall in seasonal_rainfalls.values():
+    for seasonal_rainfall in seasonal_rainfalls:
         season_labels.append(seasonal_rainfall.season.name)
         averages.append(
             seasonal_rainfall.get_average_yearly_rainfall(
@@ -172,7 +174,7 @@ def bar_seasonal_rainfall_averages(
     return averages
 
 
-def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: dict) -> list:
+def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: list) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each season passed through the dict.
 
@@ -181,7 +183,7 @@ def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: dict) -> list:
     :return: A list of the Rainfall LinReg slopes for each season.
     """
     season_labels, slopes = [], []
-    for seasonal_rainfall in seasonal_rainfalls.values():
+    for seasonal_rainfall in seasonal_rainfalls:
         season_labels.append(seasonal_rainfall.season.name)
         slopes.append(seasonal_rainfall.add_linear_regression()[1])
 

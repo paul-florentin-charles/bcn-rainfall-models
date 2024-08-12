@@ -37,12 +37,13 @@ class RainfallSchema(BaseRainfallSchema):
     value: float = fields.Float()
 
 
-class RelativeDistanceToRainfallNormalSchema(RainfallSchema):
+class RelativeDistanceToRainfallNormalSchema(BaseRainfallSchema):
     """
     Schema for depicting a relative distance to rainfall normal.
     """
 
     normal_year: int = fields.Int(load_default=param.normal_year["default"])
+    value: float = fields.Float()
 
 
 class YearsAboveOrBelowNormalSchema(BaseRainfallSchema):
@@ -51,7 +52,7 @@ class YearsAboveOrBelowNormalSchema(BaseRainfallSchema):
     """
 
     normal_year: int = fields.Int(load_default=param.normal_year["default"])
-    value: float = fields.Int()
+    value: int = fields.Int()
 
 
 class ApiError(Schema):

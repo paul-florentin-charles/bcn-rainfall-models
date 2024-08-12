@@ -11,7 +11,8 @@ from src.core.utils.enums.labels import Label
 
 def get_rainfall_within_year_interval(
     yearly_rainfall: pd.DataFrame,
-    begin_year: int | None = None,
+    *,
+    begin_year: int,
     end_year: int | None = None,
 ) -> pd.DataFrame:
     """
@@ -19,21 +20,16 @@ def get_rainfall_within_year_interval(
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: An integer representing the year
-    to start getting our rainfall values (optional).
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values (optional).
     :return: A pandas DataFrame displaying rainfall data (in mm)
     according to year.
     """
-    if begin_year is not None:
-        yearly_rainfall = yearly_rainfall[
-            yearly_rainfall[Label.YEAR.value] >= begin_year
-        ]
-
     if end_year is not None:
         yearly_rainfall = yearly_rainfall[yearly_rainfall[Label.YEAR.value] <= end_year]
 
-    return yearly_rainfall
+    return yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= begin_year]
 
 
 def remove_column(yearly_rainfall: pd.DataFrame, label: Label) -> bool:
