@@ -3,82 +3,34 @@ Collection of utility functions for API purposes.
 """
 from __future__ import annotations
 
-from flask import Response
-from werkzeug.datastructures.structures import MultiDict
+from fastapi import HTTPException
 
-from src.api.error_wrappers import bad_request
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
 
-def parse_args(args: MultiDict[str, str], *params: dict) -> tuple:
-    """
-    Parse Flask query arguments into a tuple.
-
-    :param args: Flask request args as a MultiDict.
-    :param params: Desired parameters to parse as a list of swagger-conformed dicts.
-    :return: Tuple containing retrieved values from query parameters.
-    """
-
-    return tuple(
-        args.get(
-            param["name"],
-            default=param["default"],
-            type=swagger_type_to_python_type(param["type"]),
-        )
-        for param in params
-    )
-
-
-def swagger_type_to_python_type(swagger_type: str) -> type | None:
-    """
-    Convert a Swagger known type into a Python type.
-
-    :param swagger_type: Swagger type as a string.
-    :return: Python type if recognized. None otherwise.
-    """
-    python_type: type | None = None
-    if swagger_type == "integer":
-        python_type = int
-    elif swagger_type == "number":
-        python_type = float
-    elif swagger_type == "string":
-        python_type = str
-
-    return python_type
-
-
-def return_time_mode_error_or_fill_response_dict(
-    response_dict: dict,
-    time_mode: str,
-    month: str | None = None,
-    season: str | None = None,
-) -> Response | None:
+def raise_time_mode_error_or_do_nothing(
+    time_mode: TimeMode,
+    month: Month | None = None,
+    season: Season | None = None,
+):
     """
     Manage errors related to time mode issues.
-    If time mode is set to monthly and month is None.
-    If time mode is set to seasonal and season is None.
 
-    :param response_dict: Dict where to store response fields.
-    :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal'].
-    :param month: A string corresponding to the month name.
+    :param time_mode: A TimeMode Enum ['yearly', 'monthly', 'seasonal']
+    :param month: A Month Enum ['January', 'February', ..., 'December'].
     Set if time_mode is 'monthly' (optional).
-    :param season: A string corresponding to the season name.
-    Possible values are within ['winter', 'spring', 'summer', 'fall'].
+    :param season: A Season Enum ['winter', 'spring', 'summer', 'fall'].
     Set if time_mode is 'seasonal' (optional).
-    :return: Either a Flask Response if there is an error or None.
+    :raise HTTPException: if time_mode is 'monthly' and month is None or
+    if time_mode is 'seasonal' and season is None.
+    :return: None.
     """
-    if time_mode == TimeMode.MONTHLY.value:
+    if time_mode == TimeMode.MONTHLY:
         if month is None:
-            return bad_request("Month cannot be null.")
+            raise HTTPException(status_code=400, detail="Month cannot be null.")
 
-        response_dict["month"] = Month(month)
-
-    if time_mode == TimeMode.SEASONAL.value:
+    if time_mode == TimeMode.SEASONAL:
         if season is None:
-            return bad_request("Season cannot be null.")
-
-        response_dict["season"] = Season(season)
-
-    return None
+            raise HTTPException(status_code=400, detail="Season cannot be null.")

@@ -25,7 +25,7 @@ season = Season.SPRING.value
 class TestAllRainfall:
     @staticmethod
     def test_export_all_data_to_csv():
-        folder_path: str | None = None
+        folder_path = ""
         try:
             folder_path = ALL_RAINFALL.export_all_data_to_csv()
 

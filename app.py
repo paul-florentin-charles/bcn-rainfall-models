@@ -7,278 +7,369 @@ Currently developing the Swagger API using flasgger.
 """
 from __future__ import annotations
 
-from typing import Any
+import io
+from typing import Union
 
 import matplotlib.pyplot as plt
-from flasgger import Swagger, swag_from
-from flask import Flask, request, Response, send_file
+import uvicorn
+from fastapi import FastAPI
+from starlette.responses import StreamingResponse
 
-import src.api.swagger.parameters_specs as param
-from src.api.schemas import (
-    RainfallSchema,
-    RelativeDistanceToRainfallNormalSchema,
-    YearsAboveOrBelowNormalSchema,
+from src.api.media_types import MediaType
+from src.api.models import RainfallModel, RainfallWithNormalModel, YearWithNormalModel
+from src.api.utils import (
+    raise_time_mode_error_or_do_nothing,
 )
-from src.api.swagger.csv import minimal_csv_specs
-from src.api.swagger.graph import monthly_averages_specs, seasonal_averages_specs
-from src.api.swagger.media_types import MediaType
-from src.api.swagger.rainfall import (
-    average_specs,
-    normal_specs,
-    relative_distance_to_normal_specs,
-    standard_deviation_specs,
-)
-from src.api.swagger.year import below_normal_specs, above_normal_specs
-from src.api.utils import parse_args, return_time_mode_error_or_fill_response_dict
 from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
+from src.core.utils.enums.months import Month
+from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
 cfg = Config()
 all_rainfall = AllRainfall(
-    cfg.get_dataset_url(), cfg.get_start_year(), cfg.get_rainfall_precision()
+    cfg.get_dataset_path(), cfg.get_start_year(), cfg.get_rainfall_precision()
 )
 
-app = Flask(__name__)
-swagger = Swagger(app, template_file=f"{cfg.get_api_doc_path()}/template.yaml")
-base_path: str = swagger.template["basePath"]
+app = FastAPI(
+    debug=True,
+    root_path="/api",
+    title="Barcelona Rainfall API",
+    summary="An API that provides rainfall-related data of the city of Barcelona",
+)
 
 
-@app.route(f"{base_path}/rainfall/average")
-@swag_from(average_specs.route_specs)
-def average_rainfall() -> Response:
-    params = parse_args(
-        request.args,
-        param.time_mode,
-        param.begin_year,
-        param.end_year,
-        param.month,
-        param.season,
+@app.get(
+    "/rainfall/average",
+    summary="Retrieve rainfall average for Barcelona between two years.",
+    description=f"If no ending year is precised, "
+    f"computes average until latest year available: {all_rainfall.get_last_year()}",
+    tags=["Rainfall"],
+    operation_id="getRainfallAverage",
+)
+async def get_rainfall_average(
+    time_mode: TimeMode,
+    begin_year: int,
+    end_year: Union[int, None] = None,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> RainfallModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+
+    end_year = end_year or all_rainfall.get_last_year()
+
+    return RainfallModel(
+        name="rainfall average (mm)",
+        value=all_rainfall.get_average_rainfall(
+            time_mode.value,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        begin_year=begin_year,
+        end_year=end_year,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[3], params[4]
-    ):
-        return error
 
-    to_return.update(
-        {
-            "name": "average rainfall (mm)",
-            "value": all_rainfall.get_average_rainfall(
-                params[0],
-                begin_year=params[1],
-                end_year=params[2],
-                month=params[3],
-                season=params[4],
-            ),
-            "begin_year": params[1],
-            "end_year": params[2] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode(params[0]),
-        }
+@app.get(
+    "/rainfall/normal",
+    summary="Retrieve 30 years rainfall average for Barcelona after a given year.",
+    description="Commonly called rainfall normal.",
+    tags=["Rainfall"],
+    operation_id="getRainfallNormal",
+)
+async def get_rainfall_normal(
+    time_mode: TimeMode,
+    begin_year: int,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> RainfallModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+
+    return RainfallModel(
+        name="rainfall normal (mm)",
+        value=all_rainfall.get_normal(
+            time_mode.value,
+            begin_year=begin_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        begin_year=begin_year,
+        end_year=begin_year + 29,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    return RainfallSchema().dump(to_return)
 
+@app.get(
+    "/rainfall/relative_distance_to_normal",
+    summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
+    description="The metric is a percentage that can be negative. <br>"
+    "If 100%, all the years are above normal. <br>"
+    "If -100%, all the years are below normal. <br>"
+    "If 0%, there are as many years below as years above. <br>"
+    "If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Rainfall"],
+    operation_id="getRainfallRelativeDistanceToNormal",
+)
+async def get_rainfall_relative_distance_to_normal(
+    time_mode: TimeMode,
+    begin_year: int,
+    normal_year: int,
+    end_year: Union[int, None] = None,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> RainfallWithNormalModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-@app.route(f"{base_path}/rainfall/normal")
-@swag_from(normal_specs.route_specs)
-def normal_rainfall() -> Response:
-    params = parse_args(
-        request.args, param.time_mode, param.begin_year, param.month, param.season
+    end_year = end_year or all_rainfall.get_last_year()
+
+    return RainfallWithNormalModel(
+        name="relative distance to rainfall normal (%)",
+        value=all_rainfall.get_relative_distance_from_normal(
+            time_mode.value,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[2], params[3]
-    ):
-        return error
 
-    to_return.update(
-        {
-            "name": "rainfall normal (mm)",
-            "value": all_rainfall.get_normal(*params),
-            "begin_year": params[1],
-            "end_year": params[1] + 29,
-            "time_mode": TimeMode(params[0]),
-        }
+@app.get(
+    "/rainfall/standard_deviation",
+    summary="Compute the standard deviation of rainfall for Barcelona between two years.",
+    description="If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Rainfall"],
+    operation_id="getRainfallStandardDeviation",
+)
+async def get_rainfall_standard_deviation(
+    time_mode: TimeMode,
+    begin_year: int,
+    end_year: Union[int, None] = None,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> RainfallModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+
+    end_year = end_year or all_rainfall.get_last_year()
+
+    return RainfallModel(
+        name="rainfall standard deviation (mm)",
+        value=all_rainfall.get_rainfall_standard_deviation(
+            time_mode.value,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        begin_year=begin_year,
+        end_year=end_year,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    return RainfallSchema().dump(to_return)
 
+@app.get(
+    "/year/below_normal",
+    summary="Compute the number of years below normal for a specific year range.",
+    description="Normal is computed as a 30 years average "
+    "starting from the year set via normal_year. <br>"
+    "If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Year"],
+    operation_id="getYearsBelowNormal",
+)
+async def get_years_below_normal(
+    time_mode: TimeMode,
+    begin_year: int,
+    normal_year: int,
+    end_year: Union[int, None] = None,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> YearWithNormalModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-@app.route(f"{base_path}/rainfall/relative_distance_to_normal")
-@swag_from(relative_distance_to_normal_specs.route_specs)
-def rainfall_relative_distance_to_normal() -> Response:
-    params = parse_args(
-        request.args,
-        param.time_mode,
-        param.normal_year,
-        param.begin_year,
-        param.end_year,
-        param.month,
-        param.season,
+    end_year = end_year or all_rainfall.get_last_year()
+
+    return YearWithNormalModel(
+        name="years below rainfall normal",
+        value=all_rainfall.get_years_below_normal(
+            time_mode.value,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[4], params[5]
-    ):
-        return error
 
-    to_return.update(
-        {
-            "name": "relative distance to rainfall normal (%)",
-            "value": all_rainfall.get_relative_distance_from_normal(*params),
-            "normal_year": params[1],
-            "begin_year": params[2],
-            "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode(params[0]),
-        }
+@app.get(
+    "/year/above_normal",
+    summary="Compute the number of years above normal for a specific year range.",
+    description="Normal is computed as a 30 years average "
+    "starting from the year set via normal_year. <br>"
+    "If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Year"],
+    operation_id="getYearsAboveNormal",
+)
+async def get_years_above_normal(
+    time_mode: TimeMode,
+    begin_year: int,
+    normal_year: int,
+    end_year: Union[int, None] = None,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+) -> YearWithNormalModel:
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+
+    end_year = end_year or all_rainfall.get_last_year()
+
+    return YearWithNormalModel(
+        name="years above rainfall normal",
+        value=all_rainfall.get_years_above_normal(
+            time_mode.value,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month.value if month else None,
+            season=season.value if season else None,
+        ),  # type: ignore
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        time_mode=time_mode,
+        month=month if time_mode == TimeMode.MONTHLY else None,
+        season=season if time_mode == TimeMode.SEASONAL else None,
     )
 
-    return RelativeDistanceToRainfallNormalSchema().dump(to_return)
 
+@app.get(
+    "/csv/minimal_csv",
+    response_class=StreamingResponse,
+    summary="Retrieve minimal CSV of rainfall data [Year, Rainfall].",
+    description="Could either be for rainfall upon a whole year, a specific month or a given season.",
+    tags=["CSV"],
+    operation_id="getMinimalCsv",
+)
+def get_minimal_csv(
+    time_mode: TimeMode,
+    month: Union[Month, None] = None,
+    season: Union[Season, None] = None,
+):
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-@app.route(f"{base_path}/rainfall/standard_deviation")
-@swag_from(standard_deviation_specs.route_specs)
-def rainfall_standard_deviation() -> Response:
-    params = parse_args(
-        request.args,
-        param.time_mode,
-        param.begin_year,
-        param.end_year,
-        param.month,
-        param.season,
+    month_value: str = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
+    season_value: str = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
+
+    csv_str = (
+        all_rainfall.export_as_csv(
+            time_mode.value,
+            month_value,
+            season_value,
+        )
+        or ""
     )
 
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[3], params[4]
-    ):
-        return error
+    filename = f"rainfall_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}"
+    if month_value:
+        filename += f"_{month_value.lower()}"
+    elif season_value:
+        filename += f"_{season_value}"
 
-    to_return.update(
-        {
-            "name": "rainfall standard deviation (mm)",
-            "value": all_rainfall.get_rainfall_standard_deviation(*params),
-            "begin_year": params[1],
-            "end_year": params[2] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode(params[0]),
-        }
+    return StreamingResponse(
+        iter(csv_str),
+        headers={"Content-Disposition": f'inline; filename="{filename}.csv"'},
+        media_type=MediaType.TXT_CSV.value,
     )
 
-    return RainfallSchema().dump(to_return)
 
+@app.get(
+    "/graph/rainfall_monthly_averages",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall monthly averages of data as a PNG.",
+    description="If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Graph"],
+    operation_id="getRainfallMonthlyAverages",
+)
+def get_rainfall_monthly_averages(
+    begin_year: int,
+    end_year: Union[int, None] = None,
+):
+    end_year = end_year or all_rainfall.get_last_year()
 
-@app.route(f"{base_path}/year/below_normal")
-@swag_from(below_normal_specs.route_specs)
-def years_below_normal() -> Response:
-    params = parse_args(
-        request.args,
-        param.time_mode,
-        param.normal_year,
-        param.begin_year,
-        param.end_year,
-        param.month,
-        param.season,
-    )
+    all_rainfall.bar_rainfall_averages(begin_year=begin_year, end_year=end_year)
 
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[4], params[5]
-    ):
-        return error
-
-    to_return.update(
-        {
-            "name": "years below rainfall normal",
-            "value": all_rainfall.get_years_below_normal(*params),
-            "normal_year": params[1],
-            "begin_year": params[2],
-            "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode(params[0]),
-        }
-    )
-
-    return YearsAboveOrBelowNormalSchema().dump(to_return)
-
-
-@app.route(f"{base_path}/year/above_normal")
-@swag_from(above_normal_specs.route_specs)
-def years_above_normal() -> Response:
-    params = parse_args(
-        request.args,
-        param.time_mode,
-        param.normal_year,
-        param.begin_year,
-        param.end_year,
-        param.month,
-        param.season,
-    )
-
-    to_return: dict[str, Any] = {}
-    if error := return_time_mode_error_or_fill_response_dict(
-        to_return, params[0], params[4], params[5]
-    ):
-        return error
-
-    to_return.update(
-        {
-            "name": "years above rainfall normal",
-            "value": all_rainfall.get_years_above_normal(*params),
-            "normal_year": params[1],
-            "begin_year": params[2],
-            "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode(params[0]),
-        }
-    )
-
-    return YearsAboveOrBelowNormalSchema().dump(to_return)
-
-
-@app.route(f"{base_path}/csv/minimal_csv")
-@swag_from(minimal_csv_specs.route_specs)
-def minimal_csv() -> Response:
-    params = parse_args(
-        request.args, param.time_mode, param.month, param.season, param.file_name
-    )
-
-    if error := return_time_mode_error_or_fill_response_dict(
-        {}, params[0], params[1], params[2]
-    ):
-        return error
-
-    all_rainfall.export_as_csv(*params)
-
-    return send_file(params[-1], mimetype=MediaType.TXT_CSV, as_attachment=True)
-
-
-@app.route(f"{base_path}/graph/monthly_averages")
-@swag_from(monthly_averages_specs.route_specs)
-def monthly_averages() -> Response:
-    params = parse_args(request.args, param.file_name, param.begin_year, param.end_year)
-
-    all_rainfall.bar_rainfall_averages(begin_year=params[1], end_year=params[2])
-    plt.savefig(params[0], format="svg")
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
     plt.close()
+    img_buffer.seek(0)
 
-    return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)
+    return StreamingResponse(
+        img_buffer,
+        headers={
+            "Content-Disposition": f'inline; filename="rainfall_monthly_averages_{begin_year}_{end_year}.png"'
+        },
+        media_type=MediaType.IMG_PNG.value,
+    )
 
 
-@app.route(f"{base_path}/graph/seasonal_averages")
-@swag_from(seasonal_averages_specs.route_specs)
-def seasonal_averages() -> Response:
-    params = parse_args(request.args, param.file_name, param.begin_year, param.end_year)
+@app.get(
+    "/graph/rainfall_seasonal_averages",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall seasonal averages of data as a PNG.",
+    description="If no ending year is precised, "
+    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    tags=["Graph"],
+    operation_id="getRainfallSeasonalAverages",
+)
+def get_rainfall_seasonal_averages(
+    begin_year: int,
+    end_year: Union[int, None] = None,
+):
+    end_year = end_year or all_rainfall.get_last_year()
 
     all_rainfall.bar_rainfall_averages(
-        monthly=False, begin_year=params[1], end_year=params[2]
+        begin_year=begin_year, end_year=end_year, monthly=False
     )
-    plt.savefig(params[0], format="svg")
-    plt.close()
 
-    return send_file(params[0], mimetype=MediaType.IMG_SVG, as_attachment=True)
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    return StreamingResponse(
+        img_buffer,
+        headers={
+            "Content-Disposition": f'inline; filename="rainfall_seasonal_averages_{begin_year}_{end_year}.png"'
+        },
+        media_type=MediaType.IMG_PNG.value,
+    )
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    uvicorn.run("app:app", reload=True, log_level="debug")

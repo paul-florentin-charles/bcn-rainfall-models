@@ -107,7 +107,7 @@ def bar_monthly_rainfall_averages(
     """
     month_labels, averages = [], []
     for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.name[:3])
+        month_labels.append(monthly_rainfall.month.value[:3])
         averages.append(
             monthly_rainfall.get_average_yearly_rainfall(
                 begin_year=begin_year, end_year=end_year
@@ -130,7 +130,7 @@ def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: list) -> list:
     """
     month_labels, slopes = [], []
     for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.name[:3])
+        month_labels.append(monthly_rainfall.month.value[:3])
         slopes.append(monthly_rainfall.add_linear_regression()[1])
 
     plt.bar(month_labels, slopes, label="Linear Regression slope (mm/year)")
@@ -161,7 +161,7 @@ def bar_seasonal_rainfall_averages(
     """
     season_labels, averages = [], []
     for seasonal_rainfall in seasonal_rainfalls:
-        season_labels.append(seasonal_rainfall.season.name)
+        season_labels.append(seasonal_rainfall.season.value)
         averages.append(
             seasonal_rainfall.get_average_yearly_rainfall(
                 begin_year=begin_year, end_year=end_year
@@ -184,7 +184,7 @@ def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: list) -> list:
     """
     season_labels, slopes = [], []
     for seasonal_rainfall in seasonal_rainfalls:
-        season_labels.append(seasonal_rainfall.season.name)
+        season_labels.append(seasonal_rainfall.season.value)
         slopes.append(seasonal_rainfall.add_linear_regression()[1])
 
     plt.bar(season_labels, slopes, label="Linear Regression slope (mm/year)")
