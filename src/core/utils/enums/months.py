@@ -5,20 +5,39 @@ Provides integer equivalents for months.
 from src.core.utils.enums.base_enum import BaseEnum
 
 
-class Month(int, BaseEnum):
+class Month(BaseEnum):
     """
-    An Enum listing months as integers.
+    An Enum listing all months.
     """
 
-    JANUARY = 1
-    FEBRUARY = 2
-    MARCH = 3
-    APRIL = 4
-    MAY = 5
-    JUNE = 6
-    JULY = 7
-    AUGUST = 8
-    SEPTEMBER = 9
-    OCTOBER = 10
-    NOVEMBER = 11
-    DECEMBER = 12
+    JANUARY = "January"
+    FEBRUARY = "February"
+    MARCH = "March"
+    APRIL = "April"
+    MAY = "May"
+    JUNE = "June"
+    JULY = "July"
+    AUGUST = "August"
+    SEPTEMBER = "September"
+    OCTOBER = "October"
+    NOVEMBER = "November"
+    DECEMBER = "December"
+
+    def get_rank(self) -> int:
+        return MONTH_RANK_DICT[self]
+
+
+MONTH_RANK_DICT: dict[Month, int] = {
+    Month.JANUARY: 1,
+    Month.FEBRUARY: 2,
+    Month.MARCH: 3,
+    Month.APRIL: 4,
+    Month.MAY: 5,
+    Month.JUNE: 6,
+    Month.JULY: 7,
+    Month.AUGUST: 8,
+    Month.SEPTEMBER: 9,
+    Month.OCTOBER: 10,
+    Month.NOVEMBER: 11,
+    Month.DECEMBER: 12,
+}

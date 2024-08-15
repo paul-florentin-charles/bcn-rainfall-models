@@ -26,7 +26,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_load_rainfall():
         data = YEARLY_RAINFALL.load_rainfall(
-            start_month=Month.JUNE.value, end_month=Month.OCTOBER.value
+            start_month=Month.JUNE, end_month=Month.OCTOBER
         )
         assert isinstance(data, pd.DataFrame)
         assert len(data.columns) == 2

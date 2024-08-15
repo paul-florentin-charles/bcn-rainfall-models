@@ -32,4 +32,4 @@ class MonthlyRainfall(YearlyRainfall):
         for instance month according to year.
         """
 
-        return self.load_rainfall(self.month.value, self.month.value + 1)
+        return self.load_rainfall(self.month)

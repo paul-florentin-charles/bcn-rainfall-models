@@ -33,5 +33,6 @@ class SeasonalRainfall(YearlyRainfall):
         """
 
         return self.load_rainfall(
-            self.season.value[0].value, self.season.value[2].value + 1
+            self.season.get_months()[0],
+            self.season.get_months()[-1],
         )

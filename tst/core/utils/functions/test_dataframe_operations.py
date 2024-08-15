@@ -56,8 +56,8 @@ class TestDataframeOperations:
             YEARLY_RAINFALL.data,
             YEARLY_RAINFALL.starting_year,
             YEARLY_RAINFALL.round_precision,
-            Month.MAY.value,
-            Month.SEPTEMBER.value,
+            Month.MAY.get_rank(),
+            Month.SEPTEMBER.get_rank(),
         )
 
         assert isinstance(result, pd.DataFrame)

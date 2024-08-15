@@ -18,15 +18,14 @@ normal_year = 1971
 begin_year = 1991
 end_year = 2020
 
-time_mode = TimeMode.YEARLY.value
-month = Month.MAY.name
-season = Season.SPRING.name
+month = Month.MAY.value
+season = Season.SPRING.value
 
 
 class TestAllRainfall:
     @staticmethod
     def test_export_all_data_to_csv():
-        folder_path: str | None = None
+        folder_path = ""
         try:
             folder_path = ALL_RAINFALL.export_all_data_to_csv()
 
@@ -102,17 +101,17 @@ class TestAllRainfall:
     @staticmethod
     def test_get_entity_for_time_mode():
         assert isinstance(
-            ALL_RAINFALL.get_entity_for_time_mode(TimeMode.YEARLY), YearlyRainfall
+            ALL_RAINFALL.get_entity_for_time_mode(TimeMode.YEARLY.value), YearlyRainfall
         )
         assert isinstance(
             ALL_RAINFALL.get_entity_for_time_mode(
-                TimeMode.SEASONAL, season=Season.SPRING.name
+                TimeMode.SEASONAL.value, season=Season.SPRING.value
             ),
             SeasonalRainfall,
         )
         assert isinstance(
             ALL_RAINFALL.get_entity_for_time_mode(
-                TimeMode.MONTHLY, month=Month.OCTOBER.name
+                TimeMode.MONTHLY.value, month=Month.OCTOBER.value
             ),
             MonthlyRainfall,
         )
