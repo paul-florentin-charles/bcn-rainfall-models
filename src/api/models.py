@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -17,9 +17,9 @@ class BaseRainfallModel(BaseModel):
     """
 
     name: str
-    value: Union[float, int]
+    value: float | int
     begin_year: int
-    end_year: Optional[int] = None
+    end_year: int | None = None
     time_mode: TimeMode = TimeMode.YEARLY
     month: Optional[Month] = None
     season: Optional[Season] = None
