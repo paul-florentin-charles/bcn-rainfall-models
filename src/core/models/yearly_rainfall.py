@@ -47,23 +47,25 @@ class YearlyRainfall:
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
 
-        return self.load_rainfall(Month.JANUARY.value)
+        return self.load_rainfall(Month.JANUARY, Month.DECEMBER)
 
     def load_rainfall(
-        self, start_month: int, end_month: int | None = None
+        self, start_month: Month, end_month: Month | None = None
     ) -> pd.DataFrame:
         """
         Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
         Raw data has to be shaped as rainfall values for each month according to year.
 
-        :param start_month: An integer representing the month
-        to start getting our rainfall values (compulsory)
-        :param end_month: An integer representing the month
-        to end getting our rainfall values (optional)
+        :param start_month: A Month Enum representing the month
+        to start getting our rainfall values.
+        :param end_month: A Month Enum representing the month
+        to end getting our rainfall values (optional).
+        If not given, we load rainfall data only for given start_month.
         :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         :raise DataFormatError: If raw_data attribute of instance doesn't have exactly 13 columns.
         1 for the year; 12 for every monthly rainfall.
         """
+
         if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
         ) != 1 + len(Month):
@@ -75,8 +77,8 @@ class YearlyRainfall:
             self.raw_data,
             self.starting_year,
             self.round_precision,
-            start_month,
-            end_month,
+            start_month.get_rank(),
+            end_month.get_rank() if end_month else None,
         )
 
     def get_yearly_rainfall(

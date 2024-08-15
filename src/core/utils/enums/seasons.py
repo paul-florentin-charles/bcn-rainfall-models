@@ -8,10 +8,21 @@ from src.core.utils.enums.months import Month
 
 class Season(BaseEnum):
     """
-    An enum listing seasons (winter, spring, summer and fall) as lists of Month (Enum).
+    An Enum listing all seasons: 'winter', 'spring', 'summer', 'fall'.
     """
 
-    WINTER: list[Month] = [Month.DECEMBER, Month.JANUARY, Month.FEBRUARY]
-    SPRING: list[Month] = [Month.MARCH, Month.APRIL, Month.MAY]
-    SUMMER: list[Month] = [Month.JUNE, Month.JULY, Month.AUGUST]
-    FALL: list[Month] = [Month.SEPTEMBER, Month.OCTOBER, Month.NOVEMBER]
+    WINTER = "winter"
+    SPRING = "spring"
+    SUMMER = "summer"
+    FALL = "fall"
+
+    def get_months(self):
+        return MONTHS_BY_SEASON[self]
+
+
+MONTHS_BY_SEASON: dict[Season, list[Month]] = {
+    Season.WINTER: [Month.DECEMBER, Month.JANUARY, Month.FEBRUARY],
+    Season.SPRING: [Month.MARCH, Month.APRIL, Month.MAY],
+    Season.SUMMER: [Month.JUNE, Month.JULY, Month.AUGUST],
+    Season.FALL: [Month.SEPTEMBER, Month.OCTOBER, Month.NOVEMBER],
+}

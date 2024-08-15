@@ -74,7 +74,7 @@ def average_rainfall() -> Response:
             ),
             "begin_year": params[1],
             "end_year": params[2] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 
@@ -100,7 +100,7 @@ def normal_rainfall() -> Response:
             "value": all_rainfall.get_normal(*params),
             "begin_year": params[1],
             "end_year": params[1] + 29,
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 
@@ -133,7 +133,7 @@ def rainfall_relative_distance_to_normal() -> Response:
             "normal_year": params[1],
             "begin_year": params[2],
             "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 
@@ -164,7 +164,7 @@ def rainfall_standard_deviation() -> Response:
             "value": all_rainfall.get_rainfall_standard_deviation(*params),
             "begin_year": params[1],
             "end_year": params[2] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 
@@ -197,7 +197,7 @@ def years_below_normal() -> Response:
             "normal_year": params[1],
             "begin_year": params[2],
             "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 
@@ -230,7 +230,7 @@ def years_above_normal() -> Response:
             "normal_year": params[1],
             "begin_year": params[2],
             "end_year": params[3] or all_rainfall.get_last_year(),
-            "time_mode": TimeMode[params[0]],
+            "time_mode": TimeMode(params[0]),
         }
     )
 

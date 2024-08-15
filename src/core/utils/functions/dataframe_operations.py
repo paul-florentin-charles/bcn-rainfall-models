@@ -76,9 +76,10 @@ def retrieve_rainfall_data_with_constraints(
     :param starting_year: An integer representing the year we should start get value from
     :param round_precision: A integer representing decimal precision for Rainfall data
     :param start_month: An integer representing the month
-    to start getting our rainfall values
+    to start getting our rainfall values.
     :param end_month: An integer representing the month
-    to end getting our rainfall values (optional)
+    to end getting our rainfall values (optional).
+    If not given, we load rainfall data only for given start_month.
     :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
     """
     years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
@@ -86,11 +87,13 @@ def retrieve_rainfall_data_with_constraints(
         rainfall: pd.DataFrame = concat_columns(
             [
                 monthly_rainfall.iloc[:, start_month : start_month + 1],
-                monthly_rainfall.iloc[:, 1:end_month],
+                monthly_rainfall.iloc[:, 1 : end_month + 1],
             ]
         )
     else:
-        rainfall = monthly_rainfall.iloc[:, start_month:end_month]
+        rainfall = monthly_rainfall.iloc[
+            :, start_month : (end_month or start_month) + 1
+        ]
 
     yearly_rainfall = concat_columns([years, rainfall.sum(axis="columns")]).set_axis(
         [Label.YEAR.value, Label.RAINFALL.value], axis="columns"

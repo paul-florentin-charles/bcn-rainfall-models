@@ -32,10 +32,10 @@ end_year: dict[str, Any] = {
 }
 
 time_mode: dict[str, Any] = {
-    "default": TimeMode.YEARLY.name,
+    "default": TimeMode.YEARLY.value,
     "required": True,
     "type": "string",
-    "enum": TimeMode.names(),
+    "enum": TimeMode.values(),
     "name": "time_mode",
     "in": "query",
 }
@@ -44,7 +44,7 @@ month: dict[str, Any] = {
     "default": None,
     "required": False,
     "type": "string",
-    "enum": Month.names(),
+    "enum": Month.values(),
     "name": "month",
     "in": "query",
 }
@@ -53,7 +53,7 @@ season: dict[str, Any] = {
     "default": None,
     "required": False,
     "type": "string",
-    "enum": Season.names(),
+    "enum": Season.values(),
     "name": "season",
     "in": "query",
 }

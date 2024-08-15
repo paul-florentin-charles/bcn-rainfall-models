@@ -61,24 +61,24 @@ def return_time_mode_error_or_fill_response_dict(
     If time mode is set to seasonal and season is None.
 
     :param response_dict: Dict where to store response fields.
-    :param time_mode: A string setting the time period ['YEARLY', 'MONTHLY', 'SEASONAL']
+    :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal'].
     :param month: A string corresponding to the month name.
-    Set if time_mode is 'MONTHLY' (optional)
+    Set if time_mode is 'monthly' (optional).
     :param season: A string corresponding to the season name.
-    Possible values are within ['WINTER', 'SPRING', 'SUMMER', 'FALL'].
-    Set if time_mode is 'SEASONAL' (optional)
+    Possible values are within ['winter', 'spring', 'summer', 'fall'].
+    Set if time_mode is 'seasonal' (optional).
     :return: Either a Flask Response if there is an error or None.
     """
-    if time_mode == TimeMode.MONTHLY.name:
+    if time_mode == TimeMode.MONTHLY.value:
         if month is None:
             return bad_request("Month cannot be null.")
 
-        response_dict["month"] = Month[month]
+        response_dict["month"] = Month(month)
 
-    if time_mode == TimeMode.SEASONAL.name:
+    if time_mode == TimeMode.SEASONAL.value:
         if season is None:
             return bad_request("Season cannot be null.")
 
-        response_dict["season"] = Season[season]
+        response_dict["season"] = Season(season)
 
     return None
