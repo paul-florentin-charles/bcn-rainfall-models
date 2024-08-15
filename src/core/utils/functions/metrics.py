@@ -2,6 +2,7 @@
 Provides functions to compute interesting and reusable generic metrics
 over DataFrame containing rainfall data over years.
 """
+
 from __future__ import annotations
 
 from typing import Callable

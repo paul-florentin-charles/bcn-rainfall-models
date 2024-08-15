@@ -2,6 +2,7 @@
 Provides an all-in-one class to manipulate rainfall data for every timeframe.
 At a yearly, monthly and seasonal level.
 """
+
 from __future__ import annotations
 
 from pathlib import Path

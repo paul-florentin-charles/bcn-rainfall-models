@@ -2,6 +2,7 @@
 Provides functions to do operations on DataFrame objects
 containing rainfall data over years.
 """
+
 from __future__ import annotations
 
 import pandas as pd

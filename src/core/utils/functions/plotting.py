@@ -1,6 +1,7 @@
 """
 Provides useful functions for plotting rainfall data in all shapes.
 """
+
 from __future__ import annotations
 
 import pandas as pd
