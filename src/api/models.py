@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 from src.core.utils.enums.months import Month
@@ -19,8 +17,8 @@ class BaseRainfallModel(BaseModel):
     begin_year: int
     end_year: int | None = None
     time_mode: TimeMode = TimeMode.YEARLY
-    month: Optional[Month] = None
-    season: Optional[Season] = None
+    month: Month | None = None
+    season: Season | None = None
 
 
 class RainfallModel(BaseRainfallModel):
