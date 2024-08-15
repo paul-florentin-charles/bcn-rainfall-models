@@ -1,5 +1,5 @@
 matplotlib~=3.9.2
-numpy~=2.1.0rc1
+numpy~=2.0.1
 pandas~=2.2.2
 pre-commit~=3.8.0
 pytest~=8.3.2
