@@ -2,8 +2,6 @@
 Provides a rich class to manipulate Seasonal Rainfall data.
 """
 
-from __future__ import annotations
-
 import pandas as pd
 
 from src.core.models.yearly_rainfall import YearlyRainfall
