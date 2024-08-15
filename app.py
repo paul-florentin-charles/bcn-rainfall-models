@@ -19,16 +19,12 @@ from src.api.models import RainfallModel, RainfallWithNormalModel, YearWithNorma
 from src.api.utils import (
     raise_time_mode_error_or_do_nothing,
 )
-from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
-cfg = Config()
-all_rainfall = AllRainfall(
-    cfg.get_dataset_path(), cfg.get_start_year(), cfg.get_rainfall_precision()
-)
+all_rainfall = AllRainfall.from_config()
 
 app = FastAPI(
     debug=True,

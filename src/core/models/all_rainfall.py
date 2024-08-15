@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.config import Config
 from src.core.models.monthly_rainfall import MonthlyRainfall
 from src.core.models.seasonal_rainfall import SeasonalRainfall
 from src.core.models.yearly_rainfall import YearlyRainfall
@@ -30,6 +31,7 @@ class AllRainfall:
     def __init__(
         self,
         dataset_url_or_path: str,
+        *,
         start_year=1971,
         round_precision=2,
     ):
@@ -52,6 +54,16 @@ class AllRainfall:
             )
             for season in Season
         }
+
+    @classmethod
+    def from_config(cls, from_file=False):
+        cfg = Config()
+
+        return cls(
+            cfg.get_dataset_path() if from_file else cfg.get_dataset_url(),
+            start_year=cfg.get_start_year(),
+            round_precision=cfg.get_rainfall_precision(),
+        )
 
     def export_all_data_to_csv(self, folder_path="csv_data") -> str:
         """
