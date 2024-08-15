@@ -16,8 +16,8 @@
 
 1. Clone repository
 2. Install dependencies
-3. Run Flask server
-4. Open [Swagger UI](http://127.0.0.1/apidocs)
+3. Execute `app.py` to run FastAPI with Uvicorn
+4. Open [Swagger UI](http://127.0.0.1:8000/docs)
 
 ### Linux
 ```commandline

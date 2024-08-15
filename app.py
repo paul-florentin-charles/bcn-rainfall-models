@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Run the Flask app from this file.
-Currently developing the Swagger API using flasgger.
+FastAPI app run with Uvicorn.
 """
 from __future__ import annotations
 
