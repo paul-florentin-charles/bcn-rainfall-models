@@ -1,7 +1,6 @@
 """
 Provides a rich class to manipulate Yearly Rainfall data.
 """
-from __future__ import annotations
 
 import operator as opr
 from pathlib import Path

@@ -4,10 +4,8 @@
 """
 FastAPI app run with Uvicorn.
 """
-from __future__ import annotations
 
 import io
-from typing import Union
 
 import matplotlib.pyplot as plt
 import uvicorn
@@ -19,16 +17,12 @@ from src.api.models import RainfallModel, RainfallWithNormalModel, YearWithNorma
 from src.api.utils import (
     raise_time_mode_error_or_do_nothing,
 )
-from src.config import Config
 from src.core.models.all_rainfall import AllRainfall
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
 
-cfg = Config()
-all_rainfall = AllRainfall(
-    cfg.get_dataset_path(), cfg.get_start_year(), cfg.get_rainfall_precision()
-)
+all_rainfall = AllRainfall.from_config()
 
 app = FastAPI(
     debug=True,
@@ -49,9 +43,9 @@ app = FastAPI(
 async def get_rainfall_average(
     time_mode: TimeMode,
     begin_year: int,
-    end_year: Union[int, None] = None,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> RainfallModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -84,8 +78,8 @@ async def get_rainfall_average(
 async def get_rainfall_normal(
     time_mode: TimeMode,
     begin_year: int,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> RainfallModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -121,9 +115,9 @@ async def get_rainfall_relative_distance_to_normal(
     time_mode: TimeMode,
     begin_year: int,
     normal_year: int,
-    end_year: Union[int, None] = None,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> RainfallWithNormalModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -159,9 +153,9 @@ async def get_rainfall_relative_distance_to_normal(
 async def get_rainfall_standard_deviation(
     time_mode: TimeMode,
     begin_year: int,
-    end_year: Union[int, None] = None,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> RainfallModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -198,9 +192,9 @@ async def get_years_below_normal(
     time_mode: TimeMode,
     begin_year: int,
     normal_year: int,
-    end_year: Union[int, None] = None,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> YearWithNormalModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -239,9 +233,9 @@ async def get_years_above_normal(
     time_mode: TimeMode,
     begin_year: int,
     normal_year: int,
-    end_year: Union[int, None] = None,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ) -> YearWithNormalModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -276,8 +270,8 @@ async def get_years_above_normal(
 )
 def get_minimal_csv(
     time_mode: TimeMode,
-    month: Union[Month, None] = None,
-    season: Union[Season, None] = None,
+    month: Month | None = None,
+    season: Season | None = None,
 ):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -317,7 +311,7 @@ def get_minimal_csv(
 )
 def get_rainfall_monthly_averages(
     begin_year: int,
-    end_year: Union[int, None] = None,
+    end_year: int | None = None,
 ):
     end_year = end_year or all_rainfall.get_last_year()
 
@@ -348,7 +342,7 @@ def get_rainfall_monthly_averages(
 )
 def get_rainfall_seasonal_averages(
     begin_year: int,
-    end_year: Union[int, None] = None,
+    end_year: int | None = None,
 ):
     end_year = end_year or all_rainfall.get_last_year()
 

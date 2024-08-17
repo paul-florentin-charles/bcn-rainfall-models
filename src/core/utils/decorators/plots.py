@@ -1,6 +1,7 @@
 """
 Provides decorators for plotting with Matplotlib.
 """
+
 from functools import wraps
 from typing import Callable
 

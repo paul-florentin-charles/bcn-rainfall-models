@@ -1,7 +1,6 @@
 """
 Provides a rich class to manipulate Monthly Rainfall data.
 """
-from __future__ import annotations
 
 import pandas as pd
 

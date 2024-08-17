@@ -1,7 +1,6 @@
 """
 Collection of utility functions for API purposes.
 """
-from __future__ import annotations
 
 from fastapi import HTTPException
 
