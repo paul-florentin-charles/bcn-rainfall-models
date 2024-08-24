@@ -9,8 +9,9 @@
 
 ## Requirements
 
-- Python 3
+- Python 3.12
 - Pip
+- Coverage.py / Pytest (coverage, tests)
 
 ## Get started
 
@@ -24,13 +25,27 @@
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 pip install -r requirements.txt
-python3 app.py
+python app.py
 ```
 
 ### Windows
 ```commandline
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
-python3 -m pip install -r requirements.txt
-python3 app.py
+python -m pip install -r requirements.txt
+python app.py
+```
+
+## Coverage
+
+### Linux
+```commandline
+coverage run -m pytest tst
+coverage report
+```
+
+### Windows
+```commandline
+python -m coverage run -m pytest tst
+python -m coverage report
 ```
