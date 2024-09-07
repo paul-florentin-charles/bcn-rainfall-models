@@ -366,5 +366,52 @@ def get_rainfall_seasonal_averages(
     )
 
 
+@app.get(
+    "/graph/rainfall_monthly_linreg_slopes",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall monthly linear regression slopes of data as a PNG.",
+    tags=["Graph"],
+    operation_id="getRainfallMonthlyLinregSlopes",
+)
+def get_rainfall_monthly_linreg_slopes():
+    all_rainfall.bar_rainfall_linreg_slopes()
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"rainfall_monthly_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+        media_type=MediaType.IMG_PNG.value,
+    )
+
+@app.get(
+    "/graph/rainfall_seasonal_linreg_slopes",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall seasonal linear regression slopes of data as a PNG.",
+    tags=["Graph"],
+    operation_id="getRainfallSeasonalLinregSlopes",
+)
+def get_rainfall_seasonal_linreg_slopes():
+    all_rainfall.bar_rainfall_linreg_slopes(monthly=False)
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"rainfall_seasonal_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+        media_type=MediaType.IMG_PNG.value,
+    )
+
+
 if __name__ == "__main__":
     uvicorn.run("app:app", reload=True, log_level="debug")
