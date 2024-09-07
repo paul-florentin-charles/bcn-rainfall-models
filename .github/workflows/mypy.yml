@@ -18,7 +18,7 @@ jobs:
         run: pip install mypy
 
       - name: Install stubs
-        run: mypy --install-types --non-interactive .
+        run: mypy --install-types --non-interactive --cache-dir=.mypy_cache/ .
 
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@releases/v1
