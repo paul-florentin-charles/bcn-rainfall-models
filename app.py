@@ -389,6 +389,7 @@ def get_rainfall_monthly_linreg_slopes():
         media_type=MediaType.IMG_PNG.value,
     )
 
+
 @app.get(
     "/graph/rainfall_seasonal_linreg_slopes",
     response_class=StreamingResponse,

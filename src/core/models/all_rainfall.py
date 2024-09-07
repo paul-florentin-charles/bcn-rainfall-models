@@ -122,12 +122,8 @@ class AllRainfall:
         :return: CSV data as a string if no path is set.
         None otherwise.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.export_as_csv(path)
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.export_as_csv(path)
 
     def get_average_rainfall(
         self,
@@ -153,12 +149,8 @@ class AllRainfall:
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the average Rainfall.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_average_yearly_rainfall(begin_year, end_year)
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_average_yearly_rainfall(begin_year, end_year)
 
     def get_normal(
         self,
@@ -181,12 +173,8 @@ class AllRainfall:
         :return: A float representing the Rainfall normal.
         """
 
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_normal(begin_year, self.round_precision)
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_normal(begin_year, self.round_precision)
 
     def get_relative_distance_from_normal(
         self,
@@ -214,14 +202,10 @@ class AllRainfall:
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_relative_distance_from_normal(
-            normal_year, begin_year, end_year
-        )
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_relative_distance_from_normal(
+                normal_year, begin_year, end_year
+            )
 
     def get_rainfall_standard_deviation(
         self,
@@ -252,14 +236,10 @@ class AllRainfall:
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_standard_deviation(
-            begin_year, end_year, weigh_by_average=weigh_by_average
-        )
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_standard_deviation(
+                begin_year, end_year, weigh_by_average=weigh_by_average
+            )
 
     def get_years_below_normal(
         self,
@@ -287,12 +267,8 @@ class AllRainfall:
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_years_below_normal(normal_year, begin_year, end_year)
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_years_below_normal(normal_year, begin_year, end_year)
 
     def get_years_above_normal(
         self,
@@ -320,12 +296,8 @@ class AllRainfall:
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
-        entity = self.get_entity_for_time_mode(time_mode, month, season)
-
-        if entity is None:
-            return entity
-
-        return entity.get_years_above_normal(normal_year, begin_year, end_year)
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_years_above_normal(normal_year, begin_year, end_year)
 
     def get_last_year(self) -> int:
         """

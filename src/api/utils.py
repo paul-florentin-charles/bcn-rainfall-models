@@ -26,10 +26,8 @@ def raise_time_mode_error_or_do_nothing(
     if time_mode is 'seasonal' and season is None.
     :return: None.
     """
-    if time_mode == TimeMode.MONTHLY:
-        if month is None:
-            raise HTTPException(status_code=400, detail="Month cannot be null.")
+    if time_mode == TimeMode.MONTHLY and month is None:
+        raise HTTPException(status_code=400, detail="Month cannot be null.")
 
-    if time_mode == TimeMode.SEASONAL:
-        if season is None:
-            raise HTTPException(status_code=400, detail="Season cannot be null.")
+    if time_mode == TimeMode.SEASONAL and season is None:
+        raise HTTPException(status_code=400, detail="Season cannot be null.")
