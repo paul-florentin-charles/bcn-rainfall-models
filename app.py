@@ -156,19 +156,21 @@ async def get_rainfall_standard_deviation(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
+    weigh_by_average: bool = False,
 ) -> RainfallModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
 
     return RainfallModel(
-        name="rainfall standard deviation (mm)",
+        name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
         value=all_rainfall.get_rainfall_standard_deviation(
             time_mode.value,
             begin_year=begin_year,
             end_year=end_year,
             month=month.value if month else None,
             season=season.value if season else None,
+            weigh_by_average=weigh_by_average,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
@@ -360,6 +362,53 @@ def get_rainfall_seasonal_averages(
         headers={
             "Content-Disposition": f'inline; filename="rainfall_seasonal_averages_{begin_year}_{end_year}.png"'
         },
+        media_type=MediaType.IMG_PNG.value,
+    )
+
+
+@app.get(
+    "/graph/rainfall_monthly_linreg_slopes",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall monthly linear regression slopes of data as a PNG.",
+    tags=["Graph"],
+    operation_id="getRainfallMonthlyLinregSlopes",
+)
+def get_rainfall_monthly_linreg_slopes():
+    all_rainfall.bar_rainfall_linreg_slopes()
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"rainfall_monthly_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+        media_type=MediaType.IMG_PNG.value,
+    )
+
+@app.get(
+    "/graph/rainfall_seasonal_linreg_slopes",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall seasonal linear regression slopes of data as a PNG.",
+    tags=["Graph"],
+    operation_id="getRainfallSeasonalLinregSlopes",
+)
+def get_rainfall_seasonal_linreg_slopes():
+    all_rainfall.bar_rainfall_linreg_slopes(monthly=False)
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"rainfall_seasonal_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
         media_type=MediaType.IMG_PNG.value,
     )
 

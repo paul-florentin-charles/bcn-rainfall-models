@@ -230,6 +230,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
+        weigh_by_average=False,
     ) -> float | None:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
@@ -246,6 +247,8 @@ class AllRainfall:
         :param season: A string corresponding to the season name.
         Possible values are within ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
+        :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
+        Default to False.
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
@@ -254,7 +257,9 @@ class AllRainfall:
         if entity is None:
             return entity
 
-        return entity.get_standard_deviation(begin_year, end_year)
+        return entity.get_standard_deviation(
+            begin_year, end_year, weigh_by_average=weigh_by_average
+        )
 
     def get_years_below_normal(
         self,

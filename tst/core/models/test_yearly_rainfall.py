@@ -104,11 +104,18 @@ class TestYearlyRainfall:
         assert isinstance(std, float)
 
         YEARLY_RAINFALL.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
-        std = YEARLY_RAINFALL.get_standard_deviation(
+        std_none = YEARLY_RAINFALL.get_standard_deviation(
             YEARLY_RAINFALL.starting_year, label=Label.SAVITZKY_GOLAY_FILTER
         )
 
-        assert std is None
+        assert std_none is None
+
+        std_weighted_by_avg = YEARLY_RAINFALL.get_standard_deviation(
+            YEARLY_RAINFALL.starting_year,
+            weigh_by_average=True,
+        )
+
+        assert isinstance(std_weighted_by_avg, float)
 
     @staticmethod
     def test_add_percentage_of_normal():
