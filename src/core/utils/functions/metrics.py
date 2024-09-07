@@ -19,12 +19,8 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, round_precision=2) -> fl
     :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float representing the average Rainfall.
     """
-    nb_years = len(yearly_rainfall)
-    if nb_years == 0:
-        return 0.0
-
     return round(
-        yearly_rainfall.sum(axis="rows").loc[Label.RAINFALL.value] / nb_years,  # type: ignore
+        yearly_rainfall[Label.RAINFALL.value].mean(),
         round_precision,
     )
 
