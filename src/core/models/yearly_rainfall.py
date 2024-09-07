@@ -227,7 +227,9 @@ class YearlyRainfall:
         self,
         begin_year: int,
         end_year: int | None = None,
+        *,
         label: Label | None = Label.RAINFALL,
+        weigh_by_average=False,
     ) -> float | None:
         """
         Compute the standard deviation of a column specified by its label within DataFrame
@@ -239,14 +241,22 @@ class YearlyRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         :param label: A string corresponding to an existing column label (optional).
+        :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
+        Defaults to False.
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
         if label not in self.data.columns:
             return None
 
+        data = self.get_yearly_rainfall(begin_year, end_year)[label]
+
+        standard_deviation = data.std()
+        if weigh_by_average:
+            standard_deviation /= data.mean()
+
         return round(
-            self.get_yearly_rainfall(begin_year, end_year)[label].std(),
+            standard_deviation,
             self.round_precision,
         )
 

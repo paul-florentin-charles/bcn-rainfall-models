@@ -156,19 +156,21 @@ async def get_rainfall_standard_deviation(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
+    weigh_by_average: bool = False,
 ) -> RainfallModel:
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
 
     return RainfallModel(
-        name="rainfall standard deviation (mm)",
+        name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
         value=all_rainfall.get_rainfall_standard_deviation(
             time_mode.value,
             begin_year=begin_year,
             end_year=end_year,
             month=month.value if month else None,
             season=season.value if season else None,
+            weigh_by_average=weigh_by_average,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
