@@ -5,6 +5,9 @@ on: push
 jobs:
   mypy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.12" ]
     steps:
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -18,7 +21,7 @@ jobs:
         run: pip install mypy
 
       - name: Install stubs
-        run: mypy --install-types --non-interactive --cache-dir=.mypy_cache/ .
+        run: mypy --install-types --non-interactive --cache-dir=mypy_cache/ .
 
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@releases/v1
