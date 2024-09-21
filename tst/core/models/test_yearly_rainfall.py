@@ -50,7 +50,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_export_as_csv():
-        csv_as_str = YEARLY_RAINFALL.export_as_csv()
+        csv_as_str = YEARLY_RAINFALL.export_as_csv(begin_year, end_year)
 
         assert isinstance(csv_as_str, str)
 
@@ -116,6 +116,13 @@ class TestYearlyRainfall:
         )
 
         assert isinstance(std_weighted_by_avg, float)
+
+    @staticmethod
+    def test_get_linear_regression():
+        r2_score, slope = YEARLY_RAINFALL.get_linear_regression(begin_year, end_year)
+
+        assert isinstance(r2_score, float) and r2_score <= 1
+        assert isinstance(slope, float)
 
     @staticmethod
     def test_add_percentage_of_normal():

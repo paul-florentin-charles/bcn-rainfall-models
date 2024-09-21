@@ -75,11 +75,12 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
     ):
         return False
 
-    plt.bar(
+    bar_plot = plt.bar(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],
         label=label.value,
     )
+    plt.bar_label(bar_plot)
 
     return True
 
@@ -113,7 +114,8 @@ def bar_monthly_rainfall_averages(
             )
         )
 
-    plt.bar(month_labels, averages, label=label)
+    bar_plot = plt.bar(month_labels, averages, label=label)
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return averages
@@ -121,31 +123,35 @@ def bar_monthly_rainfall_averages(
 
 def bar_monthly_rainfall_linreg_slopes(
     monthly_rainfalls: list,
+    begin_year: int,
+    end_year: int,
 ) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each month passed through the dict.
-    If list is empty, does not plot anything and returns an empty list.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
     :return: A list of the Rainfall LinReg slopes for each month.
     """
-    if not monthly_rainfalls:
-        return []
-
     month_labels, slopes = [], []
     for monthly_rainfall in monthly_rainfalls:
         month_labels.append(monthly_rainfall.month.value[:3])
-        slopes.append(monthly_rainfall.add_linear_regression()[1])
+        slopes.append(
+            monthly_rainfall.get_linear_regression(
+                begin_year=begin_year, end_year=end_year
+            )[1]
+        )
 
-    begin_year = monthly_rainfalls[0].starting_year
-    end_year = monthly_rainfalls[0].get_last_year()
-
-    plt.bar(
+    bar_plot = plt.bar(
         month_labels,
         slopes,
         label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
     )
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return slopes
@@ -180,7 +186,8 @@ def bar_seasonal_rainfall_averages(
             )
         )
 
-    plt.bar(season_labels, averages, label=label)
+    bar_plot = plt.bar(season_labels, averages, label=label)
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return averages
@@ -188,31 +195,35 @@ def bar_seasonal_rainfall_averages(
 
 def bar_seasonal_rainfall_linreg_slopes(
     seasonal_rainfalls: list,
+    begin_year: int,
+    end_year: int,
 ) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each season passed through the dict.
-    If list is empty, does not plot anything and returns an empty list.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
     :return: A list of the Rainfall LinReg slopes for each season.
     """
-    if not seasonal_rainfalls:
-        return []
-
     season_labels, slopes = [], []
     for seasonal_rainfall in seasonal_rainfalls:
         season_labels.append(seasonal_rainfall.season.value)
-        slopes.append(seasonal_rainfall.add_linear_regression()[1])
+        slopes.append(
+            seasonal_rainfall.get_linear_regression(
+                begin_year=begin_year, end_year=end_year
+            )[1]
+        )
 
-    begin_year = seasonal_rainfalls[0].starting_year
-    end_year = seasonal_rainfalls[0].get_last_year()
-
-    plt.bar(
+    bar_plot = plt.bar(
         season_labels,
         slopes,
         label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
     )
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return slopes
