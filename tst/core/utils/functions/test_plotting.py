@@ -48,7 +48,7 @@ class TestPlotting:
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():
         slopes = plotting.bar_monthly_rainfall_linreg_slopes(
-            ALL_RAINFALL.monthly_rainfalls.values()
+            list(ALL_RAINFALL.monthly_rainfalls.values())
         )
 
         assert isinstance(slopes, list)
@@ -71,7 +71,7 @@ class TestPlotting:
     @staticmethod
     def test_bar_seasonal_rainfall_linreg_slopes():
         slopes = plotting.bar_seasonal_rainfall_linreg_slopes(
-            ALL_RAINFALL.seasonal_rainfalls.values()
+            list(ALL_RAINFALL.seasonal_rainfalls.values())
         )
 
         assert isinstance(slopes, list)

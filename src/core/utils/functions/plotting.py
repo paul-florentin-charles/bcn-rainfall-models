@@ -119,20 +119,36 @@ def bar_monthly_rainfall_averages(
     return averages
 
 
-def bar_monthly_rainfall_linreg_slopes(monthly_rainfalls: list) -> list:
+def bar_monthly_rainfall_linreg_slopes(
+    monthly_rainfalls: list,
+) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each month passed through the dict.
+    If list is empty, does not plot anything and returns an empty list.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :return: A list of the Rainfall LinReg slopes for each month.
     """
+    from src.core.models.monthly_rainfall import MonthlyRainfall
+
+    monthly_rainfalls: list[MonthlyRainfall]
+    if not monthly_rainfalls:
+        return []
+
     month_labels, slopes = [], []
     for monthly_rainfall in monthly_rainfalls:
         month_labels.append(monthly_rainfall.month.value[:3])
         slopes.append(monthly_rainfall.add_linear_regression()[1])
 
-    plt.bar(month_labels, slopes, label="Linear Regression slope (mm/year)")
+    begin_year = monthly_rainfalls[0].starting_year
+    end_year = monthly_rainfalls[0].get_last_year()
+
+    plt.bar(
+        month_labels,
+        slopes,
+        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
+    )
     plt.legend()
 
     return slopes
@@ -173,20 +189,36 @@ def bar_seasonal_rainfall_averages(
     return averages
 
 
-def bar_seasonal_rainfall_linreg_slopes(seasonal_rainfalls: list) -> list:
+def bar_seasonal_rainfall_linreg_slopes(
+    seasonal_rainfalls: list,
+) -> list:
     """
     Plots a bar graphic displaying linear regression slope for each season passed through the dict.
+    If list is empty, does not plot anything and returns an empty list.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :return: A list of the Rainfall LinReg slopes for each season.
     """
+    from src.core.models.seasonal_rainfall import SeasonalRainfall
+
+    seasonal_rainfalls: list[SeasonalRainfall]
+    if not seasonal_rainfalls:
+        return []
+
     season_labels, slopes = [], []
     for seasonal_rainfall in seasonal_rainfalls:
         season_labels.append(seasonal_rainfall.season.value)
         slopes.append(seasonal_rainfall.add_linear_regression()[1])
 
-    plt.bar(season_labels, slopes, label="Linear Regression slope (mm/year)")
+    begin_year = seasonal_rainfalls[0].starting_year
+    end_year = seasonal_rainfalls[0].get_last_year()
+
+    plt.bar(
+        season_labels,
+        slopes,
+        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
+    )
     plt.legend()
 
     return slopes
