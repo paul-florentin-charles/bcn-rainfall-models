@@ -260,6 +260,37 @@ class YearlyRainfall:
             self.round_precision,
         )
 
+    def get_linear_regression(
+        self, begin_year: int, end_year: int | None = None
+    ) -> tuple[float, float]:
+        """
+        Computes Linear Regression of rainfall according to year for a given time interval.
+
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        If not given, defaults to latest year available.
+        :return: a tuple containing two floats (r2 score, slope).
+        """
+        end_year = end_year or self.get_last_year()
+
+        data = self.get_yearly_rainfall(begin_year, end_year)
+
+        years = data[Label.YEAR.value].values.reshape(-1, 1)  # type: ignore
+        rainfalls = data[Label.RAINFALL.value].values
+
+        lin_reg = LinearRegression()
+        lin_reg.fit(years, rainfalls)
+        predicted_rainfalls = [
+            round(rainfall_value, self.round_precision)
+            for rainfall_value in lin_reg.predict(years).tolist()
+        ]
+
+        return r2_score(rainfalls, predicted_rainfalls), round(
+            lin_reg.coef_[0], self.round_precision
+        )
+
     def add_percentage_of_normal(
         self, begin_year: int, end_year: int | None = None
     ) -> None:

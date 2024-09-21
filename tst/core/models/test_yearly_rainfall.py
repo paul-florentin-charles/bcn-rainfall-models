@@ -118,6 +118,13 @@ class TestYearlyRainfall:
         assert isinstance(std_weighted_by_avg, float)
 
     @staticmethod
+    def test_get_linear_regression():
+        r2_score, slope = YEARLY_RAINFALL.get_linear_regression(begin_year, end_year)
+
+        assert isinstance(r2_score, float) and r2_score <= 1
+        assert isinstance(slope, float)
+
+    @staticmethod
     def test_add_percentage_of_normal():
         YEARLY_RAINFALL.add_percentage_of_normal(YEARLY_RAINFALL.starting_year)
 

@@ -1,5 +1,6 @@
 from src.core.utils.enums.labels import Label
 from src.core.utils.functions import plotting
+from tst.core.models.test_all_rainfall import begin_year, end_year
 from tst.core.models.test_yearly_rainfall import YEARLY_RAINFALL, ALL_RAINFALL
 
 BEGIN_YEAR = 1970
@@ -48,7 +49,9 @@ class TestPlotting:
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():
         slopes = plotting.bar_monthly_rainfall_linreg_slopes(
-            list(ALL_RAINFALL.monthly_rainfalls.values())
+            list(ALL_RAINFALL.monthly_rainfalls.values()),
+            begin_year=begin_year,
+            end_year=end_year,
         )
 
         assert isinstance(slopes, list)
@@ -71,7 +74,9 @@ class TestPlotting:
     @staticmethod
     def test_bar_seasonal_rainfall_linreg_slopes():
         slopes = plotting.bar_seasonal_rainfall_linreg_slopes(
-            list(ALL_RAINFALL.seasonal_rainfalls.values())
+            list(ALL_RAINFALL.seasonal_rainfalls.values()),
+            begin_year=begin_year,
+            end_year=end_year,
         )
 
         assert isinstance(slopes, list)

@@ -360,21 +360,37 @@ class AllRainfall:
 
         return None
 
-    def bar_rainfall_linreg_slopes(self, time_mode: str) -> list | None:
+    def bar_rainfall_linreg_slopes(
+        self,
+        time_mode: str,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> list | None:
         """
         Plots a bar graphic displaying linear regression slope for each month or each season.
 
         :param time_mode: A string setting the time period ['monthly', 'seasonal'].
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        Is set to last year available is None.
         :return: A list of the Rainfall LinReg slopes for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
+        end_year = end_year or self.get_last_year()
+
         if time_mode == TimeMode.MONTHLY.value:
             return plotting.bar_monthly_rainfall_linreg_slopes(
-                list(self.monthly_rainfalls.values())
+                list(self.monthly_rainfalls.values()),
+                begin_year=begin_year,
+                end_year=end_year,
             )
         elif time_mode == TimeMode.SEASONAL.value:
             return plotting.bar_seasonal_rainfall_linreg_slopes(
-                list(self.seasonal_rainfalls.values())
+                list(self.seasonal_rainfalls.values()),
+                begin_year=begin_year,
+                end_year=end_year,
             )
 
         return None

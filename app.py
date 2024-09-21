@@ -345,12 +345,21 @@ def get_rainfall_averages(
     "/graph/rainfall_linreg_slopes",
     response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
-    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.\n"
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Graph"],
     operation_id="getRainfallLinregSlopes",
 )
-def get_rainfall_linreg_slopes(time_mode: TimeMode):
-    linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(time_mode.value)
+def get_rainfall_linreg_slopes(
+    time_mode: TimeMode,
+    begin_year: int,
+    end_year: int | None = None,
+):
+    end_year = end_year or all_rainfall.get_last_year()
+
+    linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(
+        time_mode=time_mode.value, begin_year=begin_year, end_year=end_year
+    )
     if linreg_slopes is None:
         raise HTTPException(
             status_code=400,
@@ -362,7 +371,7 @@ def get_rainfall_linreg_slopes(time_mode: TimeMode):
     plt.close()
     img_buffer.seek(0)
 
-    filename = f"rainfall_{time_mode.value}_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+    filename = f"rainfall_{time_mode.value}_linreg_slopes_{begin_year}_{end_year}.png"
 
     return StreamingResponse(
         img_buffer,
