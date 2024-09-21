@@ -50,7 +50,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_export_as_csv():
-        csv_as_str = YEARLY_RAINFALL.export_as_csv()
+        csv_as_str = YEARLY_RAINFALL.export_as_csv(begin_year, end_year)
 
         assert isinstance(csv_as_str, str)
 

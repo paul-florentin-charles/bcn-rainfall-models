@@ -35,8 +35,7 @@ app = FastAPI(
 @app.get(
     "/rainfall/average",
     summary="Retrieve rainfall average for Barcelona between two years.",
-    description=f"If no ending year is precised, "
-    f"computes average until latest year available: {all_rainfall.get_last_year()}",
+    description=f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}",
     tags=["Rainfall"],
     operation_id="getRainfallAverage",
 )
@@ -106,8 +105,7 @@ async def get_rainfall_normal(
     "If 100%, all the years are above normal. <br>"
     "If -100%, all the years are below normal. <br>"
     "If 0%, there are as many years below as years above. <br>"
-    "If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Rainfall"],
     operation_id="getRainfallRelativeDistanceToNormal",
 )
@@ -145,8 +143,7 @@ async def get_rainfall_relative_distance_to_normal(
 @app.get(
     "/rainfall/standard_deviation",
     summary="Compute the standard deviation of rainfall for Barcelona between two years.",
-    description="If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    description=f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Rainfall"],
     operation_id="getRainfallStandardDeviation",
 )
@@ -185,8 +182,7 @@ async def get_rainfall_standard_deviation(
     summary="Compute the number of years below normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
-    "If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Year"],
     operation_id="getYearsBelowNormal",
 )
@@ -226,8 +222,7 @@ async def get_years_below_normal(
     summary="Compute the number of years above normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
-    "If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Year"],
     operation_id="getYearsAboveNormal",
 )
@@ -266,12 +261,15 @@ async def get_years_above_normal(
     "/csv/minimal_csv",
     response_class=StreamingResponse,
     summary="Retrieve minimal CSV of rainfall data [Year, Rainfall].",
-    description="Could either be for rainfall upon a whole year, a specific month or a given season.",
+    description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["CSV"],
     operation_id="getMinimalCsv",
 )
 def get_minimal_csv(
     time_mode: TimeMode,
+    begin_year: int,
+    end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
@@ -283,8 +281,10 @@ def get_minimal_csv(
     csv_str = (
         all_rainfall.export_as_csv(
             time_mode.value,
-            month_value,
-            season_value,
+            begin_year=begin_year,
+            end_year=end_year,
+            month=month_value,
+            season=season_value,
         )
         or ""
     )
@@ -306,7 +306,7 @@ def get_minimal_csv(
     "/graph/rainfall_averages",
     response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal averages of data as a PNG.",
-    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.\n"
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Graph"],
     operation_id="getRainfallAverages",
@@ -345,7 +345,7 @@ def get_rainfall_averages(
     "/graph/rainfall_linreg_slopes",
     response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
-    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.\n"
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Graph"],
     operation_id="getRainfallLinregSlopes",

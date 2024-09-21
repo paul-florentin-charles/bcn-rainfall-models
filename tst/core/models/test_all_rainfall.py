@@ -25,7 +25,7 @@ class TestAllRainfall:
     def test_export_all_data_to_csv():
         folder_path = ""
         try:
-            folder_path = ALL_RAINFALL.export_all_data_to_csv()
+            folder_path = ALL_RAINFALL.export_all_data_to_csv(begin_year)
 
             assert isinstance(folder_path, str)
             assert Path(folder_path).exists()

@@ -64,10 +64,16 @@ class AllRainfall:
             round_precision=cfg.get_rainfall_precision(),
         )
 
-    def export_all_data_to_csv(self, folder_path="csv_data") -> str:
+    def export_all_data_to_csv(
+        self, begin_year: int, end_year: int | None = None, folder_path="csv_data"
+    ) -> str:
         """
         Export all the different data as CSVs into specified folder path.
 
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
         :param folder_path: path to folder where to save our CSV files.
         If not set, defaults to 'csv_data'. Should not end with '/'.
         :return: Path to folder that contains CSV files.
@@ -75,28 +81,34 @@ class AllRainfall:
         Path(f"{folder_path}/months").mkdir(parents=True, exist_ok=True)
         Path(f"{folder_path}/seasons").mkdir(parents=True, exist_ok=True)
 
-        last_year: int = self.yearly_rainfall.get_last_year()
+        end_year = end_year or self.yearly_rainfall.get_last_year()
 
         self.yearly_rainfall.export_as_csv(
-            path=Path(folder_path, f"{self.starting_year}_{last_year}_rainfall.csv")
+            begin_year=begin_year,
+            end_year=end_year,
+            path=Path(folder_path, f"{begin_year}_{end_year}_rainfall.csv"),
         )
 
         for monthly_rainfall in self.monthly_rainfalls.values():
             monthly_rainfall.export_as_csv(
+                begin_year=begin_year,
+                end_year=end_year,
                 path=Path(
                     folder_path,
                     "months",
-                    f"{self.starting_year}_{last_year}_{monthly_rainfall.month.name.lower()}_rainfall.csv",
-                )
+                    f"{begin_year}_{end_year}_{monthly_rainfall.month.value.lower()}_rainfall.csv",
+                ),
             )
 
         for season_rainfall in self.seasonal_rainfalls.values():
             season_rainfall.export_as_csv(
+                begin_year=begin_year,
+                end_year=end_year,
                 path=Path(
                     folder_path,
                     "seasons",
-                    f"{self.starting_year}_{last_year}_{season_rainfall.season.name.lower()}_rainfall.csv",
-                )
+                    f"{begin_year}_{end_year}_{season_rainfall.season.value}_rainfall.csv",
+                ),
             )
 
         return folder_path
@@ -104,6 +116,9 @@ class AllRainfall:
     def export_as_csv(
         self,
         time_mode: str,
+        *,
+        begin_year: int,
+        end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
         path: str | Path | None = None,
@@ -113,6 +128,10 @@ class AllRainfall:
         Could be for a yearly time frame, a specific month or a given season.
 
         :param time_mode: A string setting the time period ['yearly', 'monthly', 'seasonal'].
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
         :param month: A string corresponding to the month name.
         Set if time_mode is 'monthly' (optional).
         :param season: A string corresponding to the season name.
@@ -123,7 +142,9 @@ class AllRainfall:
         None otherwise.
         """
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
-            return entity.export_as_csv(path)
+            return entity.export_as_csv(
+                begin_year=begin_year, end_year=end_year, path=path
+            )
 
         return None
 

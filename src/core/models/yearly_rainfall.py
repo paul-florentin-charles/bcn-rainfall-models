@@ -98,16 +98,27 @@ class YearlyRainfall:
             self.data, begin_year=begin_year, end_year=end_year
         )
 
-    def export_as_csv(self, path: str | Path | None = None) -> str | None:
+    def export_as_csv(
+        self,
+        begin_year: int,
+        end_year: int | None = None,
+        path: str | Path | None = None,
+    ) -> str | None:
         """
         Export the actual instance data state as a CSV.
 
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string if no path is set.
         None otherwise.
         """
 
-        return self.data.to_csv(path_or_buf=path, index=False)
+        return self.get_yearly_rainfall(begin_year, end_year).to_csv(
+            path_or_buf=path, index=False
+        )
 
     def get_average_yearly_rainfall(
         self, begin_year: int, end_year: int | None = None
