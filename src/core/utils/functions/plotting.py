@@ -61,12 +61,16 @@ def scatter_column_according_to_year(
     return True
 
 
-def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) -> bool:
+def bar_column_according_to_year(
+    yearly_rainfall: pd.DataFrame, label: Label, graph_label: str | None = None
+) -> bool:
     """
     Plot bars for specified column data according to year.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param label: A Label enum designating the column to be displayed as bars for y-values.
+    :param graph_label: A string to label graphic data (optional).
+    If not set or set to "", label value is used.
     :return: A boolean set to True if data has been successfully plotted, False otherwise.
     """
     if (
@@ -75,12 +79,11 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
     ):
         return False
 
-    bar_plot = plt.bar(
+    plt.bar(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],
-        label=label.value,
+        label=graph_label or label.value,
     )
-    plt.bar_label(bar_plot)
 
     return True
 

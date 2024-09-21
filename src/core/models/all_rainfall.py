@@ -344,6 +344,45 @@ class AllRainfall:
 
         return self.yearly_rainfall.get_last_year()
 
+    def plot_rainfall_by_year(
+        self,
+        time_mode: TimeMode,
+        *,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ) -> bool | None:
+        """
+        Plot a bar graphic displaying rainfall by year computed upon whole years, specific months or specific seasons.
+
+        :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :param month: A string corresponding to the month name.
+        Set if time_mode is 'monthly' (optional).
+        :param season: A string corresponding to the season name.
+        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        Set if time_mode is 'seasonal' (optional).
+        :return: A bool indicating whether graphic has been successfully plotted or not.
+        """
+
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            if time_mode == TimeMode.MONTHLY:
+                return entity.plot_rainfall(
+                    begin_year, end_year=end_year, graph_label=f"Rainfall for {month}"
+                )
+            elif time_mode == TimeMode.SEASONAL:
+                return entity.plot_rainfall(
+                    begin_year, end_year=end_year, graph_label=f"Rainfall for {season}"
+                )
+
+            return entity.plot_rainfall(begin_year, end_year=end_year)
+
+        return None
+
     def bar_rainfall_averages(
         self,
         time_mode: TimeMode,

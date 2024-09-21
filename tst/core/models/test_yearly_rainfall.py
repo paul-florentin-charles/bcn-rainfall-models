@@ -166,7 +166,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_plot_rainfall_and_models():
-        YEARLY_RAINFALL.plot_rainfall()
+        YEARLY_RAINFALL.plot_rainfall(begin_year)
         YEARLY_RAINFALL.plot_linear_regression()
         YEARLY_RAINFALL.plot_savgol_filter()
 
