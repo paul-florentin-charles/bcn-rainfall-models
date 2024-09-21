@@ -125,6 +125,8 @@ class AllRainfall:
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.export_as_csv(path)
 
+        return None
+
     def get_average_rainfall(
         self,
         time_mode: str,
@@ -152,6 +154,8 @@ class AllRainfall:
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.get_average_yearly_rainfall(begin_year, end_year)
 
+        return None
+
     def get_normal(
         self,
         time_mode: str,
@@ -175,6 +179,8 @@ class AllRainfall:
 
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.get_normal(begin_year, self.round_precision)
+
+        return None
 
     def get_relative_distance_from_normal(
         self,
@@ -206,6 +212,8 @@ class AllRainfall:
             return entity.get_relative_distance_from_normal(
                 normal_year, begin_year, end_year
             )
+
+        return None
 
     def get_rainfall_standard_deviation(
         self,
@@ -241,6 +249,8 @@ class AllRainfall:
                 begin_year, end_year, weigh_by_average=weigh_by_average
             )
 
+        return None
+
     def get_years_below_normal(
         self,
         time_mode: str,
@@ -270,6 +280,8 @@ class AllRainfall:
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.get_years_below_normal(normal_year, begin_year, end_year)
 
+        return None
+
     def get_years_above_normal(
         self,
         time_mode: str,
@@ -298,6 +310,8 @@ class AllRainfall:
         """
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.get_years_above_normal(normal_year, begin_year, end_year)
+
+        return None
 
     def get_last_year(self) -> int:
         """

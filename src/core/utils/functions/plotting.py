@@ -130,9 +130,6 @@ def bar_monthly_rainfall_linreg_slopes(
     To be purposeful, all instances should have the same time frame in years.
     :return: A list of the Rainfall LinReg slopes for each month.
     """
-    from src.core.models.monthly_rainfall import MonthlyRainfall
-
-    monthly_rainfalls: list[MonthlyRainfall]
     if not monthly_rainfalls:
         return []
 
@@ -200,9 +197,6 @@ def bar_seasonal_rainfall_linreg_slopes(
     To be purposeful, all instances should have the same time frame in years.
     :return: A list of the Rainfall LinReg slopes for each season.
     """
-    from src.core.models.seasonal_rainfall import SeasonalRainfall
-
-    seasonal_rainfalls: list[SeasonalRainfall]
     if not seasonal_rainfalls:
         return []
 
