@@ -75,11 +75,12 @@ def bar_column_according_to_year(yearly_rainfall: pd.DataFrame, label: Label) ->
     ):
         return False
 
-    plt.bar(
+    bar_plot = plt.bar(
         yearly_rainfall[Label.YEAR.value],
         yearly_rainfall[label.value],
         label=label.value,
     )
+    plt.bar_label(bar_plot)
 
     return True
 
@@ -113,7 +114,8 @@ def bar_monthly_rainfall_averages(
             )
         )
 
-    plt.bar(month_labels, averages, label=label)
+    bar_plot = plt.bar(month_labels, averages, label=label)
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return averages
@@ -144,11 +146,12 @@ def bar_monthly_rainfall_linreg_slopes(
             )[1]
         )
 
-    plt.bar(
+    bar_plot = plt.bar(
         month_labels,
         slopes,
         label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
     )
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return slopes
@@ -183,7 +186,8 @@ def bar_seasonal_rainfall_averages(
             )
         )
 
-    plt.bar(season_labels, averages, label=label)
+    bar_plot = plt.bar(season_labels, averages, label=label)
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return averages
@@ -214,11 +218,12 @@ def bar_seasonal_rainfall_linreg_slopes(
             )[1]
         )
 
-    plt.bar(
+    bar_plot = plt.bar(
         season_labels,
         slopes,
         label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
     )
+    plt.bar_label(bar_plot)
     plt.legend()
 
     return slopes
