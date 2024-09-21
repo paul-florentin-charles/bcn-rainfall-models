@@ -335,7 +335,7 @@ def get_rainfall_by_year(
         raise HTTPException(
             status_code=400,
             detail=f"Data has not been successfully plotted, "
-            f"check if your data has both  '{Label.RAINFALL.value}' and '{Label.YEAR.value}' columns",
+            f"check if your data has both '{Label.RAINFALL.value}' and '{Label.YEAR.value}' columns",
         )
 
     img_buffer = io.BytesIO()
