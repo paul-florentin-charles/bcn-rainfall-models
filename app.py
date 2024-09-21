@@ -9,7 +9,7 @@ import io
 
 import matplotlib.pyplot as plt
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from starlette.responses import StreamingResponse
 
 from src.api.media_types import MediaType
@@ -303,21 +303,29 @@ def get_minimal_csv(
 
 
 @app.get(
-    "/graph/rainfall_monthly_averages",
+    "/graph/rainfall_averages",
     response_class=StreamingResponse,
-    summary="Retrieve rainfall monthly averages of data as a PNG.",
-    description="If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    summary="Retrieve rainfall monthly or seasonal averages of data as a PNG.",
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.\n"
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Graph"],
-    operation_id="getRainfallMonthlyAverages",
+    operation_id="getRainfallAverages",
 )
-def get_rainfall_monthly_averages(
+def get_rainfall_averages(
+    time_mode: TimeMode,
     begin_year: int,
     end_year: int | None = None,
 ):
     end_year = end_year or all_rainfall.get_last_year()
 
-    all_rainfall.bar_rainfall_averages(begin_year=begin_year, end_year=end_year)
+    averages = all_rainfall.bar_rainfall_averages(
+        time_mode=time_mode.value, begin_year=begin_year, end_year=end_year
+    )
+    if averages is None:
+        raise HTTPException(
+            status_code=400,
+            detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
+        )
 
     img_buffer = io.BytesIO()
     plt.savefig(img_buffer, format="png")
@@ -327,84 +335,34 @@ def get_rainfall_monthly_averages(
     return StreamingResponse(
         img_buffer,
         headers={
-            "Content-Disposition": f'inline; filename="rainfall_monthly_averages_{begin_year}_{end_year}.png"'
+            "Content-Disposition": f'inline; filename="rainfall_{time_mode.value}_averages_{begin_year}_{end_year}.png"'
         },
         media_type=MediaType.IMG_PNG.value,
     )
 
 
 @app.get(
-    "/graph/rainfall_seasonal_averages",
+    "/graph/rainfall_linreg_slopes",
     response_class=StreamingResponse,
-    summary="Retrieve rainfall seasonal averages of data as a PNG.",
-    description="If no ending year is precised, "
-    f"computes the relative distance until most recent year available: {all_rainfall.get_last_year()}.",
+    summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
     tags=["Graph"],
-    operation_id="getRainfallSeasonalAverages",
+    operation_id="getRainfallLinregSlopes",
 )
-def get_rainfall_seasonal_averages(
-    begin_year: int,
-    end_year: int | None = None,
-):
-    end_year = end_year or all_rainfall.get_last_year()
-
-    all_rainfall.bar_rainfall_averages(
-        begin_year=begin_year, end_year=end_year, monthly=False
-    )
+def get_rainfall_linreg_slopes(time_mode: TimeMode):
+    linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(time_mode.value)
+    if linreg_slopes is None:
+        raise HTTPException(
+            status_code=400,
+            detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
+        )
 
     img_buffer = io.BytesIO()
     plt.savefig(img_buffer, format="png")
     plt.close()
     img_buffer.seek(0)
 
-    return StreamingResponse(
-        img_buffer,
-        headers={
-            "Content-Disposition": f'inline; filename="rainfall_seasonal_averages_{begin_year}_{end_year}.png"'
-        },
-        media_type=MediaType.IMG_PNG.value,
-    )
-
-
-@app.get(
-    "/graph/rainfall_monthly_linreg_slopes",
-    response_class=StreamingResponse,
-    summary="Retrieve rainfall monthly linear regression slopes of data as a PNG.",
-    tags=["Graph"],
-    operation_id="getRainfallMonthlyLinregSlopes",
-)
-def get_rainfall_monthly_linreg_slopes():
-    all_rainfall.bar_rainfall_linreg_slopes()
-
-    img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
-    img_buffer.seek(0)
-
-    filename = f"rainfall_monthly_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
-
-    return StreamingResponse(
-        img_buffer,
-        headers={"Content-Disposition": f'inline; filename="{filename}"'},
-        media_type=MediaType.IMG_PNG.value,
-    )
-
-@app.get(
-    "/graph/rainfall_seasonal_linreg_slopes",
-    response_class=StreamingResponse,
-    summary="Retrieve rainfall seasonal linear regression slopes of data as a PNG.",
-    tags=["Graph"],
-    operation_id="getRainfallSeasonalLinregSlopes",
-)
-def get_rainfall_seasonal_linreg_slopes():
-    all_rainfall.bar_rainfall_linreg_slopes(monthly=False)
-
-    img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
-    img_buffer.seek(0)
-
-    filename = f"rainfall_seasonal_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
+    filename = f"rainfall_{time_mode.value}_linreg_slopes_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}.png"
 
     return StreamingResponse(
         img_buffer,
