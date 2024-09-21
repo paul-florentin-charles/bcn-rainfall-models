@@ -28,7 +28,8 @@ app = FastAPI(
     debug=True,
     root_path="/api",
     title="Barcelona Rainfall API",
-    summary="An API that provides rainfall-related data of the city of Barcelona",
+    summary="An API that provides rainfall-related data of the city of Barcelona.",
+    description=f"Available data is between {all_rainfall.starting_year} and {all_rainfall.get_last_year()}.",
 )
 
 
@@ -53,7 +54,7 @@ async def get_rainfall_average(
     return RainfallModel(
         name="rainfall average (mm)",
         value=all_rainfall.get_average_rainfall(
-            time_mode.value,
+            time_mode,
             begin_year=begin_year,
             end_year=end_year,
             month=month.value if month else None,
@@ -85,7 +86,7 @@ async def get_rainfall_normal(
     return RainfallModel(
         name="rainfall normal (mm)",
         value=all_rainfall.get_normal(
-            time_mode.value,
+            time_mode,
             begin_year=begin_year,
             month=month.value if month else None,
             season=season.value if season else None,
@@ -124,7 +125,7 @@ async def get_rainfall_relative_distance_to_normal(
     return RainfallWithNormalModel(
         name="relative distance to rainfall normal (%)",
         value=all_rainfall.get_relative_distance_from_normal(
-            time_mode.value,
+            time_mode,
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
@@ -162,7 +163,7 @@ async def get_rainfall_standard_deviation(
     return RainfallModel(
         name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
         value=all_rainfall.get_rainfall_standard_deviation(
-            time_mode.value,
+            time_mode,
             begin_year=begin_year,
             end_year=end_year,
             month=month.value if month else None,
@@ -201,7 +202,7 @@ async def get_years_below_normal(
     return YearWithNormalModel(
         name="years below rainfall normal",
         value=all_rainfall.get_years_below_normal(
-            time_mode.value,
+            time_mode,
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
@@ -241,7 +242,7 @@ async def get_years_above_normal(
     return YearWithNormalModel(
         name="years above rainfall normal",
         value=all_rainfall.get_years_above_normal(
-            time_mode.value,
+            time_mode,
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
@@ -280,7 +281,7 @@ def get_minimal_csv(
 
     csv_str = (
         all_rainfall.export_as_csv(
-            time_mode.value,
+            time_mode,
             begin_year=begin_year,
             end_year=end_year,
             month=month_value,
@@ -319,7 +320,7 @@ def get_rainfall_averages(
     end_year = end_year or all_rainfall.get_last_year()
 
     averages = all_rainfall.bar_rainfall_averages(
-        time_mode=time_mode.value, begin_year=begin_year, end_year=end_year
+        time_mode=time_mode, begin_year=begin_year, end_year=end_year
     )
     if averages is None:
         raise HTTPException(
@@ -358,7 +359,7 @@ def get_rainfall_linreg_slopes(
     end_year = end_year or all_rainfall.get_last_year()
 
     linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(
-        time_mode=time_mode.value, begin_year=begin_year, end_year=end_year
+        time_mode=time_mode, begin_year=begin_year, end_year=end_year
     )
     if linreg_slopes is None:
         raise HTTPException(
