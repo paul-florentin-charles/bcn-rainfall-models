@@ -28,8 +28,9 @@ class YearlyRainfall:
     def __init__(
         self,
         raw_data: pd.DataFrame,
-        start_year=1971,
-        round_precision=2,
+        *,
+        start_year: int,
+        round_precision: int,
     ):
         self.raw_data = raw_data
         self.starting_year = start_year

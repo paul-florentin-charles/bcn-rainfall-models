@@ -31,25 +31,31 @@ class AllRainfall:
         self,
         dataset_url_or_path: str,
         *,
-        start_year=1971,
-        round_precision=2,
+        start_year: int,
+        round_precision: int,
     ):
         self.dataset_url = dataset_url_or_path
         self.starting_year = start_year
         self.round_precision = round_precision
         self.raw_data: pd.DataFrame = pd.read_csv(dataset_url_or_path)
         self.yearly_rainfall = YearlyRainfall(
-            self.raw_data, start_year, round_precision
+            self.raw_data, start_year=start_year, round_precision=round_precision
         )
         self.monthly_rainfalls = {
             month.value: MonthlyRainfall(
-                self.raw_data, month, start_year, round_precision
+                self.raw_data,
+                month,
+                start_year=start_year,
+                round_precision=round_precision,
             )
             for month in Month
         }
         self.seasonal_rainfalls = {
             season.value: SeasonalRainfall(
-                self.raw_data, season, start_year, round_precision
+                self.raw_data,
+                season,
+                start_year=start_year,
+                round_precision=round_precision,
             )
             for season in Season
         }
