@@ -77,14 +77,14 @@ class TestAllRainfall:
         assert isinstance(ALL_RAINFALL.get_last_year(), int)
 
     @staticmethod
-    def test_get_relative_distance_from_normal():
+    def test_get_relative_distance_to_normal():
         for t_mode in TimeMode:
-            relative_distance = ALL_RAINFALL.get_relative_distance_from_normal(
+            relative_distance = ALL_RAINFALL.get_relative_distance_to_normal(
                 t_mode, normal_year, begin_year, end_year, month, season
             )
 
             assert isinstance(relative_distance, float)
-            assert -100.0 <= relative_distance <= 100.0
+            assert -100.0 <= relative_distance
 
     @staticmethod
     def test_get_standard_deviation():

@@ -205,11 +205,11 @@ class AllRainfall:
         """
 
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
-            return entity.get_normal(begin_year, self.round_precision)
+            return entity.get_normal(begin_year)
 
         return None
 
-    def get_relative_distance_from_normal(
+    def get_relative_distance_to_normal(
         self,
         time_mode: TimeMode,
         normal_year: int,
@@ -236,7 +236,7 @@ class AllRainfall:
         :return: A float representing the relative distance to rainfall normal.
         """
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
-            return entity.get_relative_distance_from_normal(
+            return entity.get_relative_distance_to_normal(
                 normal_year, begin_year, end_year
             )
 
@@ -455,6 +455,46 @@ class AllRainfall:
         elif time_mode == TimeMode.SEASONAL:
             return plotting.bar_seasonal_rainfall_linreg_slopes(
                 list(self.seasonal_rainfalls.values()),
+                begin_year=begin_year,
+                end_year=end_year,
+            )
+
+        return None
+
+    def bar_relative_distance_from_normal(
+        self,
+        time_mode: TimeMode,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> list | None:
+        """
+        Plots a bar graphic displaying relative distance to normal for each month or each season.
+
+        :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        Is set to last year available is None.
+        :return: A list of the relative distances to normal (%) for each month or season.
+        None if time_mode is not within {'monthly', 'seasonal'}.
+        """
+        end_year = end_year or self.get_last_year()
+
+        if time_mode == TimeMode.MONTHLY:
+            return plotting.bar_monthly_relative_distances_to_normal(
+                list(self.monthly_rainfalls.values()),
+                normal_year=normal_year,
+                begin_year=begin_year,
+                end_year=end_year,
+            )
+        elif time_mode == TimeMode.SEASONAL:
+            return plotting.bar_seasonal_relative_distances_to_normal(
+                list(self.seasonal_rainfalls.values()),
+                normal_year=normal_year,
                 begin_year=begin_year,
                 end_year=end_year,
             )

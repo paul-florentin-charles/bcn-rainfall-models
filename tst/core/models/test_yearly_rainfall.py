@@ -89,13 +89,13 @@ class TestYearlyRainfall:
         assert isinstance(YEARLY_RAINFALL.get_last_year(), int)
 
     @staticmethod
-    def test_get_relative_distance_from_normal():
-        relative_distance = YEARLY_RAINFALL.get_relative_distance_from_normal(
+    def test_get_relative_distance_to_normal():
+        relative_distance = YEARLY_RAINFALL.get_relative_distance_to_normal(
             normal_year, begin_year, end_year
         )
 
         assert isinstance(relative_distance, float)
-        assert -100.0 <= relative_distance <= 100.0
+        assert -100.0 <= relative_distance
 
     @staticmethod
     def test_get_standard_deviation():

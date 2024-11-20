@@ -104,9 +104,11 @@ async def get_rainfall_normal(
     "/rainfall/relative_distance_to_normal",
     summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
     description="The metric is a percentage that can be negative. <br>"
-    "If 100%, all the years are above normal. <br>"
-    "If -100%, all the years are below normal. <br>"
-    "If 0%, there are as many years below as years above. <br>"
+    "Its formula is `(average - normal) / normal * 100` <br> "
+    "1. `average` is average rainfall computed between `begin_year` and `end_year`<br>"
+    "2. `normal` is normal rainfall computed from `normal_year`<br>"
+    "If 100%, average is twice the normal. <br>"
+    "If -50%, average is half the normal. <br>"
     f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Rainfall"],
     operation_id="getRainfallRelativeDistanceToNormal",
@@ -125,7 +127,7 @@ async def get_rainfall_relative_distance_to_normal(
 
     return RainfallWithNormalModel(
         name="relative distance to rainfall normal (%)",
-        value=all_rainfall.get_relative_distance_from_normal(
+        value=all_rainfall.get_relative_distance_to_normal(
             time_mode,
             normal_year=normal_year,
             begin_year=begin_year,
@@ -426,6 +428,49 @@ def get_rainfall_linreg_slopes(
     img_buffer.seek(0)
 
     filename = f"rainfall_{time_mode.value}_linreg_slopes_{begin_year}_{end_year}.png"
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+        media_type=MediaType.IMG_PNG.value,
+    )
+
+
+@app.get(
+    "/graph/relative_distances_to_normal",
+    response_class=StreamingResponse,
+    summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG.",
+    description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
+    tags=["Graph"],
+    operation_id="geRelativeDistancesToNormal",
+)
+def get_relative_distances_to_normal(
+    time_mode: TimeMode,
+    normal_year: int,
+    begin_year: int,
+    end_year: int | None = None,
+):
+    end_year = end_year or all_rainfall.get_last_year()
+
+    relative_distances_to_normal = all_rainfall.bar_relative_distance_from_normal(
+        time_mode=time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+    )
+    if relative_distances_to_normal is None:
+        raise HTTPException(
+            status_code=400,
+            detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
+        )
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"{time_mode.value}_relative_distances_to_{normal_year}_normal_{begin_year}_{end_year}.png"
 
     return StreamingResponse(
         img_buffer,

@@ -138,17 +138,16 @@ class YearlyRainfall:
             self.get_yearly_rainfall(begin_year, end_year), self.round_precision
         )
 
-    def get_normal(self, begin_year: int, round_precision=2) -> float:
+    def get_normal(self, begin_year: int) -> float:
         """
         Computes Rainfall average over 30 years time frame.
 
         :param begin_year: An integer representing the year
         to start from to compute our normal.
-        :param round_precision: A float representing the rainfall precision (optional).
         :return: A float storing the normal.
         """
 
-        return metrics.get_normal(self.data, begin_year, round_precision)
+        return metrics.get_normal(self.data, begin_year, self.round_precision)
 
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int | None = None
@@ -201,12 +200,12 @@ class YearlyRainfall:
 
         return int(self.data[Label.YEAR].iloc[-1])
 
-    def get_relative_distance_from_normal(
+    def get_relative_distance_to_normal(
         self, normal_year: int, begin_year: int, end_year: int | None = None
-    ) -> float:
+    ) -> float | None:
         """
-        Computes the relative distance between above and below normal years
-        for a specific year range.
+        Computes the relative distance between average rainfall within two given years
+        and normal rainfall computed from a specific year.
 
         :param normal_year: An integer representing the year
         to start computing the 30 years normal of the rainfall.
@@ -220,18 +219,14 @@ class YearlyRainfall:
             end_year = self.get_last_year()
 
         gap = end_year - begin_year + 1
-        if gap == 0:
-            return 0.0
+        if gap <= 0:
+            return None
 
-        n_years_above_normal = self.get_years_above_normal(
-            normal_year, begin_year, end_year
-        )
-        n_years_below_normal = self.get_years_below_normal(
-            normal_year, begin_year, end_year
-        )
+        normal = self.get_normal(normal_year)
+        average = self.get_average_yearly_rainfall(begin_year, end_year)
 
         return round(
-            (n_years_above_normal - n_years_below_normal) / gap * 100,
+            (average - normal) / normal * 100,
             self.round_precision,
         )
 

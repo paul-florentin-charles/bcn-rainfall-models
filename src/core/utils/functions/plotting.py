@@ -124,42 +124,6 @@ def bar_monthly_rainfall_averages(
     return averages
 
 
-def bar_monthly_rainfall_linreg_slopes(
-    monthly_rainfalls: list,
-    begin_year: int,
-    end_year: int,
-) -> list:
-    """
-    Plots a bar graphic displaying linear regression slope for each month passed through the dict.
-
-    :param monthly_rainfalls: A list of instances of MonthlyRainfall.
-    To be purposeful, all instances should have the same time frame in years.
-    :param begin_year: An integer representing the year
-    to start getting our rainfall values.
-    :param end_year: An integer representing the year
-    to end getting our rainfall values.
-    :return: A list of the Rainfall LinReg slopes for each month.
-    """
-    month_labels, slopes = [], []
-    for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.value[:3])
-        slopes.append(
-            monthly_rainfall.get_linear_regression(
-                begin_year=begin_year, end_year=end_year
-            )[1]
-        )
-
-    bar_plot = plt.bar(
-        month_labels,
-        slopes,
-        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
-    )
-    plt.bar_label(bar_plot)
-    plt.legend()
-
-    return slopes
-
-
 def bar_seasonal_rainfall_averages(
     seasonal_rainfalls: list,
     *,
@@ -196,6 +160,42 @@ def bar_seasonal_rainfall_averages(
     return averages
 
 
+def bar_monthly_rainfall_linreg_slopes(
+    monthly_rainfalls: list,
+    begin_year: int,
+    end_year: int,
+) -> list:
+    """
+    Plots a bar graphic displaying linear regression slope for each month passed through the dict.
+
+    :param monthly_rainfalls: A list of instances of MonthlyRainfall.
+    To be purposeful, all instances should have the same time frame in years.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :return: A list of the Rainfall LinReg slopes for each month.
+    """
+    month_labels, slopes = [], []
+    for monthly_rainfall in monthly_rainfalls:
+        month_labels.append(monthly_rainfall.month.value[:3])
+        slopes.append(
+            monthly_rainfall.get_linear_regression(
+                begin_year=begin_year, end_year=end_year
+            )[1]
+        )
+
+    bar_plot = plt.bar(
+        month_labels,
+        slopes,
+        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
+    )
+    plt.bar_label(bar_plot)
+    plt.legend()
+
+    return slopes
+
+
 def bar_seasonal_rainfall_linreg_slopes(
     seasonal_rainfalls: list,
     begin_year: int,
@@ -230,3 +230,81 @@ def bar_seasonal_rainfall_linreg_slopes(
     plt.legend()
 
     return slopes
+
+
+def bar_monthly_relative_distances_to_normal(
+    monthly_rainfalls: list,
+    normal_year: int,
+    begin_year: int,
+    end_year: int,
+) -> list:
+    """
+    Plots a bar graphic displaying relative distances to normal for each month passed through the dict.
+
+    :param monthly_rainfalls: A list of instances of MonthlyRainfall.
+    To be purposeful, all instances should have the same time frame in years.
+    :param normal_year: An integer representing the year
+    to start computing the 30 years normal of the rainfall.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :return: A list of the relative distances to normal (%) for each month.
+    """
+    month_labels, relative_distances_to_normal = [], []
+    for monthly_rainfall in monthly_rainfalls:
+        month_labels.append(monthly_rainfall.month.value[:3])
+        relative_distances_to_normal.append(
+            monthly_rainfall.get_relative_distance_to_normal(
+                normal_year, begin_year, end_year
+            )
+        )
+
+    bar_plot = plt.bar(
+        month_labels,
+        relative_distances_to_normal,
+        label=f"Relative distance to {normal_year} normal between {begin_year} and {end_year} (%)",
+    )
+    plt.bar_label(bar_plot)
+    plt.legend()
+
+    return relative_distances_to_normal
+
+
+def bar_seasonal_relative_distances_to_normal(
+    seasonal_rainfalls: list,
+    normal_year: int,
+    begin_year: int,
+    end_year: int,
+) -> list:
+    """
+    Plots a bar graphic displaying relative distances to normal for each season passed through the dict.
+
+    :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
+    To be purposeful, all instances should have the same time frame in years.
+    :param normal_year: An integer representing the year
+    to start computing the 30 years normal of the rainfall.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :return: A list of the relative distances to normal (%) for each season.
+    """
+    season_labels, relative_distances_to_normal = [], []
+    for seasonal_rainfall in seasonal_rainfalls:
+        season_labels.append(seasonal_rainfall.season.value)
+        relative_distances_to_normal.append(
+            seasonal_rainfall.get_relative_distance_to_normal(
+                normal_year, begin_year, end_year
+            )
+        )
+
+    bar_plot = plt.bar(
+        season_labels,
+        relative_distances_to_normal,
+        label=f"Relative distance to {normal_year} normal between {begin_year} and {end_year} (%)",
+    )
+    plt.bar_label(bar_plot)
+    plt.legend()
+
+    return relative_distances_to_normal
