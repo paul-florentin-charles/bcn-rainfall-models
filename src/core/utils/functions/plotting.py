@@ -94,7 +94,7 @@ def bar_monthly_rainfall_averages(
     begin_year: int,
     end_year: int | None = None,
     label="Average rainfall (mm)",
-) -> list:
+) -> list[float]:
     """
     Plots a bar graphic displaying average rainfall for each month passed through the dict.
 
@@ -130,7 +130,7 @@ def bar_seasonal_rainfall_averages(
     begin_year: int,
     end_year: int | None = None,
     label="Average rainfall (mm)",
-) -> list:
+) -> list[float]:
     """
     Plots a bar graphic displaying average rainfall for each season passed through the dict.
 
@@ -164,7 +164,7 @@ def bar_monthly_rainfall_linreg_slopes(
     monthly_rainfalls: list,
     begin_year: int,
     end_year: int,
-) -> list:
+) -> list[float]:
     """
     Plots a bar graphic displaying linear regression slope for each month passed through the dict.
 
@@ -200,7 +200,7 @@ def bar_seasonal_rainfall_linreg_slopes(
     seasonal_rainfalls: list,
     begin_year: int,
     end_year: int,
-) -> list:
+) -> list[float]:
     """
     Plots a bar graphic displaying linear regression slope for each season passed through the dict.
 
@@ -237,7 +237,7 @@ def bar_monthly_relative_distances_to_normal(
     normal_year: int,
     begin_year: int,
     end_year: int,
-) -> list:
+) -> list[float | None]:
     """
     Plots a bar graphic displaying relative distances to normal for each month passed through the dict.
 
@@ -276,7 +276,7 @@ def bar_seasonal_relative_distances_to_normal(
     normal_year: int,
     begin_year: int,
     end_year: int,
-) -> list:
+) -> list[float | None]:
     """
     Plots a bar graphic displaying relative distances to normal for each season passed through the dict.
 

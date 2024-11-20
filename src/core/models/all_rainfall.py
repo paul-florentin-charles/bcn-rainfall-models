@@ -394,7 +394,7 @@ class AllRainfall:
         time_mode: TimeMode,
         begin_year: int,
         end_year: int | None = None,
-    ) -> list | None:
+    ) -> list[float] | None:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
@@ -431,7 +431,7 @@ class AllRainfall:
         time_mode: TimeMode,
         begin_year: int,
         end_year: int | None = None,
-    ) -> list | None:
+    ) -> list[float] | None:
         """
         Plots a bar graphic displaying linear regression slope for each month or each season.
 
@@ -467,7 +467,7 @@ class AllRainfall:
         normal_year: int,
         begin_year: int,
         end_year: int | None = None,
-    ) -> list | None:
+    ) -> list[float | None] | None:
         """
         Plots a bar graphic displaying relative distance to normal for each month or each season.
 
