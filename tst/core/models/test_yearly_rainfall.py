@@ -36,7 +36,7 @@ class TestYearlyRainfall:
     def test_load_rainfall_fails_because_data_format_error():
         with raises(DataFormatError):
             YearlyRainfall(
-                raw_data=pd.DataFrame(),
+                pd.DataFrame(),
                 start_year=config.get_start_year(),
                 round_precision=config.get_rainfall_precision(),
             )
@@ -166,7 +166,7 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_plot_rainfall_and_models():
-        YEARLY_RAINFALL.plot_rainfall()
+        YEARLY_RAINFALL.plot_rainfall(begin_year)
         YEARLY_RAINFALL.plot_linear_regression()
         YEARLY_RAINFALL.plot_savgol_filter()
 

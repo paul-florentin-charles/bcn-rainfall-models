@@ -18,6 +18,7 @@ from src.api.utils import (
     raise_time_mode_error_or_do_nothing,
 )
 from src.core.models.all_rainfall import AllRainfall
+from src.core.utils.enums.labels import Label
 from src.core.utils.enums.months import Month
 from src.core.utils.enums.seasons import Season
 from src.core.utils.enums.time_modes import TimeMode
@@ -300,6 +301,58 @@ def get_minimal_csv(
         iter(csv_str),
         headers={"Content-Disposition": f'inline; filename="{filename}.csv"'},
         media_type=MediaType.TXT_CSV.value,
+    )
+
+
+@app.get(
+    "/graph/rainfall_by_year",
+    response_class=StreamingResponse,
+    summary="Retrieve rainfall by year as a PNG.",
+    description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
+    f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
+    tags=["Graph"],
+    operation_id="getRainfallByYear",
+)
+def get_rainfall_by_year(
+    time_mode: TimeMode,
+    begin_year: int,
+    end_year: int | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
+):
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+
+    end_year = end_year or all_rainfall.get_last_year()
+
+    success = all_rainfall.plot_rainfall_by_year(
+        time_mode,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month.value if month else None,
+        season=season.value if season else None,
+    )
+    if success is False:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Data has not been successfully plotted, "
+            f"check if your data has both '{Label.RAINFALL.value}' and '{Label.YEAR.value}' columns",
+        )
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format="png")
+    plt.close()
+    img_buffer.seek(0)
+
+    filename = f"rainfall_by_year_{begin_year}_{end_year}.png"
+    if time_mode == TimeMode.MONTHLY:
+        filename = f"{month.value.lower()}_{filename}"  # type: ignore
+    elif time_mode == TimeMode.SEASONAL:
+        filename = f"{season.value}_{filename}"  # type: ignore
+
+    return StreamingResponse(
+        img_buffer,
+        headers={"Content-Disposition": f"inline; filename={filename}"},
+        media_type=MediaType.IMG_PNG.value,
     )
 
 

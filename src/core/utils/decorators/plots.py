@@ -19,8 +19,8 @@ def legend(ylabel=f"{Label.RAINFALL.value} in (mm)") -> Callable:
 
     def decorator(func: Callable):
         @wraps(func)
-        def wrapper(*args):
-            func(*args)
+        def wrapper(*args, **kwargs):
+            func(*args, **kwargs)
             plt.xlabel(Label.YEAR.value)
             plt.ylabel(ylabel)
             plt.legend()

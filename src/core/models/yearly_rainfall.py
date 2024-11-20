@@ -28,8 +28,9 @@ class YearlyRainfall:
     def __init__(
         self,
         raw_data: pd.DataFrame,
-        start_year=1971,
-        round_precision=2,
+        *,
+        start_year: int,
+        round_precision: int,
     ):
         self.raw_data = raw_data
         self.starting_year = start_year
@@ -391,14 +392,30 @@ class YearlyRainfall:
         return df_opr.remove_column(self.data, label)
 
     @plots.legend()
-    def plot_rainfall(self) -> bool:
+    def plot_rainfall(
+        self,
+        begin_year: int,
+        *,
+        end_year: int | None = None,
+        graph_label: str | None = None,
+    ) -> bool:
         """
         Plot Rainfall data according to year.
 
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values (optional).
+        :param graph_label: A string to label graphic data (optional).
+        If not set or set to "", label value is used.
         :return: A boolean set to True if data has been successfully plotted, False otherwise.
         """
 
-        return plotting.bar_column_according_to_year(self.data, Label.RAINFALL)
+        return plotting.bar_column_according_to_year(
+            self.get_yearly_rainfall(begin_year, end_year),
+            label=Label.RAINFALL,
+            graph_label=graph_label,
+        )
 
     @plots.legend()
     def plot_linear_regression(self) -> bool:
