@@ -17,24 +17,30 @@
 
 1. Clone repository
 2. Install dependencies
-3. Execute `app.py` to run FastAPI with Uvicorn
+3. Run **FastAPI** with Uvicorn
 4. Open [Swagger UI](http://127.0.0.1:8000/docs)
+5. Run **Flask**
+6. Open [Webapp](http://127.0.0.1:5000)
 
 ### Linux
 ```commandline
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 pip install -r requirements.txt
-python app.py
 ```
+
+1. `uvicorn back.routes:app` *to run back*
+2. `flask --app front.app run` *to run front*
 
 ### Windows
 ```commandline
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 python -m pip install -r requirements.txt
-python app.py
 ```
+
+1. `python -m uvicorn back.routes:app` *to run back*
+2. `python -m flask --app front.app run` *to run front*
 
 ## Coverage
 
