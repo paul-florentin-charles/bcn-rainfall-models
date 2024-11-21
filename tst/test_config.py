@@ -1,7 +1,7 @@
 from pytest import raises
 from yaml.parser import ParserError  # type: ignore
 
-from src.config import Config, CONFIG_FNAME
+from config import Config, CONFIG_FNAME
 
 config: Config = Config(path=CONFIG_FNAME)
 
