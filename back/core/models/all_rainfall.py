@@ -154,7 +154,7 @@ class AllRainfall:
 
         return None
 
-    def get_average_rainfall(
+    def get_rainfall_average(
         self,
         time_mode: TimeMode,
         *,

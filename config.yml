@@ -12,4 +12,9 @@ data:
   kmeans_clusters: 4
 
 api:
-  doc_path: src/api/swagger
+  host: 127.0.0.1
+  port: 8000
+
+front:
+  host: 127.0.0.1
+  port: 5000

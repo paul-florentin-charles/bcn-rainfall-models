@@ -50,7 +50,7 @@ async def get_rainfall_average(
 
     return RainfallModel(
         name="rainfall average (mm)",
-        value=all_rainfall.get_average_rainfall(
+        value=all_rainfall.get_rainfall_average(
             time_mode,
             begin_year=begin_year,
             end_year=end_year,

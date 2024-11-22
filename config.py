@@ -2,6 +2,8 @@
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
+from typing import Any
+
 from yaml import safe_load, parser  # type: ignore
 
 CONFIG_FNAME: str = "config.yml"
@@ -81,11 +83,28 @@ class Config:
 
         return self.yaml_config["data"]["kmeans_clusters"]
 
-    def get_api_doc_path(self) -> str:
+    def get_api_server_settings(self) -> dict[str, Any]:
         """
-        The path to Swagger YAML spec files to document API.
+        Return FastAPI server settings.
 
-        :return: The path to API Swagger documentation as a String
+        ex:
+        {
+            "host": "127.0.0.1",
+            "port": 8000,
+        }
         """
 
-        return self.yaml_config["api"]["doc_path"]
+        return self.yaml_config["api"]
+
+    def get_front_server_settings(self) -> dict[str, Any]:
+        """
+        Return Flask server settings.
+
+        ex:
+        {
+            "host": "127.0.0.1",
+            "port": 5000
+        }
+        """
+
+        return self.yaml_config["front"]

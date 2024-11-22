@@ -35,7 +35,7 @@ class TestAllRainfall:
     @staticmethod
     def test_get_average_rainfall():
         for t_mode in TimeMode:
-            avg_rainfall = ALL_RAINFALL.get_average_rainfall(
+            avg_rainfall = ALL_RAINFALL.get_rainfall_average(
                 t_mode,
                 begin_year=begin_year,
                 end_year=end_year,

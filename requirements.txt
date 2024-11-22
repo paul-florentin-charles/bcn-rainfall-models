@@ -11,4 +11,3 @@ uvicorn~=0.32.1
 pydantic~=2.8.2
 starlette~=0.41.3
 Flask~=3.1.0
-requests~=2.32.3
