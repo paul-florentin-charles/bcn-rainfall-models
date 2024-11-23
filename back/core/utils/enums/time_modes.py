@@ -2,7 +2,7 @@
 Provides list of Time modes (Enum) to inform on what timeframe is used on current rainfall data.
 """
 
-from back.core.utils.enums.base_enum import BaseEnum
+from back.core.utils.enums import BaseEnum
 
 
 class TimeMode(BaseEnum):

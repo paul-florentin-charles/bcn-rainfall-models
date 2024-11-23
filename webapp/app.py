@@ -1,3 +1,8 @@
+"""
+Webapp run with Flask that communicates with an API (FastAPI/Uvicorn) to display rainfall-related data.
+/!\ WIP /!\
+"""
+
 from flask import Flask
 
 from back.api import APIClient

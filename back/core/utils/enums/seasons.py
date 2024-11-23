@@ -2,7 +2,7 @@
 Provides list of Month (Enum) equivalents for all four seasons of the year.
 """
 
-from back.core.utils.enums.base_enum import BaseEnum
+from back.core.utils.enums import BaseEnum
 from back.core.utils.enums.months import Month
 
 

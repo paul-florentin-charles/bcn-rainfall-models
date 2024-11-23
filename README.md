@@ -22,25 +22,30 @@
 5. Run **Flask**
 6. Open [Webapp](http://127.0.0.1:5000)
 
-### Linux
+### Linux Setup
 ```commandline
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 pip install -r requirements.txt
 ```
 
-1. `uvicorn back.api.routes:app` *to run API*
-2. `flask --app webapp.app run` *to run Webapp*
-
-### Windows
+### Windows Setup
 ```commandline
 git clone https://github.com/paul-florentin-charles/bcn-rainfall-models.git
 cd bcn-rainfall-models
 python -m pip install -r requirements.txt
 ```
 
-1. `python -m uvicorn back.api.routes:app` *to run API*
-2. `python -m flask --app webapp.app run` *to run Webapp*
+### Run servers
+
+1. Run **API**
+   1. `uvicorn back.api.routes:app` via _Uvicorn_ command
+   2. `python run.py --server api` via _Python_ script
+2. Run **Webapp**
+   1. `flask --app webapp.app run` via _Uvicorn_ command
+   2. `python run.py --server webapp` via _Python_ script
+
+_N. B._ – Better to use it via Python since script runs server using settings written in `config.yml`.
 
 ## Coverage
 

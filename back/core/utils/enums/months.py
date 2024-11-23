@@ -2,7 +2,7 @@
 Provides integer equivalents for months.
 """
 
-from back.core.utils.enums.base_enum import BaseEnum
+from back.core.utils.enums import BaseEnum
 
 
 class Month(BaseEnum):

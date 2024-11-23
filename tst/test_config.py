@@ -8,6 +8,16 @@ config: Config = Config(path=CONFIG_FNAME)
 
 class TestConfig:
     @staticmethod
+    def test_config_file_not_found():
+        with raises(FileNotFoundError):
+            Config(path="/there/is/no/config/file/there/dude.yaml")
+
+    @staticmethod
+    def test_config_file_invalid():
+        with raises(ParserError):
+            Config(path="README.md")
+
+    @staticmethod
     def test_get_dataset_url():
         dataset_url = config.get_dataset_url()
         assert isinstance(dataset_url, str)
@@ -28,11 +38,13 @@ class TestConfig:
         assert isinstance(kmeans_clusters, int)
 
     @staticmethod
-    def test_config_file_not_found():
-        with raises(FileNotFoundError):
-            Config(path="/there/is/no/config/file/there/dude.yaml")
+    def test_get_api_server_settings():
+        settings = config.get_api_server_settings()
+        assert isinstance(settings, dict)
+        assert settings.keys() == {"host", "port"}
 
     @staticmethod
-    def test_config_file_invalid():
-        with raises(ParserError):
-            Config(path="README.md")
+    def test_get_webapp_server_settings():
+        settings = config.get_webapp_server_settings()
+        assert isinstance(settings, dict)
+        assert settings.keys() == {"host", "port"}

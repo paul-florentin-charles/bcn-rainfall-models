@@ -36,16 +36,8 @@ class Config:
 
         :return: The dataset URL as a String.
         """
-        dataset_url: str = self.yaml_config["base_url"]
-        yaml_dataset_config: dict = self.yaml_config["dataset"]
 
-        return dataset_url + "/".join(
-            [
-                f"/dataset/{yaml_dataset_config['id']}",
-                f"resource/{yaml_dataset_config['resource_id']}",
-                f"download/{yaml_dataset_config['file_name']}",
-            ]
-        )
+        return self.yaml_config["dataset"]["file_url"]
 
     def get_dataset_path(self) -> str:
         """

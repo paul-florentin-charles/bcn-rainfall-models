@@ -2,7 +2,7 @@
 Provides labels for retrieving interesting data within Pandas DataFrame.
 """
 
-from back.core.utils.enums.base_enum import BaseEnum
+from back.core.utils.enums import BaseEnum
 
 
 class Label(str, BaseEnum):
