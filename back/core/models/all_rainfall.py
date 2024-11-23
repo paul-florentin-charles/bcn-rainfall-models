@@ -6,6 +6,7 @@ At a yearly, monthly and seasonal level.
 from pathlib import Path
 
 import pandas as pd
+from plotly.graph_objs import Figure
 
 from config import Config
 from back.core.models.monthly_rainfall import MonthlyRainfall
@@ -350,7 +351,7 @@ class AllRainfall:
 
         return self.yearly_rainfall.get_last_year()
 
-    def plot_rainfall_by_year(
+    def get_bar_figure_of_rainfall_according_to_year(
         self,
         time_mode: TimeMode,
         *,
@@ -358,9 +359,10 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> bool | None:
+    ) -> Figure | None:
         """
-        Plot a bar graphic displaying rainfall by year computed upon whole years, specific months or specific seasons.
+        Return a bar graphic displaying rainfall by year
+        computed upon whole years, specific months or specific seasons.
 
         :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
         :param begin_year: An integer representing the year
@@ -372,20 +374,22 @@ class AllRainfall:
         :param season: A string corresponding to the season name.
         Possible values are within ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
-        :return: A bool indicating whether graphic has been successfully plotted or not.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             if time_mode == TimeMode.MONTHLY:
-                return entity.plot_rainfall(
+                return entity.get_bar_figure_of_rainfall_according_to_year(
                     begin_year, end_year=end_year, graph_label=f"Rainfall for {month}"
                 )
             elif time_mode == TimeMode.SEASONAL:
-                return entity.plot_rainfall(
+                return entity.get_bar_figure_of_rainfall_according_to_year(
                     begin_year, end_year=end_year, graph_label=f"Rainfall for {season}"
                 )
 
-            return entity.plot_rainfall(begin_year, end_year=end_year)
+            return entity.get_bar_figure_of_rainfall_according_to_year(
+                begin_year, end_year=end_year
+            )
 
         return None
 

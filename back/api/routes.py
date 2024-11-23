@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException
 from starlette.responses import StreamingResponse
 
 from back.api.media_types import MediaType
-from back.api.models import RainfallModel, RainfallWithNormalModel, YearWithNormalModel
+from back.api.models import RainfallModel
 from back.api.utils import (
     raise_time_mode_error_or_do_nothing,
 )
@@ -32,8 +32,9 @@ app = FastAPI(
 
 @app.get(
     "/rainfall/average",
+    response_model=RainfallModel,
     summary="Retrieve rainfall average for Barcelona between two years.",
-    description=f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}",
+    description=f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Rainfall"],
     operation_id="getRainfallAverage",
 )
@@ -43,7 +44,7 @@ async def get_rainfall_average(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
-) -> RainfallModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
@@ -67,6 +68,7 @@ async def get_rainfall_average(
 
 @app.get(
     "/rainfall/normal",
+    response_model=RainfallModel,
     summary="Retrieve 30 years rainfall average for Barcelona after a given year.",
     description="Commonly called rainfall normal.",
     tags=["Rainfall"],
@@ -77,7 +79,7 @@ async def get_rainfall_normal(
     begin_year: int,
     month: Month | None = None,
     season: Season | None = None,
-) -> RainfallModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
@@ -98,9 +100,10 @@ async def get_rainfall_normal(
 
 @app.get(
     "/rainfall/relative_distance_to_normal",
+    response_model=RainfallModel,
     summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
     description="The metric is a percentage that can be negative. <br>"
-    "Its formula is `(average - normal) / normal * 100` <br> "
+    "Its formula is `(average - normal) / normal * 100`. <br> "
     "1. `average` is average rainfall computed between `begin_year` and `end_year`<br>"
     "2. `normal` is normal rainfall computed from `normal_year`<br>"
     "If 100%, average is twice the normal. <br>"
@@ -116,12 +119,12 @@ async def get_rainfall_relative_distance_to_normal(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
-) -> RainfallWithNormalModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
 
-    return RainfallWithNormalModel(
+    return RainfallModel(
         name="relative distance to rainfall normal (%)",
         value=all_rainfall.get_relative_distance_to_normal(
             time_mode,
@@ -142,6 +145,7 @@ async def get_rainfall_relative_distance_to_normal(
 
 @app.get(
     "/rainfall/standard_deviation",
+    response_model=RainfallModel,
     summary="Compute the standard deviation of rainfall for Barcelona between two years.",
     description=f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
     tags=["Rainfall"],
@@ -154,7 +158,7 @@ async def get_rainfall_standard_deviation(
     month: Month | None = None,
     season: Season | None = None,
     weigh_by_average: bool = False,
-) -> RainfallModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
@@ -179,6 +183,7 @@ async def get_rainfall_standard_deviation(
 
 @app.get(
     "/year/below_normal",
+    response_model=RainfallModel,
     summary="Compute the number of years below normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
@@ -193,12 +198,12 @@ async def get_years_below_normal(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
-) -> YearWithNormalModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
 
-    return YearWithNormalModel(
+    return RainfallModel(
         name="years below rainfall normal",
         value=all_rainfall.get_years_below_normal(
             time_mode,
@@ -219,6 +224,7 @@ async def get_years_below_normal(
 
 @app.get(
     "/year/above_normal",
+    response_model=RainfallModel,
     summary="Compute the number of years above normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
@@ -233,12 +239,12 @@ async def get_years_above_normal(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
-) -> YearWithNormalModel:
+):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     end_year = end_year or all_rainfall.get_last_year()
 
-    return YearWithNormalModel(
+    return RainfallModel(
         name="years above rainfall normal",
         value=all_rainfall.get_years_above_normal(
             time_mode,
@@ -322,14 +328,14 @@ def get_rainfall_by_year(
 
     end_year = end_year or all_rainfall.get_last_year()
 
-    success = all_rainfall.plot_rainfall_by_year(
+    figure = all_rainfall.get_bar_figure_of_rainfall_according_to_year(
         time_mode,
         begin_year=begin_year,
         end_year=end_year,
         month=month.value if month else None,
         season=season.value if season else None,
     )
-    if success is False:
+    if figure is None:
         raise HTTPException(
             status_code=400,
             detail=f"Data has not been successfully plotted, "
@@ -337,8 +343,8 @@ def get_rainfall_by_year(
         )
 
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     filename = f"rainfall_by_year_{begin_year}_{end_year}.png"

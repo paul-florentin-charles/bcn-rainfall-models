@@ -1,3 +1,6 @@
+import pandas as pd
+from plotly.graph_objs import Figure
+
 from back.core.utils.enums.labels import Label
 from back.core.utils.functions import plotting
 from tst.back.core.models.test_all_rainfall import begin_year, end_year, normal_year
@@ -26,13 +29,18 @@ class TestPlotting:
         assert is_plotted
 
     @staticmethod
-    def test_bar_column_according_to_year():
-        is_plotted = plotting.bar_column_according_to_year(
+    def test_get_bar_figure_of_column_according_to_year():
+        bar_fig = plotting.get_bar_figure_of_column_according_to_year(
             YEARLY_RAINFALL.data, Label.RAINFALL
         )
 
-        assert isinstance(is_plotted, bool)
-        assert is_plotted
+        assert isinstance(bar_fig, Figure)
+
+        bar_fig = plotting.get_bar_figure_of_column_according_to_year(
+            pd.DataFrame(), Label.RAINFALL
+        )
+
+        assert bar_fig is None
 
     @staticmethod
     def test_bar_monthly_rainfall_averages():

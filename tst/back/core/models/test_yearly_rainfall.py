@@ -1,4 +1,5 @@
 import pandas as pd
+from plotly.graph_objs import Figure
 from pytest import raises
 
 from back.core.models.yearly_rainfall import YearlyRainfall
@@ -166,7 +167,11 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_plot_rainfall_and_models():
-        YEARLY_RAINFALL.plot_rainfall(begin_year)
+        bar_fig = YEARLY_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
+            begin_year
+        )
+        assert isinstance(bar_fig, Figure)
+
         YEARLY_RAINFALL.plot_linear_regression()
         YEARLY_RAINFALL.plot_savgol_filter()
 

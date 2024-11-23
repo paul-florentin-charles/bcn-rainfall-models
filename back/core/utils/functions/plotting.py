@@ -3,7 +3,9 @@ Provides useful functions for plotting rainfall data in all shapes.
 """
 
 import pandas as pd
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
+import plotly.express as px
+from plotly.graph_objs import Figure
 
 from back.core.utils.enums.labels import Label
 
@@ -61,31 +63,29 @@ def scatter_column_according_to_year(
     return True
 
 
-def bar_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, graph_label: str | None = None
-) -> bool:
+def get_bar_figure_of_column_according_to_year(
+    yearly_rainfall: pd.DataFrame, label: Label, figure_label: str | None = None
+) -> Figure | None:
     """
-    Plot bars for specified column data according to year.
+    Return plotly bar figure for specified column data according to year.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param label: A Label enum designating the column to be displayed as bars for y-values.
-    :param graph_label: A string to label graphic data (optional).
+    :param figure_label: A string to label graphic data (optional).
     If not set or set to "", label value is used.
-    :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
     """
     if (
         Label.YEAR not in yearly_rainfall.columns
         or label not in yearly_rainfall.columns
     ):
-        return False
+        return None
 
-    plt.bar(
-        yearly_rainfall[Label.YEAR.value],
-        yearly_rainfall[label.value],
-        label=graph_label or label.value,
+    return px.bar(
+        x=yearly_rainfall[Label.YEAR.value],
+        y=yearly_rainfall[label.value],
+        title=figure_label or label.value,
     )
-
-    return True
 
 
 def bar_monthly_rainfall_averages(

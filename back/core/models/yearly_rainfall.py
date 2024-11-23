@@ -8,6 +8,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from plotly.graph_objs import Figure
 from scipy import signal
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
@@ -387,16 +388,15 @@ class YearlyRainfall:
 
         return df_opr.remove_column(self.data, label)
 
-    @plots.legend()
-    def plot_rainfall(
+    def get_bar_figure_of_rainfall_according_to_year(
         self,
         begin_year: int,
         *,
         end_year: int | None = None,
         graph_label: str | None = None,
-    ) -> bool:
+    ) -> Figure | None:
         """
-        Plot Rainfall data according to year.
+        Return bar figure of Rainfall data according to year.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
@@ -404,13 +404,13 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :param graph_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
-        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.bar_column_according_to_year(
+        return plotting.get_bar_figure_of_column_according_to_year(
             self.get_yearly_rainfall(begin_year, end_year),
             label=Label.RAINFALL,
-            graph_label=graph_label,
+            figure_label=graph_label,
         )
 
     @plots.legend()
