@@ -41,10 +41,10 @@ class TestConfig:
     def test_get_api_server_settings():
         settings = config.get_api_server_settings()
         assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port"}
+        assert settings.keys() == {"host", "port", "reload"}
 
     @staticmethod
     def test_get_webapp_server_settings():
         settings = config.get_webapp_server_settings()
         assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port"}
+        assert settings.keys() == {"host", "port", "debug"}
