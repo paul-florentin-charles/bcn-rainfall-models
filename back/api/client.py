@@ -51,3 +51,24 @@ class APIClient(APISession):
                 "season": season.value if season else None,
             },
         )
+
+    def get_rainfall_relative_distance_to_normal(
+        self,
+        time_mode: TimeMode,
+        begin_year: int,
+        normal_year: int,
+        end_year: int | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
+    ) -> dict[str, Any]:
+        return self.get_json_api(
+            "/rainfall/relative_distance_to_normal",
+            params={
+                "time_mode": time_mode.value,
+                "begin_year": begin_year,
+                "normal_year": normal_year,
+                "end_year": end_year,
+                "month": month.value if month else None,
+                "season": season.value if season else None,
+            },
+        )

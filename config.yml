@@ -15,6 +15,6 @@ api:
   host: 127.0.0.1
   port: 8000
 
-front:
+webapp:
   host: 127.0.0.1
   port: 5000

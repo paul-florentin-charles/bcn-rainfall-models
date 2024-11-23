@@ -1,7 +1,7 @@
 from pathlib import Path
 from shutil import rmtree
 
-from back.core.models.all_rainfall import AllRainfall
+from back.core.models import AllRainfall
 from back.core.models.monthly_rainfall import MonthlyRainfall
 from back.core.models.seasonal_rainfall import SeasonalRainfall
 from back.core.models.yearly_rainfall import YearlyRainfall

@@ -96,7 +96,7 @@ class Config:
 
         return self.yaml_config["api"]
 
-    def get_front_server_settings(self) -> dict[str, Any]:
+    def get_webapp_server_settings(self) -> dict[str, Any]:
         """
         Return Flask server settings.
 
@@ -107,4 +107,4 @@ class Config:
         }
         """
 
-        return self.yaml_config["front"]
+        return self.yaml_config["webapp"]

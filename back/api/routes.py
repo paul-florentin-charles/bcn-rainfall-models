@@ -13,7 +13,7 @@ from back.api.models import RainfallModel, RainfallWithNormalModel, YearWithNorm
 from back.api.utils import (
     raise_time_mode_error_or_do_nothing,
 )
-from back.core.models.all_rainfall import AllRainfall
+from back.core.models import AllRainfall
 from back.core.utils.enums.labels import Label
 from back.core.utils.enums.months import Month
 from back.core.utils.enums.seasons import Season
@@ -275,8 +275,8 @@ def get_minimal_csv(
 ):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-    month_value: str = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
-    season_value: str = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
+    month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
+    season_value = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
 
     csv_str = (
         all_rainfall.export_as_csv(
@@ -291,9 +291,9 @@ def get_minimal_csv(
 
     filename = f"rainfall_{all_rainfall.starting_year}_{all_rainfall.get_last_year()}"
     if month_value:
-        filename += f"_{month_value.lower()}"
+        filename = f"{filename}_{month_value.lower()}"
     elif season_value:
-        filename += f"_{season_value}"
+        filename = f"{filename}_{season_value}"
 
     return StreamingResponse(
         iter(csv_str),

@@ -29,8 +29,8 @@ cd bcn-rainfall-models
 pip install -r requirements.txt
 ```
 
-1. `uvicorn back.routes:app` *to run back*
-2. `flask --app front.app run` *to run front*
+1. `uvicorn back.api.routes:app` *to run API*
+2. `flask --app webapp.app run` *to run Webapp*
 
 ### Windows
 ```commandline
@@ -39,8 +39,8 @@ cd bcn-rainfall-models
 python -m pip install -r requirements.txt
 ```
 
-1. `python -m uvicorn back.routes:app` *to run back*
-2. `python -m flask --app front.app run` *to run front*
+1. `python -m uvicorn back.api.routes:app` *to run API*
+2. `python -m flask --app webapp.app run` *to run Webapp*
 
 ## Coverage
 
