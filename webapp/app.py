@@ -3,7 +3,7 @@ Webapp run with Flask that communicates with an API (FastAPI/Uvicorn) to display
 Work-in-progress!
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 from back.api import APIClient
 from back.core.utils.enums.seasons import Season
@@ -13,6 +13,17 @@ from back.core.utils.enums.months import Month
 app = Flask(__name__)
 
 api_client = APIClient.from_config()
+
+
+@app.route("/")
+def index():
+    data = api_client.get_rainfall_by_year_as_plotly_json(
+        time_mode=TimeMode.SEASONAL,
+        begin_year=1971,
+        season=Season.SPRING,
+    )
+
+    return render_template("index.html", graphJSON=data)
 
 
 @app.route("/average")
@@ -33,7 +44,7 @@ def rainfall_normal():
     )
 
 
-@app.route("/")
+@app.route("/relative_distance_to_normal")
 def rainfall_relative_distance_to_normal():
     return jsonify(
         api_client.get_rainfall_relative_distance_to_normal(

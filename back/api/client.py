@@ -72,3 +72,23 @@ class APIClient(APISession):
                 "season": season.value if season else None,
             },
         )
+
+    def get_rainfall_by_year_as_plotly_json(
+        self,
+        time_mode: TimeMode,
+        begin_year: int,
+        end_year: int | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
+    ) -> dict:
+        return self.get_json_api(
+            "/graph/rainfall_by_year",
+            params={
+                "time_mode": time_mode.value,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month.value if month else None,
+                "season": season.value if season else None,
+                "as_json": True,
+            },
+        )

@@ -310,7 +310,7 @@ def get_minimal_csv(
 
 @app.get(
     "/graph/rainfall_by_year",
-    response_class=StreamingResponse,
+    # response_class=StreamingResponse,
     summary="Retrieve rainfall by year as a PNG.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
     f"If no ending year is precised, most recent year available is taken: {all_rainfall.get_last_year()}.",
@@ -323,6 +323,7 @@ def get_rainfall_by_year(
     end_year: int | None = None,
     month: Month | None = None,
     season: Season | None = None,
+    as_json: bool = False,
 ):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
@@ -341,6 +342,9 @@ def get_rainfall_by_year(
             detail=f"Data has not been successfully plotted, "
             f"check if your data has both '{Label.RAINFALL.value}' and '{Label.YEAR.value}' columns",
         )
+
+    if as_json:
+        return figure.to_json()
 
     img_buffer = io.BytesIO()
     figure.write_image(img_buffer, format="png")
