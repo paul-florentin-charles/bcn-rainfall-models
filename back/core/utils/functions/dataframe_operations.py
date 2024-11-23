@@ -61,6 +61,7 @@ def concat_columns(data_frames: list[pd.DataFrame | pd.Series]) -> pd.DataFrame:
 
 def retrieve_rainfall_data_with_constraints(
     monthly_rainfall: pd.DataFrame,
+    *,
     starting_year: int,
     round_precision: int,
     start_month: int,

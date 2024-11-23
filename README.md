@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![coverage badge](coverage.svg)](https://github.com/nedbat/coveragepy)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![MyPy](https://camo.githubusercontent.com/247d658e0d85ae9cc243d7bd73e1c22cf5d30fca1f060328362f2da86b9c31de/68747470733a2f2f7777772e6d7970792d6c616e672e6f72672f7374617469632f6d7970795f62616467652e737667)](https://mypy-lang.org/)
+[![MyPy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
 🚧 **Work In Progress** 🚧
 

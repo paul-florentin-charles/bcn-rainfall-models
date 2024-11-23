@@ -77,10 +77,10 @@ class YearlyRainfall:
 
         return df_opr.retrieve_rainfall_data_with_constraints(
             self.raw_data,
-            self.starting_year,
-            self.round_precision,
-            start_month.get_rank(),
-            end_month.get_rank() if end_month else None,
+            starting_year=self.starting_year,
+            round_precision=self.round_precision,
+            start_month=start_month.get_rank(),
+            end_month=end_month.get_rank() if end_month else None,
         )
 
     def get_yearly_rainfall(

@@ -54,10 +54,10 @@ class TestDataframeOperations:
     def test_retrieve_rainfall_data_with_constraints():
         result = df_opr.retrieve_rainfall_data_with_constraints(
             YEARLY_RAINFALL.data,
-            YEARLY_RAINFALL.starting_year,
-            YEARLY_RAINFALL.round_precision,
-            Month.MAY.get_rank(),
-            Month.SEPTEMBER.get_rank(),
+            starting_year=YEARLY_RAINFALL.starting_year,
+            round_precision=YEARLY_RAINFALL.round_precision,
+            start_month=Month.MAY.get_rank(),
+            end_month=Month.SEPTEMBER.get_rank(),
         )
 
         assert isinstance(result, pd.DataFrame)

@@ -73,7 +73,7 @@ def get_bar_figure_of_column_according_to_year(
     :param label: A Label enum designating the column to be displayed as bars for y-values.
     :param figure_label: A string to label graphic data (optional).
     If not set or set to "", label value is used.
-        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
+    :return: A plotly Figure object if data has been successfully plotted, None otherwise.
     """
     if (
         Label.YEAR not in yearly_rainfall.columns
@@ -82,8 +82,9 @@ def get_bar_figure_of_column_according_to_year(
         return None
 
     return px.bar(
-        x=yearly_rainfall[Label.YEAR.value],
-        y=yearly_rainfall[label.value],
+        yearly_rainfall[[label.value, label.YEAR.value]],
+        x=Label.YEAR.value,
+        y=label.value,
         title=figure_label or label.value,
     )
 

@@ -17,10 +17,11 @@ api_client = APIClient.from_config()
 
 @app.route("/average")
 def rainfall_average():
-    return jsonify(api_client.get_rainfall_average(
+    return jsonify(
+        api_client.get_rainfall_average(
             time_mode=TimeMode.YEARLY, begin_year=1991, end_year=2021
-        ))
-
+        )
+    )
 
 
 @app.route("/normal")

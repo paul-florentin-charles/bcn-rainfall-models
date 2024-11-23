@@ -343,7 +343,6 @@ def get_rainfall_by_year(
         )
 
     img_buffer = io.BytesIO()
-
     figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
