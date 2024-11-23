@@ -393,7 +393,7 @@ class YearlyRainfall:
         begin_year: int,
         *,
         end_year: int | None = None,
-        graph_label: str | None = None,
+        figure_label: str | None = None,
     ) -> Figure | None:
         """
         Return bar figure of Rainfall data according to year.
@@ -402,7 +402,7 @@ class YearlyRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param graph_label: A string to label graphic data (optional).
+        :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
@@ -410,7 +410,7 @@ class YearlyRainfall:
         return plotting.get_bar_figure_of_column_according_to_year(
             self.get_yearly_rainfall(begin_year, end_year),
             label=Label.RAINFALL,
-            figure_label=graph_label,
+            figure_label=figure_label,
         )
 
     @plots.legend()

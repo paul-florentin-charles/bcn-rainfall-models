@@ -378,17 +378,14 @@ class AllRainfall:
         """
 
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            figure_label = "Rainfall (mm)"
             if time_mode == TimeMode.MONTHLY:
-                return entity.get_bar_figure_of_rainfall_according_to_year(
-                    begin_year, end_year=end_year, graph_label=f"Rainfall for {month}"
-                )
+                figure_label = f"{figure_label} for {month}"
             elif time_mode == TimeMode.SEASONAL:
-                return entity.get_bar_figure_of_rainfall_according_to_year(
-                    begin_year, end_year=end_year, graph_label=f"Rainfall for {season}"
-                )
+                figure_label = f"{figure_label} for {season}"
 
             return entity.get_bar_figure_of_rainfall_according_to_year(
-                begin_year, end_year=end_year
+                begin_year, end_year=end_year, figure_label=figure_label
             )
 
         return None
