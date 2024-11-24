@@ -21,6 +21,7 @@ def index():
         time_mode=TimeMode.SEASONAL,
         begin_year=1971,
         season=Season.SPRING,
+        plot_average=True,
     )
 
     return render_template("index.html", plotlyJSON=data)
@@ -52,5 +53,18 @@ def rainfall_relative_distance_to_normal():
             begin_year=1995,
             normal_year=1975,
             season=Season.FALL,
+        )
+    )
+
+
+@app.route("/standard_deviation")
+def rainfall_standard_deviation():
+    return jsonify(
+        api_client.get_rainfall_standard_deviation(
+            time_mode=TimeMode.SEASONAL,
+            begin_year=2005,
+            end_year=2020,
+            season=Season.WINTER,
+            weigh_by_average=True,
         )
     )

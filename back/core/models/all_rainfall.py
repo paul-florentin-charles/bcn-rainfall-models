@@ -359,6 +359,7 @@ class AllRainfall:
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
+        plot_average=False,
     ) -> Figure | None:
         """
         Return a bar graphic displaying rainfall by year
@@ -374,6 +375,8 @@ class AllRainfall:
         :param season: A string corresponding to the season name.
         Possible values are within ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
+        :param plot_average: Whether to plot average rainfall as an horizontal line or not.
+        Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
@@ -385,7 +388,10 @@ class AllRainfall:
                 figure_label = f"{figure_label} for {season}"
 
             return entity.get_bar_figure_of_rainfall_according_to_year(
-                begin_year, end_year=end_year, figure_label=figure_label
+                begin_year,
+                end_year=end_year,
+                figure_label=figure_label,
+                plot_average=plot_average,
             )
 
         return None

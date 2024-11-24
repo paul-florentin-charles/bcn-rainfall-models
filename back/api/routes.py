@@ -342,6 +342,7 @@ def get_rainfall_by_year(
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
+    plot_average: bool = False,
     as_json: bool = False,
 ):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -354,6 +355,7 @@ def get_rainfall_by_year(
         end_year=end_year,
         month=month.value if month else None,
         season=season.value if season else None,
+        plot_average=plot_average,
     )
     if figure is None:
         raise HTTPException(

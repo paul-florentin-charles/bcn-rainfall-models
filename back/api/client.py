@@ -73,6 +73,27 @@ class APIClient(APISession):
             },
         )
 
+    def get_rainfall_standard_deviation(
+        self,
+        time_mode: TimeMode,
+        begin_year: int,
+        end_year: int | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
+        weigh_by_average=False,
+    ):
+        return self.get_json_api(
+            "/rainfall/standard_deviation",
+            params={
+                "time_mode": time_mode.value,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month.value if month else None,
+                "season": season.value if season else None,
+                "weigh_by_average": weigh_by_average,
+            },
+        )
+
     def get_rainfall_by_year_as_plotly_json(
         self,
         time_mode: TimeMode,
@@ -80,6 +101,7 @@ class APIClient(APISession):
         end_year: int | None = None,
         month: Month | None = None,
         season: Season | None = None,
+        plot_average=False,
     ) -> dict:
         return self.get_json_api(
             "/graph/rainfall_by_year",
@@ -89,6 +111,7 @@ class APIClient(APISession):
                 "end_year": end_year,
                 "month": month.value if month else None,
                 "season": season.value if season else None,
+                "plot_average": plot_average,
                 "as_json": True,
             },
         )

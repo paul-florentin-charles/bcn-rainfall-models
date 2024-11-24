@@ -18,8 +18,8 @@ from back.core.utils.custom_exceptions import DataFormatError
 from back.core.utils.decorators import plots
 from back.core.utils.enums.labels import Label
 from back.core.utils.enums.months import Month
-from back.core.utils.functions import plotting
 from back.core.utils.functions import dataframe_operations as df_opr, metrics
+from back.core.utils.functions import plotting
 
 
 class YearlyRainfall:
@@ -394,6 +394,7 @@ class YearlyRainfall:
         *,
         end_year: int | None = None,
         figure_label: str | None = None,
+        plot_average=False,
     ) -> Figure | None:
         """
         Return bar figure of Rainfall data according to year.
@@ -404,14 +405,28 @@ class YearlyRainfall:
         to end getting our rainfall values (optional).
         :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
+        :param plot_average: Whether to plot average rainfall as an horizontal line or not.
+        Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.get_bar_figure_of_column_according_to_year(
+        figure = plotting.get_bar_figure_of_column_according_to_year(
             self.get_yearly_rainfall(begin_year, end_year),
             label=Label.RAINFALL,
             figure_label=figure_label,
         )
+
+        if figure and plot_average:
+            average_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+
+            figure.add_hline(
+                average_rainfall,
+                annotation_text=f"Average rainfall over period – {average_rainfall} mm",
+                annotation_position="top left",
+                opacity=0.9,
+            )
+
+        return figure
 
     @plots.legend()
     def plot_linear_regression(self) -> bool:
