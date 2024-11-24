@@ -6,9 +6,9 @@ Work-in-progress!
 from flask import Flask, jsonify, render_template
 
 from back.api import APIClient
+from back.core.utils.enums.months import Month
 from back.core.utils.enums.seasons import Season
 from back.core.utils.enums.time_modes import TimeMode
-from back.core.utils.enums.months import Month
 
 app = Flask(__name__)
 
@@ -23,7 +23,7 @@ def index():
         season=Season.SPRING,
     )
 
-    return render_template("index.html", graphJSON=data)
+    return render_template("index.html", plotlyJSON=data)
 
 
 @app.route("/average")
