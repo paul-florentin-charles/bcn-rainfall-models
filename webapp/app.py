@@ -3,16 +3,28 @@ Webapp run with Flask that communicates with an API (FastAPI/Uvicorn) to display
 Work-in-progress!
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 from back.api import APIClient
+from back.core.utils.enums.months import Month
 from back.core.utils.enums.seasons import Season
 from back.core.utils.enums.time_modes import TimeMode
-from back.core.utils.enums.months import Month
 
 app = Flask(__name__)
 
 api_client = APIClient.from_config()
+
+
+@app.route("/")
+def index():
+    data = api_client.get_rainfall_by_year_as_plotly_json(
+        time_mode=TimeMode.SEASONAL,
+        begin_year=1971,
+        season=Season.SPRING,
+        plot_average=True,
+    )
+
+    return render_template("index.html", plotlyJSON=data)
 
 
 @app.route("/average")
@@ -33,7 +45,7 @@ def rainfall_normal():
     )
 
 
-@app.route("/")
+@app.route("/relative_distance_to_normal")
 def rainfall_relative_distance_to_normal():
     return jsonify(
         api_client.get_rainfall_relative_distance_to_normal(
@@ -41,5 +53,18 @@ def rainfall_relative_distance_to_normal():
             begin_year=1995,
             normal_year=1975,
             season=Season.FALL,
+        )
+    )
+
+
+@app.route("/standard_deviation")
+def rainfall_standard_deviation():
+    return jsonify(
+        api_client.get_rainfall_standard_deviation(
+            time_mode=TimeMode.SEASONAL,
+            begin_year=2005,
+            end_year=2020,
+            season=Season.WINTER,
+            weigh_by_average=True,
         )
     )
