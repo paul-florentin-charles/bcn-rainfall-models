@@ -12,7 +12,6 @@ CONFIG_FNAME: str = "config.yml"
 class Config:
     """
     Provides function to retrieve and/or build fields from YAML Configuration.
-
     It needs to be instantiated first to be loaded.
     """
 
