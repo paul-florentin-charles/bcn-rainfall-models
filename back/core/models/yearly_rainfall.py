@@ -137,7 +137,7 @@ class YearlyRainfall:
         """
 
         return metrics.get_average_rainfall(
-            self.get_yearly_rainfall(begin_year, end_year), self.round_precision
+            self.get_yearly_rainfall(begin_year, end_year), round_precision=self.round_precision
         )
 
     def get_normal(self, begin_year: int) -> float:
@@ -149,7 +149,7 @@ class YearlyRainfall:
         :return: A float storing the normal.
         """
 
-        return metrics.get_normal(self.data, begin_year, self.round_precision)
+        return metrics.get_normal(self.data, begin_year, round_precision=self.round_precision)
 
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int | None = None
@@ -169,7 +169,7 @@ class YearlyRainfall:
         return metrics.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
             metrics.get_normal(self.data, normal_year),
-            opr.lt,
+            comparator=opr.lt,
         )
 
     def get_years_above_normal(
@@ -190,7 +190,7 @@ class YearlyRainfall:
         return metrics.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
             metrics.get_normal(self.data, normal_year),
-            opr.gt,
+            comparator=opr.gt,
         )
 
     def get_last_year(self) -> int:
@@ -386,7 +386,7 @@ class YearlyRainfall:
         :return: A boolean set to whether the operation passed or not.
         """
 
-        return df_opr.remove_column(self.data, label)
+        return df_opr.remove_column(self.data, label=label)
 
     def get_bar_figure_of_rainfall_according_to_year(
         self,
@@ -437,7 +437,7 @@ class YearlyRainfall:
         """
 
         return plotting.plot_column_according_to_year(
-            self.data, Label.LINEAR_REGRESSION, "red"
+            self.data, Label.LINEAR_REGRESSION, color="red"
         )
 
     @plots.legend()
@@ -449,7 +449,7 @@ class YearlyRainfall:
         """
 
         return plotting.plot_column_according_to_year(
-            self.data, Label.SAVITZKY_GOLAY_FILTER, "orange"
+            self.data, Label.SAVITZKY_GOLAY_FILTER, color="orange"
         )
 
     @plots.legend(ylabel=Label.PERCENTAGE_OF_NORMAL.value)

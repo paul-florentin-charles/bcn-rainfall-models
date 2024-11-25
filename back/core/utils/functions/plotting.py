@@ -11,7 +11,7 @@ from back.core.utils.enums.labels import Label
 
 
 def plot_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, color: str | None = None
+    yearly_rainfall: pd.DataFrame, label: Label, *, color: str | None = None
 ) -> bool:
     """
     Plot specified column data according to year.
@@ -38,7 +38,7 @@ def plot_column_according_to_year(
 
 
 def scatter_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, display_label=True
+    yearly_rainfall: pd.DataFrame, label: Label, *, display_label=True
 ) -> bool:
     """
     Scatter specified column data according to year.
@@ -64,7 +64,7 @@ def scatter_column_according_to_year(
 
 
 def get_bar_figure_of_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, figure_label: str | None = None
+    yearly_rainfall: pd.DataFrame, label: Label, *, figure_label: str | None = None
 ) -> Figure | None:
     """
     Return plotly bar figure for specified column data according to year.
