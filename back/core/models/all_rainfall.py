@@ -375,10 +375,12 @@ class AllRainfall:
         :param season: A string corresponding to the season name.
         Possible values are within ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
-        :param plot_average: Whether to plot average rainfall as an horizontal line or not.
+        :param plot_average: Whether to plot average rainfall as a horizontal line or not.
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
+        if end_year is None:
+            end_year = self.get_last_year()
 
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             figure_label = "Rainfall (mm)"
@@ -386,22 +388,24 @@ class AllRainfall:
                 figure_label = f"{figure_label} for {month}"
             elif time_mode == TimeMode.SEASONAL:
                 figure_label = f"{figure_label} for {season}"
+            figure_label = f"{figure_label} between {begin_year} and {end_year}"
 
             return entity.get_bar_figure_of_rainfall_according_to_year(
                 begin_year,
-                end_year=end_year,
+                end_year,
                 figure_label=figure_label,
                 plot_average=plot_average,
             )
 
         return None
 
-    def bar_rainfall_averages(
+    def get_bar_figure_of_rainfall_averages(
         self,
         time_mode: TimeMode,
+        *,
         begin_year: int,
-        end_year: int | None = None,
-    ) -> list[float] | None:
+        end_year: int,
+    ) -> Figure | None:
         """
         Plots a bar graphic displaying average rainfall for each month or each season.
 
@@ -409,26 +413,21 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
-        :return: A list of the Rainfall averages for each month or season.
+        to end getting our rainfall values.
+        :return: A plotly Figure object of the rainfall averages for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
-        end_year = end_year or self.get_last_year()
-        label = f"Average rainfall (mm) between {begin_year} and {end_year}"
-
         if time_mode == TimeMode.MONTHLY:
-            return plotting.bar_monthly_rainfall_averages(
+            return plotting.get_bar_figure_of_monthly_rainfall_averages(
                 list(self.monthly_rainfalls.values()),
                 begin_year=begin_year,
                 end_year=end_year,
-                label=label,
             )
         elif time_mode == TimeMode.SEASONAL:
-            return plotting.bar_seasonal_rainfall_averages(
+            return plotting.get_bar_figure_of_seasonal_rainfall_averages(
                 list(self.seasonal_rainfalls.values()),
                 begin_year=begin_year,
                 end_year=end_year,
-                label=label,
             )
 
         return None

@@ -57,7 +57,9 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
     return max(yearly_rainfall[Label.KMEANS.value]) + 1
 
 
-def get_normal(yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1) -> float:
+def get_normal(
+    yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
+) -> float:
     """
     Computes average rainfall over 30 years time frame.
 

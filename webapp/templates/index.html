@@ -19,12 +19,21 @@
 
 <body>
 <h1>Barcelona Rainfall</h1>
-<div id='chart' class='chart'></div>
+<div id='chart'></div>
+<br>
+<div id='chart_2'></div>
+<br>
+<div id='chart_3'></div>
 </body>
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
     var graphs = {{plotlyJSON | safe}};
+    var graphs_2 = {{plotlyJSON_2 | safe}};
+    var graphs_3 = {{plotlyJSON_3 | safe}};
+
     Plotly.plot('chart', graphs, {});
+    Plotly.plot('chart_2', graphs_2, {});
+    Plotly.plot('chart_3', graphs_3, {});
 </script>
 </html>

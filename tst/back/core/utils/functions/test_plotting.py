@@ -43,28 +43,24 @@ class TestPlotting:
         assert bar_fig is None
 
     @staticmethod
-    def test_bar_monthly_rainfall_averages():
-        averages = plotting.bar_monthly_rainfall_averages(
+    def test_get_bar_figure_of_monthly_rainfall_averages():
+        figure = plotting.get_bar_figure_of_monthly_rainfall_averages(
             ALL_RAINFALL.monthly_rainfalls.values(),
             begin_year=BEGIN_YEAR,
+            end_year=end_year,
         )
 
-        assert isinstance(averages, list)
-        assert len(averages) == len(ALL_RAINFALL.monthly_rainfalls.values())
-        for average in averages:
-            assert isinstance(average, float)
+        assert isinstance(figure, Figure)
 
     @staticmethod
     def test_bar_seasonal_rainfall_averages():
-        averages = plotting.bar_seasonal_rainfall_averages(
+        figure = plotting.get_bar_figure_of_seasonal_rainfall_averages(
             ALL_RAINFALL.seasonal_rainfalls.values(),
             begin_year=BEGIN_YEAR,
+            end_year=end_year,
         )
 
-        assert isinstance(averages, list)
-        assert len(averages) == len(ALL_RAINFALL.seasonal_rainfalls)
-        for average in averages:
-            assert isinstance(average, float)
+        assert isinstance(figure, Figure)
 
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():

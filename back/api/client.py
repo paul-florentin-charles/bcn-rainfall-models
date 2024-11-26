@@ -115,3 +115,19 @@ class APIClient(APISession):
                 "as_json": True,
             },
         )
+
+    def get_rainfall_averages_as_plotly_json(
+        self,
+        time_mode: TimeMode,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> dict:
+        return self.get_json_api(
+            "/graph/rainfall_averages",
+            params={
+                "time_mode": time_mode.value,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "as_json": True,
+            },
+        )

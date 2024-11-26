@@ -137,7 +137,8 @@ class YearlyRainfall:
         """
 
         return metrics.get_average_rainfall(
-            self.get_yearly_rainfall(begin_year, end_year), round_precision=self.round_precision
+            self.get_yearly_rainfall(begin_year, end_year),
+            round_precision=self.round_precision,
         )
 
     def get_normal(self, begin_year: int) -> float:
@@ -149,7 +150,9 @@ class YearlyRainfall:
         :return: A float storing the normal.
         """
 
-        return metrics.get_normal(self.data, begin_year, round_precision=self.round_precision)
+        return metrics.get_normal(
+            self.data, begin_year, round_precision=self.round_precision
+        )
 
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int | None = None
@@ -391,8 +394,8 @@ class YearlyRainfall:
     def get_bar_figure_of_rainfall_according_to_year(
         self,
         begin_year: int,
+        end_year: int,
         *,
-        end_year: int | None = None,
         figure_label: str | None = None,
         plot_average=False,
     ) -> Figure | None:
@@ -402,7 +405,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
         :param plot_average: Whether to plot average rainfall as an horizontal line or not.

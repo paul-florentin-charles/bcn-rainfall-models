@@ -89,27 +89,25 @@ def get_bar_figure_of_column_according_to_year(
     )
 
 
-def bar_monthly_rainfall_averages(
+def get_bar_figure_of_monthly_rainfall_averages(
     monthly_rainfalls: list,
     *,
     begin_year: int,
-    end_year: int | None = None,
-    label="Average rainfall (mm)",
-) -> list[float]:
+    end_year: int,
+) -> Figure:
     """
-    Plots a bar graphic displaying average rainfall for each month passed through the dict.
+    Return plotly bar figure displaying average rainfall for each month passed through the dict.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :param begin_year: An integer representing the year
     to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our rainfall values (optional).
-    :param label: A string to use as a label for bar graphic. (optional)
-    Defaults to "Average rainfall (mm)".
-    :return: A list of the Rainfall averages for each month.
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the rainfall averages for each month.
     """
-    month_labels, averages = [], []
+    month_labels: list[str] = []
+    averages: list[float] = []
     for monthly_rainfall in monthly_rainfalls:
         month_labels.append(monthly_rainfall.month.value[:3])
         averages.append(
@@ -118,34 +116,35 @@ def bar_monthly_rainfall_averages(
             )
         )
 
-    bar_plot = plt.bar(month_labels, averages, label=label)
-    plt.bar_label(bar_plot)
-    plt.legend()
+    return px.bar(
+        pd.DataFrame(
+            zip(month_labels, averages), columns=["Month", Label.RAINFALL.value]
+        ),
+        x="Month",
+        y=Label.RAINFALL.value,
+        title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}",
+    )
 
-    return averages
 
-
-def bar_seasonal_rainfall_averages(
+def get_bar_figure_of_seasonal_rainfall_averages(
     seasonal_rainfalls: list,
     *,
     begin_year: int,
-    end_year: int | None = None,
-    label="Average rainfall (mm)",
-) -> list[float]:
+    end_year: int,
+) -> Figure:
     """
-    Plots a bar graphic displaying average rainfall for each season passed through the dict.
+    Return plotly bar figure displaying average rainfall for each season passed through the dict.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :param begin_year: An integer representing the year
     to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our rainfall values (optional).
-    :param label: A string to use as a label for bar graphic. (optional)
-    Defaults to "Average rainfall (mm)".
-    :return: A list of the Rainfall averages for each season.
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the rainfall averages for each season.
     """
-    season_labels, averages = [], []
+    season_labels: list[str] = []
+    averages: list[float] = []
     for seasonal_rainfall in seasonal_rainfalls:
         season_labels.append(seasonal_rainfall.season.value)
         averages.append(
@@ -154,11 +153,14 @@ def bar_seasonal_rainfall_averages(
             )
         )
 
-    bar_plot = plt.bar(season_labels, averages, label=label)
-    plt.bar_label(bar_plot)
-    plt.legend()
-
-    return averages
+    return px.bar(
+        pd.DataFrame(
+            zip(season_labels, averages), columns=["Season", Label.RAINFALL.value]
+        ),
+        x="Season",
+        y=Label.RAINFALL.value,
+        title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}",
+    )
 
 
 def bar_monthly_rainfall_linreg_slopes(
