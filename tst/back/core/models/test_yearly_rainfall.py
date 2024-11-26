@@ -168,7 +168,7 @@ class TestYearlyRainfall:
     @staticmethod
     def test_plot_rainfall_and_models():
         bar_fig = YEARLY_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
-            begin_year
+            begin_year, end_year
         )
         assert isinstance(bar_fig, Figure)
 

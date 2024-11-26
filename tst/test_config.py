@@ -3,7 +3,7 @@ from yaml.parser import ParserError  # type: ignore
 
 from config import Config, CONFIG_FNAME
 
-config: Config = Config(path=CONFIG_FNAME)
+config = Config(path=CONFIG_FNAME)
 
 
 class TestConfig:

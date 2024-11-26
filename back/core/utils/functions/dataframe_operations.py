@@ -30,7 +30,7 @@ def get_rainfall_within_year_interval(
     return yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= begin_year]
 
 
-def remove_column(yearly_rainfall: pd.DataFrame, label: Label) -> bool:
+def remove_column(yearly_rainfall: pd.DataFrame, *, label: Label) -> bool:
     """
     Remove a column from a DataFrame using its label.
     Removing 'Year' or 'Rainfall' columns is prevented.
@@ -83,7 +83,7 @@ def retrieve_rainfall_data_with_constraints(
     """
     years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
     if end_month is not None and end_month < start_month:
-        rainfall: pd.DataFrame = concat_columns(
+        rainfall = concat_columns(
             [
                 monthly_rainfall.iloc[:, start_month : start_month + 1],
                 monthly_rainfall.iloc[:, 1 : end_month + 1],

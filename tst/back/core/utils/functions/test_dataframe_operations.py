@@ -22,14 +22,14 @@ class TestDataframeOperations:
 
     @staticmethod
     def test_remove_column():
-        removed = df_opr.remove_column(YEARLY_RAINFALL.data, Label.YEAR)
+        removed = df_opr.remove_column(YEARLY_RAINFALL.data, label=Label.YEAR)
 
         assert Label.YEAR in YEARLY_RAINFALL.data.columns
         assert not removed
 
         YEARLY_RAINFALL.add_savgol_filter()
         removed = df_opr.remove_column(
-            YEARLY_RAINFALL.data, Label.SAVITZKY_GOLAY_FILTER
+            YEARLY_RAINFALL.data, label=Label.SAVITZKY_GOLAY_FILTER
         )
 
         assert Label.SAVITZKY_GOLAY_FILTER not in YEARLY_RAINFALL.data.columns

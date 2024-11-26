@@ -328,8 +328,7 @@ def get_minimal_csv(
 
 @app.get(
     "/graph/rainfall_by_year",
-    # response_class=StreamingResponse,
-    summary="Retrieve rainfall by year as a PNG.",
+    summary="Retrieve rainfall by year as a PNG or as a JSON.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -386,8 +385,7 @@ def get_rainfall_by_year(
 
 @app.get(
     "/graph/rainfall_averages",
-    response_class=StreamingResponse,
-    summary="Retrieve rainfall monthly or seasonal averages of data as a PNG.",
+    summary="Retrieve rainfall monthly or seasonal averages of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -398,21 +396,26 @@ def get_rainfall_averages(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
+    as_json: bool = False,
 ):
-    end_year = end_year or max_year_available
-
-    averages = all_rainfall.bar_rainfall_averages(
-        time_mode=time_mode, begin_year=begin_year, end_year=end_year
-    )
-    if averages is None:
+    if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
             detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
         )
 
+    if end_year is None:
+        end_year = max_year_available
+
+    figure = all_rainfall.get_bar_figure_of_rainfall_averages(
+        time_mode=time_mode, begin_year=begin_year, end_year=end_year
+    )
+
+    if as_json:
+        return figure.to_json()
+
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     return StreamingResponse(

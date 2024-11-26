@@ -11,7 +11,7 @@ from back.core.utils.enums.labels import Label
 from back.core.utils.functions import dataframe_operations as df_opr
 
 
-def get_average_rainfall(yearly_rainfall: pd.DataFrame, round_precision=1) -> float:
+def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) -> float:
     """
     Computes Rainfall average.
 
@@ -26,7 +26,7 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, round_precision=1) -> fl
 
 
 def get_years_compared_to_given_rainfall_value(
-    yearly_rainfall: pd.DataFrame, rainfall_value: float, comparator: Callable
+    yearly_rainfall: pd.DataFrame, rainfall_value: float, *, comparator: Callable
 ) -> int:
     """
     Computes the number of years that conform specified comparison
@@ -57,7 +57,9 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
     return max(yearly_rainfall[Label.KMEANS.value]) + 1
 
 
-def get_normal(yearly_rainfall: pd.DataFrame, begin_year, round_precision=1) -> float:
+def get_normal(
+    yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
+) -> float:
     """
     Computes average rainfall over 30 years time frame.
 
@@ -71,5 +73,5 @@ def get_normal(yearly_rainfall: pd.DataFrame, begin_year, round_precision=1) -> 
         df_opr.get_rainfall_within_year_interval(
             yearly_rainfall, begin_year=begin_year, end_year=begin_year + 29
         ),
-        round_precision,
+        round_precision=round_precision,
     )
