@@ -18,20 +18,20 @@ api_client = APIClient.from_config()
 @app.route("/")
 def index():
     data = api_client.get_rainfall_by_year_as_plotly_json(
-        time_mode=TimeMode.SEASONAL,
+        time_mode=TimeMode.SEASONAL.value,
         begin_year=1971,
-        season=Season.SPRING,
+        season=Season.SPRING.value,
         plot_average=True,
     )
 
     data_2 = api_client.get_rainfall_averages_as_plotly_json(
-        time_mode=TimeMode.MONTHLY,
+        time_mode=TimeMode.MONTHLY.value,
         begin_year=1991,
         end_year=2020,
     )
 
     data_3 = api_client.get_rainfall_averages_as_plotly_json(
-        time_mode=TimeMode.SEASONAL,
+        time_mode=TimeMode.SEASONAL.value,
         begin_year=1991,
         end_year=2020,
     )
@@ -45,7 +45,7 @@ def index():
 def rainfall_average():
     return jsonify(
         api_client.get_rainfall_average(
-            time_mode=TimeMode.YEARLY, begin_year=1991, end_year=2021
+            time_mode=TimeMode.YEARLY.value, begin_year=1991, end_year=2021
         )
     )
 
@@ -54,7 +54,7 @@ def rainfall_average():
 def rainfall_normal():
     return jsonify(
         api_client.get_rainfall_normal(
-            time_mode=TimeMode.MONTHLY, begin_year=1985, month=Month.MAY
+            time_mode=TimeMode.MONTHLY.value, begin_year=1985, month=Month.MAY.value
         )
     )
 
@@ -63,10 +63,10 @@ def rainfall_normal():
 def rainfall_relative_distance_to_normal():
     return jsonify(
         api_client.get_rainfall_relative_distance_to_normal(
-            time_mode=TimeMode.SEASONAL,
+            time_mode=TimeMode.SEASONAL.value,
             begin_year=1995,
             normal_year=1975,
-            season=Season.FALL,
+            season=Season.FALL.value,
         )
     )
 
@@ -75,10 +75,10 @@ def rainfall_relative_distance_to_normal():
 def rainfall_standard_deviation():
     return jsonify(
         api_client.get_rainfall_standard_deviation(
-            time_mode=TimeMode.SEASONAL,
+            time_mode=TimeMode.SEASONAL.value,
             begin_year=2005,
             end_year=2020,
-            season=Season.WINTER,
+            season=Season.WINTER.value,
             weigh_by_average=True,
         )
     )
