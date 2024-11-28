@@ -95,6 +95,50 @@ class APIClient(APISession):
             },
         )
 
+    def get_years_below_normal(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ) -> dict[str, Any]:
+        return self.get_json_api(
+            "/year/below_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month,
+                "season": season,
+            },
+        )
+
+    def get_years_above_normal(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ) -> dict[str, Any]:
+        return self.get_json_api(
+            "/year/above_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month,
+                "season": season,
+            },
+        )
+
     def get_rainfall_by_year_as_plotly_json(
         self,
         *,

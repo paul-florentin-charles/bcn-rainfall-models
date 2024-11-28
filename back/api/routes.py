@@ -213,10 +213,10 @@ async def get_rainfall_standard_deviation(
 )
 async def get_years_below_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     normal_year: Annotated[
         int, Query(ge=min_year_available, le=max_normal_year_available)
     ],
+    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     month: Month | None = None,
@@ -259,10 +259,10 @@ async def get_years_below_normal(
 )
 async def get_years_above_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     normal_year: Annotated[
         int, Query(ge=min_year_available, le=max_normal_year_available)
     ],
+    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     month: Month | None = None,
