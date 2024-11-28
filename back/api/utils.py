@@ -27,7 +27,27 @@ def raise_time_mode_error_or_do_nothing(
     :return: None.
     """
     if time_mode == TimeMode.MONTHLY and month is None:
-        raise HTTPException(status_code=400, detail="Month cannot be null.")
+        raise HTTPException(
+            status_code=400, detail=f"You gave {time_mode=}, month cannot be null."
+        )
 
     if time_mode == TimeMode.SEASONAL and season is None:
-        raise HTTPException(status_code=400, detail="Season cannot be null.")
+        raise HTTPException(
+            status_code=400, detail=f"You gave {time_mode=}, season cannot be null."
+        )
+
+
+def raise_year_related_error_or_do_nothing(begin_year: int, end_year: int):
+    """
+    Manage errors related to year related issues.
+
+    :param int begin_year: An integer representing year of start.
+    :param int end_year: An integer representing year of end.
+    :raise HTTPException: if begin_year > end_year.
+    :return: None.
+    """
+    if begin_year > end_year:
+        raise HTTPException(
+            status_code=400,
+            detail=f"{begin_year=} must be lower or equal than {end_year=}.",
+        )

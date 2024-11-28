@@ -13,6 +13,7 @@ from back.api.media_types import MediaType
 from back.api.models import RainfallModel
 from back.api.utils import (
     raise_time_mode_error_or_do_nothing,
+    raise_year_related_error_or_do_nothing,
 )
 from back.core.models import AllRainfall
 from back.core.utils.enums.labels import Label
@@ -52,9 +53,11 @@ async def get_rainfall_average(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="rainfall average (mm)",
@@ -83,7 +86,9 @@ async def get_rainfall_average(
 )
 async def get_rainfall_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
+    begin_year: Annotated[
+        int, Query(ge=min_year_available, le=max_normal_year_available)
+    ],
     month: Month | None = None,
     season: Season | None = None,
 ):
@@ -130,9 +135,11 @@ async def get_rainfall_relative_distance_to_normal(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="relative distance to rainfall normal (%)",
@@ -170,9 +177,11 @@ async def get_rainfall_standard_deviation(
     season: Season | None = None,
     weigh_by_average: bool = False,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
@@ -213,9 +222,11 @@ async def get_years_below_normal(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="years below rainfall normal",
@@ -257,9 +268,11 @@ async def get_years_above_normal(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="years above rainfall normal",
@@ -297,6 +310,10 @@ def get_minimal_csv(
     month: Month | None = None,
     season: Season | None = None,
 ):
+    if end_year is None:
+        end_year = max_year_available
+
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
@@ -344,9 +361,11 @@ def get_rainfall_by_year(
     plot_average: bool = False,
     as_json: bool = False,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     figure = all_rainfall.get_bar_figure_of_rainfall_according_to_year(
         time_mode,
@@ -406,6 +425,8 @@ def get_rainfall_averages(
 
     if end_year is None:
         end_year = max_year_available
+
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
 
     figure = all_rainfall.get_bar_figure_of_rainfall_averages(
         time_mode=time_mode, begin_year=begin_year, end_year=end_year

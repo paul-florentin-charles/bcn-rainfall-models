@@ -8,7 +8,7 @@ from back.core.utils.enums.time_modes import TimeMode
 class RainfallModel(BaseModel):
     """
     Model for depicting a value linked to rainfall data.
-    It could be either a float value for rainfall or an integer value for years.
+    It could be either a float value for a rainfall value, a percentage, etc. or an integer value for years.
     """
 
     name: str
