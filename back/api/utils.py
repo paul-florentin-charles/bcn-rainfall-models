@@ -28,12 +28,14 @@ def raise_time_mode_error_or_do_nothing(
     """
     if time_mode == TimeMode.MONTHLY and month is None:
         raise HTTPException(
-            status_code=400, detail=f"You gave {time_mode=}, month cannot be null."
+            status_code=400,
+            detail=f"You gave {time_mode=}, month cannot be null and should be one these values: {Month.values()}.",
         )
 
     if time_mode == TimeMode.SEASONAL and season is None:
         raise HTTPException(
-            status_code=400, detail=f"You gave {time_mode=}, season cannot be null."
+            status_code=400,
+            detail=f"You gave {time_mode=}, season cannot be null and should be one these values: {Season.values()}.",
         )
 
 
