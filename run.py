@@ -26,7 +26,7 @@ def run(server: str):
         case "api":
             uvicorn.run("back.api.routes:app", **config.get_api_server_settings())
         case "webapp":
-            from webapp import app
+            from webapp.app import app
 
             app.run(**config.get_webapp_server_settings())
         case _:  # Should not happen

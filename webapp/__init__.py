@@ -1,3 +1,5 @@
-from webapp.app import app
+from back.api import APIClient
 
-__all__ = ["app"]
+api_client = APIClient.from_config()
+
+__all__ = ["api_client"]

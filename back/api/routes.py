@@ -330,7 +330,7 @@ def get_minimal_csv(
         or ""
     )
 
-    filename = f"rainfall_{min_year_available}_{max_year_available}"
+    filename = f"rainfall_{begin_year}_{end_year}"
     if month_value:
         filename = f"{filename}_{month_value.lower()}"
     elif season_value:
