@@ -28,7 +28,7 @@ max_year_available = all_rainfall.get_last_year()
 max_normal_year_available = max_year_available - 29
 
 
-app = FastAPI(
+fastapi_app = FastAPI(
     debug=True,
     root_path="/api",
     title="Barcelona Rainfall API",
@@ -37,7 +37,7 @@ app = FastAPI(
 )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/average",
     response_model=RainfallModel,
     summary="Retrieve rainfall average for Barcelona between two years.",
@@ -76,7 +76,7 @@ async def get_rainfall_average(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/normal",
     response_model=RainfallModel,
     summary="Retrieve 30 years rainfall average for Barcelona after a given year.",
@@ -110,7 +110,7 @@ async def get_rainfall_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/relative_distance_to_normal",
     response_model=RainfallModel,
     summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
@@ -160,7 +160,7 @@ async def get_rainfall_relative_distance_to_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/standard_deviation",
     response_model=RainfallModel,
     summary="Compute the standard deviation of rainfall for Barcelona between two years.",
@@ -201,7 +201,7 @@ async def get_rainfall_standard_deviation(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/year/below_normal",
     response_model=RainfallModel,
     summary="Compute the number of years below normal for a specific year range.",
@@ -247,7 +247,7 @@ async def get_years_below_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/year/above_normal",
     response_model=RainfallModel,
     summary="Compute the number of years above normal for a specific year range.",
@@ -293,7 +293,7 @@ async def get_years_above_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/csv/minimal_csv",
     response_class=StreamingResponse,
     summary="Retrieve minimal CSV of rainfall data [Year, Rainfall].",
@@ -343,7 +343,7 @@ def get_minimal_csv(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_by_year",
     summary="Retrieve rainfall by year as a PNG or as a JSON.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
@@ -402,7 +402,7 @@ def get_rainfall_by_year(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_averages",
     summary="Retrieve rainfall monthly or seasonal averages of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
@@ -448,7 +448,7 @@ def get_rainfall_averages(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_linreg_slopes",
     response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
@@ -488,7 +488,7 @@ def get_rainfall_linreg_slopes(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/relative_distances_to_normal",
     response_class=StreamingResponse,
     summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG.",

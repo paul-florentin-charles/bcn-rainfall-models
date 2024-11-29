@@ -24,11 +24,11 @@ def run(server: str):
     config = Config()
     match server:
         case "api":
-            uvicorn.run("back.api.routes:app", **config.get_api_server_settings())
+            uvicorn.run("back.api.app:fastapi_app", **config.get_api_server_settings())
         case "webapp":
-            from webapp.app import app
+            from webapp.app import flask_app
 
-            app.run(**config.get_webapp_server_settings())
+            flask_app.run(**config.get_webapp_server_settings())
         case _:  # Should not happen
             click.echo(f"Option --server/-s should be in {SERVERS} (case-insensitive)")
             exit(1)

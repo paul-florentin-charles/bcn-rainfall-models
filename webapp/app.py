@@ -8,11 +8,11 @@ from flask import Flask, render_template
 from webapp import api_client
 from webapp.views import metrics
 
-app = Flask(__name__)
-app.register_blueprint(metrics)
+flask_app = Flask(__name__)
+flask_app.register_blueprint(metrics)
 
 
-@app.route("/")
+@flask_app.route("/")
 def index():
     data = api_client.get_rainfall_by_year_as_plotly_json(
         time_mode="seasonal",

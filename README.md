@@ -39,10 +39,10 @@ python -m pip install -r requirements.txt
 ### Run servers
 
 1. Run **API**
-   1. `uvicorn back.api.routes:app` via _Uvicorn_ command
+   1. `uvicorn back.api.app:fastapi_app` via _Uvicorn_ command
    2. `python run.py --server api` via _Python_ script
 2. Run **Webapp**
-   1. `flask --app webapp.app run` via _Uvicorn_ command
+   1. `flask --app webapp.flask_app run` via _Uvicorn_ command
    2. `python run.py --server webapp` via _Python_ script
 
 _N. B._ – Better to use it via Python since script runs server using settings written in `config.yml`.
