@@ -4,8 +4,9 @@ Provides useful functions for plotting rainfall data in all shapes.
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import plotly.express as px
-from plotly.graph_objs import Figure
+
+# import plotly.express as px
+from plotly.graph_objs import Figure, Bar
 
 from back.core.utils.enums import Label
 
@@ -81,12 +82,26 @@ def get_bar_figure_of_column_according_to_year(
     ):
         return None
 
-    return px.bar(
-        yearly_rainfall[[label, label.YEAR]],
-        x=Label.YEAR.value,
-        y=label.value,
-        title=figure_label or label.value,
+    figure = Figure()
+    figure.add_trace(
+        Bar(
+            x=yearly_rainfall[Label.YEAR.value],
+            y=yearly_rainfall[label.value],
+        )
     )
+
+    figure.update_layout(title=figure_label or label.value)
+    figure.update_xaxes(title_text=Label.YEAR.value)
+    figure.update_yaxes(title_text=label.value)
+
+    return figure
+
+    # return px.bar(
+    #     yearly_rainfall[[label, label.YEAR]],
+    #     x=Label.YEAR.value,
+    #     y=label.value,
+    #     title=figure_label or label.value,
+    # )
 
 
 def get_bar_figure_of_monthly_rainfall_averages(
@@ -109,21 +124,32 @@ def get_bar_figure_of_monthly_rainfall_averages(
     month_labels: list[str] = []
     averages: list[float] = []
     for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.value[:3])
+        month_labels.append(monthly_rainfall.month.value)
         averages.append(
             monthly_rainfall.get_average_yearly_rainfall(
                 begin_year=begin_year, end_year=end_year
             )
         )
 
-    return px.bar(
-        pd.DataFrame(
-            zip(month_labels, averages), columns=["Month", Label.RAINFALL.value]
-        ),
-        x="Month",
-        y=Label.RAINFALL.value,
-        title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}",
+    figure = Figure()
+    figure.add_trace(Bar(x=month_labels, y=averages, name="Monthly"))
+
+    figure.update_layout(
+        title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}"
     )
+    figure.update_xaxes(title_text="Month")
+    figure.update_yaxes(title_text=Label.RAINFALL.value)
+
+    return figure
+
+    # return px.bar(
+    #     pd.DataFrame(
+    #         zip(month_labels, averages), columns=["Month", Label.RAINFALL.value]
+    #     ),
+    #     x="Month",
+    #     y=Label.RAINFALL.value,
+    #     title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}",
+    # )
 
 
 def get_bar_figure_of_seasonal_rainfall_averages(
@@ -153,14 +179,31 @@ def get_bar_figure_of_seasonal_rainfall_averages(
             )
         )
 
-    return px.bar(
-        pd.DataFrame(
-            zip(season_labels, averages), columns=["Season", Label.RAINFALL.value]
-        ),
-        x="Season",
-        y=Label.RAINFALL.value,
-        title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}",
+    figure = Figure()
+    figure.add_trace(
+        Bar(
+            x=season_labels,
+            y=averages,
+            name="Seasonal",
+        )
     )
+
+    figure.update_layout(
+        title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}"
+    )
+    figure.update_xaxes(title_text="Season")
+    figure.update_yaxes(title_text=Label.RAINFALL.value)
+
+    return figure
+
+    # return px.bar(
+    #     pd.DataFrame(
+    #         zip(season_labels, averages), columns=["Season", Label.RAINFALL.value]
+    #     ),
+    #     x="Season",
+    #     y=Label.RAINFALL.value,
+    #     title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}",
+    # )
 
 
 def bar_monthly_rainfall_linreg_slopes(

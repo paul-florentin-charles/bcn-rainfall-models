@@ -354,7 +354,7 @@ def get_rainfall_by_year(
     season: Season | None = None,
     plot_average: bool = False,
     as_json: bool = False,
-) -> str | StreamingResponse:
+):
     if end_year is None:
         end_year = max_year_available
 
@@ -410,7 +410,7 @@ def get_rainfall_averages(
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     as_json: bool = False,
-) -> str | StreamingResponse:
+):
     if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,

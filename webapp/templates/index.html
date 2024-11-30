@@ -32,6 +32,8 @@
 <div id='chart_2'></div>
 <br>
 <div id='chart_3'></div>
+<br>
+<div id='chart_toggle'></div>
 </body>
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
@@ -39,9 +41,11 @@
     var graphs = {{ plotlyJSON|safe }};
     var graphs_2 = {{ plotlyJSON_2|safe }};
     var graphs_3 = {{ plotlyJSON_3|safe }};
+    var graphs_toggle = {{ plotlyToggleJSON|safe }};
 
     Plotly.plot('chart', graphs, {});
     Plotly.plot('chart_2', graphs_2, {});
     Plotly.plot('chart_3', graphs_3, {});
+    Plotly.plot('chart_toggle', graphs_toggle, {});
 </script>
 </html>
