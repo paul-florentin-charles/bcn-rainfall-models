@@ -5,6 +5,7 @@ from back.core.models import AllRainfall
 from back.core.models.monthly_rainfall import MonthlyRainfall
 from back.core.models.seasonal_rainfall import SeasonalRainfall
 from back.core.models.yearly_rainfall import YearlyRainfall
+from back.core.utils.enums import Label
 from back.core.utils.enums.months import Month
 from back.core.utils.enums.seasons import Season
 from back.core.utils.enums.time_modes import TimeMode
@@ -15,8 +16,8 @@ normal_year = 1971
 begin_year = 1991
 end_year = 2020
 
-month = Month.MAY.value
-season = Season.SPRING.value
+month = Month.MAY
+season = Season.SPRING
 
 
 class TestAllRainfall:
@@ -31,6 +32,27 @@ class TestAllRainfall:
         finally:
             if folder_path:
                 rmtree(folder_path, ignore_errors=True)
+
+    @staticmethod
+    def test_export_as_csv():
+        csv_str = ALL_RAINFALL.export_as_csv(
+            TimeMode.YEARLY, begin_year=begin_year, end_year=end_year
+        )
+
+        assert isinstance(csv_str, str)
+        lines: list[str] = csv_str.splitlines()
+        assert len(lines) == end_year - begin_year + 2  # With header
+        assert set(lines[0].split(",")) == {Label.YEAR.value, Label.RAINFALL.value}
+
+        csv_str = ALL_RAINFALL.export_as_csv(
+            TimeMode.MONTHLY, begin_year=begin_year, end_year=end_year, month=month
+        )
+        assert isinstance(csv_str, str)
+
+        csv_str = ALL_RAINFALL.export_as_csv(
+            TimeMode.SEASONAL, begin_year=begin_year, end_year=end_year, season=season
+        )
+        assert isinstance(csv_str, str)
 
     @staticmethod
     def test_get_average_rainfall():
