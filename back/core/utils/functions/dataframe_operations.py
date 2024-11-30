@@ -56,7 +56,7 @@ def concat_columns(data_frames: list[pd.DataFrame | pd.Series]) -> pd.DataFrame:
     :return: The concatenation result as a pandas DataFrame.
     """
 
-    return pd.concat(tuple(data_frames), axis="columns")
+    return pd.concat(data_frames, axis="columns")
 
 
 def retrieve_rainfall_data_with_constraints(
@@ -98,10 +98,8 @@ def retrieve_rainfall_data_with_constraints(
         [Label.YEAR.value, Label.RAINFALL.value], axis="columns"
     )
 
-    yearly_rainfall = (
-        get_rainfall_within_year_interval(yearly_rainfall, begin_year=starting_year)
-        .reset_index()
-        .drop(columns="index")
+    yearly_rainfall = get_rainfall_within_year_interval(
+        yearly_rainfall, begin_year=starting_year
     )
 
     yearly_rainfall[Label.RAINFALL.value] = round(

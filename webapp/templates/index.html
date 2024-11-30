@@ -1,24 +1,32 @@
 <!doctype html>
-<html>
-<style>
-    * {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-
-    body {
-        background-color: #272b34;
-        font-family: 'Khula', sans-serif;
-        font-weight: 300;
-        color: white;
-        line-height: 1em;
-        margin: 0;
-        padding: 2em 1em;
-    }
-</style>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/styles/main.css">
+    <title>Barcelona Rainfall</title>
+</head>
 
 <body>
 <h1>Barcelona Rainfall</h1>
+<div id="csv_1">
+    <h2>Rainfall (mm) by year for May</h2>
+    <table>
+        <tr>
+            <th>{{ dataCSV[0][0] }}</th>
+
+            {% for year, _ in dataCSV[1:] %}
+                <td>{{ year }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>{{ dataCSV[0][1] }}</th>
+
+            {% for _, rainfall in dataCSV[1:] %}
+                <td>{{ rainfall }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+<br>
 <div id='chart'></div>
 <br>
 <div id='chart_2'></div>
@@ -28,9 +36,9 @@
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
-    var graphs = {{plotlyJSON | safe}};
-    var graphs_2 = {{plotlyJSON_2 | safe}};
-    var graphs_3 = {{plotlyJSON_3 | safe}};
+    var graphs = {{ plotlyJSON|safe }};
+    var graphs_2 = {{ plotlyJSON_2|safe }};
+    var graphs_3 = {{ plotlyJSON_3|safe }};
 
     Plotly.plot('chart', graphs, {});
     Plotly.plot('chart_2', graphs_2, {});

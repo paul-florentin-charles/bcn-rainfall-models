@@ -1,5 +1,5 @@
 """
-FastAPI client exposing API routes related to rainfall data of Barcelona.
+FastAPI application exposing API routes related to rainfall data of Barcelona.
 """
 
 import io
@@ -13,6 +13,7 @@ from back.api.media_types import MediaType
 from back.api.models import RainfallModel
 from back.api.utils import (
     raise_time_mode_error_or_do_nothing,
+    raise_year_related_error_or_do_nothing,
 )
 from back.core.models import AllRainfall
 from back.core.utils.enums.labels import Label
@@ -27,7 +28,7 @@ max_year_available = all_rainfall.get_last_year()
 max_normal_year_available = max_year_available - 29
 
 
-app = FastAPI(
+fastapi_app = FastAPI(
     debug=True,
     root_path="/api",
     title="Barcelona Rainfall API",
@@ -36,7 +37,7 @@ app = FastAPI(
 )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/average",
     response_model=RainfallModel,
     summary="Retrieve rainfall average for Barcelona between two years.",
@@ -52,9 +53,11 @@ async def get_rainfall_average(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="rainfall average (mm)",
@@ -73,7 +76,7 @@ async def get_rainfall_average(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/normal",
     response_model=RainfallModel,
     summary="Retrieve 30 years rainfall average for Barcelona after a given year.",
@@ -83,7 +86,9 @@ async def get_rainfall_average(
 )
 async def get_rainfall_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
+    begin_year: Annotated[
+        int, Query(ge=min_year_available, le=max_normal_year_available)
+    ],
     month: Month | None = None,
     season: Season | None = None,
 ):
@@ -105,7 +110,7 @@ async def get_rainfall_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/relative_distance_to_normal",
     response_model=RainfallModel,
     summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
@@ -130,9 +135,11 @@ async def get_rainfall_relative_distance_to_normal(
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="relative distance to rainfall normal (%)",
@@ -153,7 +160,7 @@ async def get_rainfall_relative_distance_to_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/rainfall/standard_deviation",
     response_model=RainfallModel,
     summary="Compute the standard deviation of rainfall for Barcelona between two years.",
@@ -170,9 +177,11 @@ async def get_rainfall_standard_deviation(
     season: Season | None = None,
     weigh_by_average: bool = False,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
@@ -192,7 +201,7 @@ async def get_rainfall_standard_deviation(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/year/below_normal",
     response_model=RainfallModel,
     summary="Compute the number of years below normal for a specific year range.",
@@ -204,18 +213,20 @@ async def get_rainfall_standard_deviation(
 )
 async def get_years_below_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     normal_year: Annotated[
         int, Query(ge=min_year_available, le=max_normal_year_available)
     ],
+    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="years below rainfall normal",
@@ -236,7 +247,7 @@ async def get_years_below_normal(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/year/above_normal",
     response_model=RainfallModel,
     summary="Compute the number of years above normal for a specific year range.",
@@ -248,18 +259,20 @@ async def get_years_below_normal(
 )
 async def get_years_above_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     normal_year: Annotated[
         int, Query(ge=min_year_available, le=max_normal_year_available)
     ],
+    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
         name="years above rainfall normal",
@@ -280,16 +293,16 @@ async def get_years_above_normal(
     )
 
 
-@app.get(
-    "/csv/minimal_csv",
+@fastapi_app.get(
+    "/csv/rainfall_by_year",
     response_class=StreamingResponse,
-    summary="Retrieve minimal CSV of rainfall data [Year, Rainfall].",
+    summary="Retrieve CSV of rainfall by year data: ['Year', 'Rainfall'] columns.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["CSV"],
-    operation_id="getMinimalCsv",
+    operation_id="getRainfallByYearAsCSV",
 )
-def get_minimal_csv(
+def get_rainfall_by_year_as_csv(
     time_mode: TimeMode,
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
@@ -297,23 +310,24 @@ def get_minimal_csv(
     month: Month | None = None,
     season: Season | None = None,
 ):
+    if end_year is None:
+        end_year = max_year_available
+
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
     season_value = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
 
-    csv_str = (
-        all_rainfall.export_as_csv(
-            time_mode,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month_value,
-            season=season_value,
-        )
-        or ""
+    csv_str = all_rainfall.export_as_csv(
+        time_mode,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month_value,
+        season=season_value,
     )
 
-    filename = f"rainfall_{min_year_available}_{max_year_available}"
+    filename = f"rainfall_{begin_year}_{end_year}"
     if month_value:
         filename = f"{filename}_{month_value.lower()}"
     elif season_value:
@@ -326,7 +340,7 @@ def get_minimal_csv(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_by_year",
     summary="Retrieve rainfall by year as a PNG or as a JSON.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
@@ -344,9 +358,11 @@ def get_rainfall_by_year(
     plot_average: bool = False,
     as_json: bool = False,
 ):
-    raise_time_mode_error_or_do_nothing(time_mode, month, season)
+    if end_year is None:
+        end_year = max_year_available
 
-    end_year = end_year or max_year_available
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+    raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     figure = all_rainfall.get_bar_figure_of_rainfall_according_to_year(
         time_mode,
@@ -383,7 +399,7 @@ def get_rainfall_by_year(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_averages",
     summary="Retrieve rainfall monthly or seasonal averages of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
@@ -407,6 +423,8 @@ def get_rainfall_averages(
     if end_year is None:
         end_year = max_year_available
 
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+
     figure = all_rainfall.get_bar_figure_of_rainfall_averages(
         time_mode=time_mode, begin_year=begin_year, end_year=end_year
     )
@@ -427,7 +445,7 @@ def get_rainfall_averages(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/rainfall_linreg_slopes",
     response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
@@ -467,7 +485,7 @@ def get_rainfall_linreg_slopes(
     )
 
 
-@app.get(
+@fastapi_app.get(
     "/graph/relative_distances_to_normal",
     response_class=StreamingResponse,
     summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG.",
