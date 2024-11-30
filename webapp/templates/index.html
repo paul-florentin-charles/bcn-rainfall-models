@@ -7,6 +7,26 @@
 
 <body>
 <h1>Barcelona Rainfall</h1>
+<div id="csv_1">
+    <h2>Rainfall (mm) by year for May</h2>
+    <table>
+        <tr>
+            <th>{{ dataCSV[0][0] }}</th>
+
+            {% for year, _ in dataCSV[1:] %}
+                <td>{{ year }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>{{ dataCSV[0][1] }}</th>
+
+            {% for _, rainfall in dataCSV[1:] %}
+                <td>{{ rainfall }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+<br>
 <div id='chart'></div>
 <br>
 <div id='chart_2'></div>

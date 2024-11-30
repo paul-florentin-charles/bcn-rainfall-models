@@ -98,7 +98,9 @@ def retrieve_rainfall_data_with_constraints(
         [Label.YEAR.value, Label.RAINFALL.value], axis="columns"
     )
 
-    yearly_rainfall = get_rainfall_within_year_interval(yearly_rainfall, begin_year=starting_year)
+    yearly_rainfall = get_rainfall_within_year_interval(
+        yearly_rainfall, begin_year=starting_year
+    )
 
     yearly_rainfall[Label.RAINFALL.value] = round(
         yearly_rainfall[Label.RAINFALL.value], round_precision

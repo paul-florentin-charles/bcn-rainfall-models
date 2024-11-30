@@ -294,15 +294,15 @@ async def get_years_above_normal(
 
 
 @fastapi_app.get(
-    "/csv/minimal_csv",
+    "/csv/rainfall_by_year",
     response_class=StreamingResponse,
-    summary="Retrieve minimal CSV of rainfall data [Year, Rainfall].",
+    summary="Retrieve CSV of rainfall by year data: ['Year', 'Rainfall'] columns.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["CSV"],
-    operation_id="getMinimalCsv",
+    operation_id="getRainfallByYearAsCSV",
 )
-def get_minimal_csv(
+def get_rainfall_by_year_as_csv(
     time_mode: TimeMode,
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
@@ -319,15 +319,12 @@ def get_minimal_csv(
     month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
     season_value = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
 
-    csv_str = (
-        all_rainfall.export_as_csv(
-            time_mode,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month_value,
-            season=season_value,
-        )
-        or ""
+    csv_str = all_rainfall.export_as_csv(
+        time_mode,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month_value,
+        season=season_value,
     )
 
     filename = f"rainfall_{begin_year}_{end_year}"

@@ -143,6 +143,25 @@ class APIClient(APISession):
             },
         )
 
+    def get_rainfall_by_year_as_csv(
+        self,
+        time_mode: str,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ):
+        return self.get_api(
+            "/csv/rainfall_by_year",
+            params={
+                "time_mode": time_mode,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month,
+                "season": season,
+            },
+        )
+
     def get_rainfall_by_year_as_plotly_json(
         self,
         *,

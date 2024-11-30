@@ -33,6 +33,21 @@ def index():
         end_year=2020,
     )
 
+    csv_data = (
+        api_client.get_rainfall_by_year_as_csv(
+            time_mode="monthly",
+            begin_year=1995,
+            end_year=2020,
+            month="May",
+        )
+        .content.decode()
+        .splitlines()
+    )
+
     return render_template(
-        "index.html", plotlyJSON=data, plotlyJSON_2=data_2, plotlyJSON_3=data_3
+        "index.html",
+        plotlyJSON=data,
+        plotlyJSON_2=data_2,
+        plotlyJSON_3=data_3,
+        dataCSV=[csv_line.split(",") for csv_line in csv_data],
     )
