@@ -1,3 +1,7 @@
+"""
+API client built to interact with FastAPI application without needing the knowledge of the routes URLs.
+"""
+
 from typing import Any
 
 from api_session import APISession

@@ -1,5 +1,5 @@
 """
-FastAPI client exposing API routes related to rainfall data of Barcelona.
+FastAPI application exposing API routes related to rainfall data of Barcelona.
 """
 
 import io

@@ -19,10 +19,7 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) ->
     :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float representing the average Rainfall.
     """
-    return round(
-        yearly_rainfall[Label.RAINFALL.value].mean(),
-        round_precision,
-    )
+    return yearly_rainfall[Label.RAINFALL.value].mean().round(round_precision)
 
 
 def get_years_compared_to_given_rainfall_value(
@@ -41,7 +38,7 @@ def get_years_compared_to_given_rainfall_value(
         comparator(yearly_rainfall[Label.RAINFALL.value], rainfall_value)
     ]
 
-    return int(yearly_rainfall.count()[Label.YEAR.value])
+    return int(yearly_rainfall[Label.YEAR.value].count())
 
 
 def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
@@ -54,7 +51,7 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
     if Label.KMEANS not in yearly_rainfall.columns:
         return 0
 
-    return max(yearly_rainfall[Label.KMEANS.value]) + 1
+    return yearly_rainfall[Label.KMEANS.value].max() + 1
 
 
 def get_normal(
