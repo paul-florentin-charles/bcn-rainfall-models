@@ -5,7 +5,7 @@ Provides a rich class to manipulate Seasonal Rainfall data.
 import pandas as pd
 
 from back.core.models.yearly_rainfall import YearlyRainfall
-from back.core.utils.enums.seasons import Season
+from back.core.utils.enums import Season
 
 
 class SeasonalRainfall(YearlyRainfall):

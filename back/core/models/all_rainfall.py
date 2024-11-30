@@ -8,13 +8,11 @@ from pathlib import Path
 import pandas as pd
 from plotly.graph_objs import Figure
 
+from back.core.utils.enums import Month, Season, TimeMode
 from config import Config
 from back.core.models.monthly_rainfall import MonthlyRainfall
 from back.core.models.seasonal_rainfall import SeasonalRainfall
 from back.core.models.yearly_rainfall import YearlyRainfall
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
 from back.core.utils.functions import plotting
 
 
@@ -126,8 +124,8 @@ class AllRainfall:
         *,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
         path: str | Path | None = None,
     ) -> str | None:
         """
@@ -139,10 +137,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string if no path is set.
@@ -161,8 +158,8 @@ class AllRainfall:
         *,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> float | None:
         """
         Computes Rainfall average for a specific year range and time mode.
@@ -172,10 +169,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the average Rainfall.
         """
@@ -187,9 +183,10 @@ class AllRainfall:
     def get_normal(
         self,
         time_mode: TimeMode,
+        *,
         begin_year: int,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> float | None:
         """
         Computes Rainfall normal from a specific year and time mode.
@@ -197,10 +194,9 @@ class AllRainfall:
         :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
         :param begin_year: An integer representing the year
         to start computing rainfall normal.
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the Rainfall normal.
         """
@@ -213,11 +209,12 @@ class AllRainfall:
     def get_relative_distance_to_normal(
         self,
         time_mode: TimeMode,
+        *,
         normal_year: int,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> float | None:
         """
         Computes relative distance to Rainfall normal for a specific year range and time mode.
@@ -229,10 +226,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
@@ -246,10 +242,11 @@ class AllRainfall:
     def get_rainfall_standard_deviation(
         self,
         time_mode: TimeMode,
+        *,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
         weigh_by_average=False,
     ) -> float | None:
         """
@@ -262,10 +259,9 @@ class AllRainfall:
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
         Default to False.
@@ -282,11 +278,12 @@ class AllRainfall:
     def get_years_below_normal(
         self,
         time_mode: TimeMode,
+        *,
         normal_year: int,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> int | None:
         """
         Computes the number of years below rainfall normal for a specific year range and time mode.
@@ -298,10 +295,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
@@ -313,11 +309,12 @@ class AllRainfall:
     def get_years_above_normal(
         self,
         time_mode: TimeMode,
+        *,
         normal_year: int,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> int | None:
         """
         Computes the number of years above rainfall normal for a specific year range and time mode.
@@ -329,10 +326,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the relative distance to rainfall normal.
         """
@@ -357,8 +353,8 @@ class AllRainfall:
         *,
         begin_year: int,
         end_year: int | None = None,
-        month: str | None = None,
-        season: str | None = None,
+        month: Month | None = None,
+        season: Season | None = None,
         plot_average=False,
     ) -> Figure | None:
         """
@@ -370,10 +366,9 @@ class AllRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :param plot_average: Whether to plot average rainfall as a horizontal line or not.
         Defaults to False.
@@ -508,7 +503,10 @@ class AllRainfall:
         return None
 
     def get_entity_for_time_mode(
-        self, time_mode: TimeMode, month: str | None = None, season: str | None = None
+        self,
+        time_mode: TimeMode,
+        month: Month | None = None,
+        season: Season | None = None,
     ) -> YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None:
         """
         Retrieve current entity for specified time mode,
@@ -516,10 +514,9 @@ class AllRainfall:
         Month or Season should be specified according to time mode.
 
         :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
-        :param month: A string corresponding to the month name.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
-        :param season: A string corresponding to the season name.
-        Possible values are within ['winter', 'spring', 'summer', 'fall'].
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :return: Corresponding entity as a class instance.
         None if time mode is unknown, time mode is 'monthly' and month is None
@@ -530,8 +527,8 @@ class AllRainfall:
         if time_mode == TimeMode.YEARLY:
             entity = self.yearly_rainfall
         elif time_mode == TimeMode.MONTHLY and month:
-            entity = self.monthly_rainfalls[month]
+            entity = self.monthly_rainfalls[month.value]
         elif time_mode == TimeMode.SEASONAL and season:
-            entity = self.seasonal_rainfalls[season]
+            entity = self.seasonal_rainfalls[season.value]
 
         return entity

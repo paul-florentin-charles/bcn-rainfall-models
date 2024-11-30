@@ -7,7 +7,7 @@ from typing import Callable
 
 import pandas as pd
 
-from back.core.utils.enums.labels import Label
+from back.core.utils.enums import Label
 from back.core.utils.functions import dataframe_operations as df_opr
 
 

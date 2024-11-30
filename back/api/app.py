@@ -316,22 +316,19 @@ def get_rainfall_by_year_as_csv(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-    month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
-    season_value = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
-
     csv_str = all_rainfall.export_as_csv(
         time_mode,
         begin_year=begin_year,
         end_year=end_year,
-        month=month_value,
-        season=season_value,
+        month=month,
+        season=season,
     )
 
     filename = f"rainfall_{begin_year}_{end_year}"
-    if month_value:
-        filename = f"{filename}_{month_value.lower()}"
-    elif season_value:
-        filename = f"{filename}_{season_value}"
+    if time_mode == TimeMode.MONTHLY:
+        filename = f"{filename}_{month.value}"  # type: ignore
+    elif time_mode == TimeMode.SEASONAL:
+        filename = f"{filename}_{season.value}"  # type: ignore
 
     return StreamingResponse(
         iter(csv_str),

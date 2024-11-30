@@ -16,8 +16,7 @@ from sklearn.metrics import r2_score
 
 from back.core.utils.custom_exceptions import DataFormatError
 from back.core.utils.decorators import plots
-from back.core.utils.enums.labels import Label
-from back.core.utils.enums.months import Month
+from back.core.utils.enums import Label, Month
 from back.core.utils.functions import dataframe_operations as df_opr, metrics
 from back.core.utils.functions import plotting
 

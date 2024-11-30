@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from plotly.graph_objs import Figure
 
-from back.core.utils.enums.labels import Label
+from back.core.utils.enums import Label
 
 
 def plot_column_according_to_year(

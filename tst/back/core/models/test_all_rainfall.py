@@ -48,7 +48,9 @@ class TestAllRainfall:
     @staticmethod
     def test_get_normal():
         for t_mode in TimeMode:
-            normal = ALL_RAINFALL.get_normal(t_mode, begin_year, month, season)
+            normal = ALL_RAINFALL.get_normal(
+                t_mode, begin_year=begin_year, month=month, season=season
+            )
 
             assert isinstance(normal, float)
 
@@ -56,7 +58,12 @@ class TestAllRainfall:
     def test_get_years_below_normal():
         for t_mode in TimeMode:
             n_years_below_avg = ALL_RAINFALL.get_years_below_normal(
-                t_mode, normal_year, begin_year, end_year, month, season
+                t_mode,
+                normal_year=normal_year,
+                begin_year=begin_year,
+                end_year=end_year,
+                month=month,
+                season=season,
             )
 
             assert isinstance(n_years_below_avg, int)
@@ -66,7 +73,12 @@ class TestAllRainfall:
     def test_get_years_above_normal():
         for t_mode in TimeMode:
             n_years_above_avg = ALL_RAINFALL.get_years_above_normal(
-                t_mode, normal_year, begin_year, end_year, month, season
+                t_mode,
+                normal_year=normal_year,
+                begin_year=begin_year,
+                end_year=end_year,
+                month=month,
+                season=season,
             )
 
             assert isinstance(n_years_above_avg, int)
@@ -80,7 +92,12 @@ class TestAllRainfall:
     def test_get_relative_distance_to_normal():
         for t_mode in TimeMode:
             relative_distance = ALL_RAINFALL.get_relative_distance_to_normal(
-                t_mode, normal_year, begin_year, end_year, month, season
+                t_mode,
+                normal_year=normal_year,
+                begin_year=begin_year,
+                end_year=end_year,
+                month=month,
+                season=season,
             )
 
             assert isinstance(relative_distance, float)
@@ -90,7 +107,11 @@ class TestAllRainfall:
     def test_get_standard_deviation():
         for t_mode in TimeMode:
             std = ALL_RAINFALL.get_rainfall_standard_deviation(
-                t_mode, begin_year, end_year, month, season
+                t_mode,
+                begin_year=begin_year,
+                end_year=end_year,
+                month=month,
+                season=season,
             )
 
             assert isinstance(std, float)
