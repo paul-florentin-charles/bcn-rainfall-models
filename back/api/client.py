@@ -171,7 +171,7 @@ class APIClient(APISession):
         month: str | None = None,
         season: str | None = None,
         plot_average=False,
-    ) -> dict:
+    ) -> str:
         return self.get_json_api(
             "/graph/rainfall_by_year",
             params={
@@ -191,7 +191,7 @@ class APIClient(APISession):
         time_mode: str,
         begin_year: int,
         end_year: int | None = None,
-    ) -> dict:
+    ) -> str:
         return self.get_json_api(
             "/graph/rainfall_averages",
             params={

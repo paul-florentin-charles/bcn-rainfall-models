@@ -65,8 +65,8 @@ async def get_rainfall_average(
             time_mode,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
@@ -99,8 +99,8 @@ async def get_rainfall_normal(
         value=all_rainfall.get_normal(
             time_mode,
             begin_year=begin_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=begin_year + 29,
@@ -148,8 +148,8 @@ async def get_rainfall_relative_distance_to_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -189,8 +189,8 @@ async def get_rainfall_standard_deviation(
             time_mode,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
             weigh_by_average=weigh_by_average,
         ),  # type: ignore
         begin_year=begin_year,
@@ -235,8 +235,8 @@ async def get_years_below_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -281,8 +281,8 @@ async def get_years_above_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -354,7 +354,7 @@ def get_rainfall_by_year(
     season: Season | None = None,
     plot_average: bool = False,
     as_json: bool = False,
-):
+) -> str | StreamingResponse:
     if end_year is None:
         end_year = max_year_available
 
@@ -365,8 +365,8 @@ def get_rainfall_by_year(
         time_mode,
         begin_year=begin_year,
         end_year=end_year,
-        month=month.value if month else None,
-        season=season.value if season else None,
+        month=month,
+        season=season,
         plot_average=plot_average,
     )
     if figure is None:
@@ -410,7 +410,7 @@ def get_rainfall_averages(
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
     as_json: bool = False,
-):
+) -> str | StreamingResponse:
     if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
