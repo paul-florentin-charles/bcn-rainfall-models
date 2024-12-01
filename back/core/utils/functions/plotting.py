@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # import plotly.express as px
-from plotly.graph_objs import Figure, Bar
+import plotly.graph_objs as go
 
 from back.core.utils.enums import Label
 
@@ -66,7 +66,7 @@ def scatter_column_according_to_year(
 
 def get_bar_figure_of_column_according_to_year(
     yearly_rainfall: pd.DataFrame, label: Label, *, figure_label: str | None = None
-) -> Figure | None:
+) -> go.Figure | None:
     """
     Return plotly bar figure for specified column data according to year.
 
@@ -82,9 +82,9 @@ def get_bar_figure_of_column_according_to_year(
     ):
         return None
 
-    figure = Figure()
+    figure = go.Figure()
     figure.add_trace(
-        Bar(
+        go.Bar(
             x=yearly_rainfall[Label.YEAR.value],
             y=yearly_rainfall[label.value],
         )
@@ -109,7 +109,7 @@ def get_bar_figure_of_monthly_rainfall_averages(
     *,
     begin_year: int,
     end_year: int,
-) -> Figure:
+) -> go.Figure:
     """
     Return plotly bar figure displaying average rainfall for each month passed through the dict.
 
@@ -131,8 +131,8 @@ def get_bar_figure_of_monthly_rainfall_averages(
             )
         )
 
-    figure = Figure()
-    figure.add_trace(Bar(x=month_labels, y=averages, name="Monthly"))
+    figure = go.Figure()
+    figure.add_trace(go.Bar(x=month_labels, y=averages, name="Monthly"))
 
     figure.update_layout(
         title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}"
@@ -142,22 +142,13 @@ def get_bar_figure_of_monthly_rainfall_averages(
 
     return figure
 
-    # return px.bar(
-    #     pd.DataFrame(
-    #         zip(month_labels, averages), columns=["Month", Label.RAINFALL.value]
-    #     ),
-    #     x="Month",
-    #     y=Label.RAINFALL.value,
-    #     title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}",
-    # )
-
 
 def get_bar_figure_of_seasonal_rainfall_averages(
     seasonal_rainfalls: list,
     *,
     begin_year: int,
     end_year: int,
-) -> Figure:
+) -> go.Figure:
     """
     Return plotly bar figure displaying average rainfall for each season passed through the dict.
 
@@ -179,9 +170,9 @@ def get_bar_figure_of_seasonal_rainfall_averages(
             )
         )
 
-    figure = Figure()
+    figure = go.Figure()
     figure.add_trace(
-        Bar(
+        go.Bar(
             x=season_labels,
             y=averages,
             name="Seasonal",
@@ -196,23 +187,15 @@ def get_bar_figure_of_seasonal_rainfall_averages(
 
     return figure
 
-    # return px.bar(
-    #     pd.DataFrame(
-    #         zip(season_labels, averages), columns=["Season", Label.RAINFALL.value]
-    #     ),
-    #     x="Season",
-    #     y=Label.RAINFALL.value,
-    #     title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}",
-    # )
 
-
-def bar_monthly_rainfall_linreg_slopes(
+def get_bar_figure_of_monthly_rainfall_linreg_slopes(
     monthly_rainfalls: list,
+    *,
     begin_year: int,
     end_year: int,
-) -> list[float]:
+) -> go.Figure:
     """
-    Plots a bar graphic displaying linear regression slope for each month passed through the dict.
+    Return plotly bar figure displaying rainfall linear regression slopes for each month passed through the dict.
 
     :param monthly_rainfalls: A list of instances of MonthlyRainfall.
     To be purposeful, all instances should have the same time frame in years.
@@ -220,35 +203,43 @@ def bar_monthly_rainfall_linreg_slopes(
     to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values.
-    :return: A list of the Rainfall LinReg slopes for each month.
+    :return: A plotly Figure object of the rainfall LinReg slopes for each month.
     """
     month_labels, slopes = [], []
     for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.value[:3])
+        month_labels.append(monthly_rainfall.month.value)
         slopes.append(
             monthly_rainfall.get_linear_regression(
                 begin_year=begin_year, end_year=end_year
             )[1]
         )
 
-    bar_plot = plt.bar(
-        month_labels,
-        slopes,
-        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
+    figure = go.Figure()
+    figure.add_trace(
+        go.Bar(
+            x=month_labels,
+            y=slopes,
+            name="Monthly",
+        )
     )
-    plt.bar_label(bar_plot)
-    plt.legend()
 
-    return slopes
+    figure.update_layout(
+        title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}"
+    )
+    figure.update_xaxes(title_text="Month")
+    figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
+
+    return figure
 
 
-def bar_seasonal_rainfall_linreg_slopes(
+def get_bar_figure_of_seasonal_rainfall_linreg_slopes(
     seasonal_rainfalls: list,
+    *,
     begin_year: int,
     end_year: int,
-) -> list[float]:
+) -> go.Figure:
     """
-    Plots a bar graphic displaying linear regression slope for each season passed through the dict.
+    Return plotly bar figure displaying rainfall linear regression slopes for each season passed through the dict.
 
     :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
@@ -256,7 +247,7 @@ def bar_seasonal_rainfall_linreg_slopes(
     to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values.
-    :return: A list of the Rainfall LinReg slopes for each season.
+    :return: A plotly Figure object of the rainfall LinReg slopes for each season.
     """
     season_labels, slopes = [], []
     for seasonal_rainfall in seasonal_rainfalls:
@@ -267,15 +258,22 @@ def bar_seasonal_rainfall_linreg_slopes(
             )[1]
         )
 
-    bar_plot = plt.bar(
-        season_labels,
-        slopes,
-        label=f"Linear Regression slope (mm/year) between {begin_year} and {end_year}",
+    figure = go.Figure()
+    figure.add_trace(
+        go.Bar(
+            x=season_labels,
+            y=slopes,
+            name="Seasonal",
+        )
     )
-    plt.bar_label(bar_plot)
-    plt.legend()
 
-    return slopes
+    figure.update_layout(
+        title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}"
+    )
+    figure.update_xaxes(title_text="Season")
+    figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
+
+    return figure
 
 
 def bar_monthly_relative_distances_to_normal(

@@ -201,3 +201,20 @@ class APIClient(APISession):
                 "as_json": True,
             },
         )
+
+    def get_rainfall_linreg_slopes_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> str:
+        return self.get_json_api(
+            "/graph/rainfall_linreg_slopes",
+            params={
+                "time_mode": time_mode,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "as_json": True,
+            },
+        )

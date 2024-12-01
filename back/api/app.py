@@ -444,7 +444,6 @@ def get_rainfall_averages(
 
 @fastapi_app.get(
     "/graph/rainfall_linreg_slopes",
-    response_class=StreamingResponse,
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
@@ -456,21 +455,28 @@ def get_rainfall_linreg_slopes(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
+    as_json: bool = False,
 ):
-    end_year = end_year or max_year_available
-
-    linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(
-        time_mode=time_mode, begin_year=begin_year, end_year=end_year
-    )
-    if linreg_slopes is None:
+    if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
             detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
         )
 
+    if end_year is None:
+        end_year = max_year_available
+
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+
+    figure = all_rainfall.get_bar_figure_of_rainfall_linreg_slopes(
+        time_mode=time_mode, begin_year=begin_year, end_year=end_year
+    )
+
+    if as_json:
+        return figure.to_json()
+
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     filename = f"rainfall_{time_mode.value}_linreg_slopes_{begin_year}_{end_year}.png"

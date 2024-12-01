@@ -64,29 +64,23 @@ class TestPlotting:
 
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():
-        slopes = plotting.bar_monthly_rainfall_linreg_slopes(
+        slopes = plotting.get_bar_figure_of_monthly_rainfall_linreg_slopes(
             list(ALL_RAINFALL.monthly_rainfalls.values()),
             begin_year=begin_year,
             end_year=end_year,
         )
 
-        assert isinstance(slopes, list)
-        assert len(slopes) == len(ALL_RAINFALL.monthly_rainfalls)
-        for slope in slopes:
-            assert isinstance(slope, float)
+        assert isinstance(slopes, Figure)
 
     @staticmethod
     def test_bar_seasonal_rainfall_linreg_slopes():
-        slopes = plotting.bar_seasonal_rainfall_linreg_slopes(
+        slopes = plotting.get_bar_figure_of_seasonal_rainfall_linreg_slopes(
             list(ALL_RAINFALL.seasonal_rainfalls.values()),
             begin_year=begin_year,
             end_year=end_year,
         )
 
-        assert isinstance(slopes, list)
-        assert len(slopes) == len(ALL_RAINFALL.seasonal_rainfalls)
-        for slope in slopes:
-            assert isinstance(slope, float)
+        assert isinstance(slopes, Figure)
 
     @staticmethod
     def test_bar_monthly_relative_distances_to_normal():
