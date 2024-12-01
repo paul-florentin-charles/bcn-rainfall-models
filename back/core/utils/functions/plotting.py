@@ -96,13 +96,6 @@ def get_bar_figure_of_column_according_to_year(
 
     return figure
 
-    # return px.bar(
-    #     yearly_rainfall[[label, label.YEAR]],
-    #     x=Label.YEAR.value,
-    #     y=label.value,
-    #     title=figure_label or label.value,
-    # )
-
 
 def get_bar_figure_of_monthly_rainfall_averages(
     monthly_rainfalls: list,
