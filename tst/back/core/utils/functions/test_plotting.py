@@ -1,6 +1,7 @@
 import pandas as pd
 from plotly.graph_objs import Figure
 
+from back.core.utils.enums import TimeMode
 from back.core.utils.enums.labels import Label
 from back.core.utils.functions import plotting
 from tst.back.core.models.test_all_rainfall import begin_year, end_year, normal_year
@@ -43,24 +44,33 @@ class TestPlotting:
         assert bar_fig is None
 
     @staticmethod
-    def test_get_bar_figure_of_monthly_rainfall_averages():
-        figure = plotting.get_bar_figure_of_monthly_rainfall_averages(
+    def test_get_bar_figure_of_rainfall_averages():
+        figure = plotting.get_bar_figure_of_rainfall_averages(
             ALL_RAINFALL.monthly_rainfalls.values(),
+            time_mode=TimeMode.MONTHLY,
             begin_year=BEGIN_YEAR,
             end_year=end_year,
         )
 
         assert isinstance(figure, Figure)
 
-    @staticmethod
-    def test_bar_seasonal_rainfall_averages():
-        figure = plotting.get_bar_figure_of_seasonal_rainfall_averages(
+        figure = plotting.get_bar_figure_of_rainfall_averages(
             ALL_RAINFALL.seasonal_rainfalls.values(),
+            time_mode=TimeMode.SEASONAL,
             begin_year=BEGIN_YEAR,
             end_year=end_year,
         )
 
         assert isinstance(figure, Figure)
+
+        figure = plotting.get_bar_figure_of_rainfall_averages(
+            ALL_RAINFALL.seasonal_rainfalls.values(),
+            time_mode=TimeMode.YEARLY,
+            begin_year=BEGIN_YEAR,
+            end_year=end_year,
+        )
+
+        assert figure is None
 
     @staticmethod
     def test_bar_monthly_rainfall_linreg_slopes():

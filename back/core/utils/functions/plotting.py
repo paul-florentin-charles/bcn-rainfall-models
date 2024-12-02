@@ -5,10 +5,9 @@ Provides useful functions for plotting rainfall data in all shapes.
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# import plotly.express as px
 import plotly.graph_objs as go
 
-from back.core.utils.enums import Label
+from back.core.utils.enums import Label, TimeMode
 
 
 def plot_column_according_to_year(
@@ -97,85 +96,50 @@ def get_bar_figure_of_column_according_to_year(
     return figure
 
 
-def get_bar_figure_of_monthly_rainfall_averages(
-    monthly_rainfalls: list,
+def get_bar_figure_of_rainfall_averages(
+    rainfalls: list,
     *,
+    time_mode: TimeMode,
     begin_year: int,
     end_year: int,
-) -> go.Figure:
+) -> go.Figure | None:
     """
-    Return plotly bar figure displaying average rainfall for each month passed through the dict.
+    Return plotly bar figure displaying average rainfall for each month or for each season passed through the dict.
 
-    :param monthly_rainfalls: A list of instances of MonthlyRainfall.
+    :param rainfalls: A list of instances of MonthlyRainfall or a list of instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
+    :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
     :param begin_year: An integer representing the year
     to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values.
-    :return: A plotly Figure object of the rainfall averages for each month.
+    :return: A plotly Figure object of the rainfall averages for each month or for each season.
+    None if time_mode is 'yearly'.
     """
-    month_labels: list[str] = []
+    if time_mode == TimeMode.YEARLY:
+        return None
+
+    labels: list[str] = []
     averages: list[float] = []
-    for monthly_rainfall in monthly_rainfalls:
-        month_labels.append(monthly_rainfall.month.value)
+    for rainfall in rainfalls:
+        if time_mode == TimeMode.MONTHLY:
+            labels.append(rainfall.month.value)
+        else:
+            labels.append(rainfall.season.value)
+
         averages.append(
-            monthly_rainfall.get_average_yearly_rainfall(
+            rainfall.get_average_yearly_rainfall(
                 begin_year=begin_year, end_year=end_year
             )
         )
 
     figure = go.Figure()
-    figure.add_trace(go.Bar(x=month_labels, y=averages, name="Monthly"))
+    figure.add_trace(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
 
     figure.update_layout(
-        title=f"Average monthly rainfall (mm) between {begin_year} and {end_year}"
+        title=f"Average {time_mode.value} rainfall (mm) between {begin_year} and {end_year}"
     )
-    figure.update_xaxes(title_text="Month")
-    figure.update_yaxes(title_text=Label.RAINFALL.value)
-
-    return figure
-
-
-def get_bar_figure_of_seasonal_rainfall_averages(
-    seasonal_rainfalls: list,
-    *,
-    begin_year: int,
-    end_year: int,
-) -> go.Figure:
-    """
-    Return plotly bar figure displaying average rainfall for each season passed through the dict.
-
-    :param seasonal_rainfalls: A list of instances of SeasonalRainfall.
-    To be purposeful, all instances should have the same time frame in years.
-    :param begin_year: An integer representing the year
-    to start getting our rainfall values.
-    :param end_year: An integer representing the year
-    to end getting our rainfall values.
-    :return: A plotly Figure object of the rainfall averages for each season.
-    """
-    season_labels: list[str] = []
-    averages: list[float] = []
-    for seasonal_rainfall in seasonal_rainfalls:
-        season_labels.append(seasonal_rainfall.season.value)
-        averages.append(
-            seasonal_rainfall.get_average_yearly_rainfall(
-                begin_year=begin_year, end_year=end_year
-            )
-        )
-
-    figure = go.Figure()
-    figure.add_trace(
-        go.Bar(
-            x=season_labels,
-            y=averages,
-            name="Seasonal",
-        )
-    )
-
-    figure.update_layout(
-        title=f"Average seasonal rainfall (mm) between {begin_year} and {end_year}"
-    )
-    figure.update_xaxes(title_text="Season")
+    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text=Label.RAINFALL.value)
 
     return figure

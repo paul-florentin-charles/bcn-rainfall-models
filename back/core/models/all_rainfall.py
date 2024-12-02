@@ -411,20 +411,18 @@ class AllRainfall:
         :return: A plotly Figure object of the rainfall averages for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
+        rainfall_values: list[MonthlyRainfall] | list[SeasonalRainfall] = []
         if time_mode == TimeMode.MONTHLY:
-            return plotting.get_bar_figure_of_monthly_rainfall_averages(
-                list(self.monthly_rainfalls.values()),
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_values = list(self.monthly_rainfalls.values())
         elif time_mode == TimeMode.SEASONAL:
-            return plotting.get_bar_figure_of_seasonal_rainfall_averages(
-                list(self.seasonal_rainfalls.values()),
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_values = list(self.seasonal_rainfalls.values())
 
-        return None
+        return plotting.get_bar_figure_of_rainfall_averages(
+            rainfall_values,
+            time_mode=time_mode,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
 
     def get_bar_figure_of_rainfall_linreg_slopes(
         self,
