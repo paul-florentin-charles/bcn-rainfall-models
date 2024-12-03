@@ -5,7 +5,6 @@ FastAPI application exposing API routes related to rainfall data of Barcelona.
 import io
 from typing import Annotated
 
-import matplotlib.pyplot as plt
 from fastapi import FastAPI, HTTPException, Query
 from starlette.responses import StreamingResponse
 
@@ -444,7 +443,7 @@ def get_rainfall_averages(
 
 @fastapi_app.get(
     "/graph/rainfall_linreg_slopes",
-    summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
+    summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -490,8 +489,7 @@ def get_rainfall_linreg_slopes(
 
 @fastapi_app.get(
     "/graph/relative_distances_to_normal",
-    response_class=StreamingResponse,
-    summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG.",
+    summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -505,24 +503,29 @@ def get_relative_distances_to_normal(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
+    as_json: bool = False,
 ):
-    end_year = end_year or max_year_available
-
-    relative_distances_to_normal = all_rainfall.bar_relative_distance_from_normal(
-        time_mode=time_mode,
-        normal_year=normal_year,
-        begin_year=begin_year,
-        end_year=end_year,
-    )
-    if relative_distances_to_normal is None:
+    if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
             detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
         )
 
+    if end_year is None:
+        end_year = max_year_available
+
+    figure = all_rainfall.get_bar_figure_of_relative_distance_to_normal(
+        time_mode=time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+    )
+
+    if as_json:
+        return figure.to_json()
+
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     filename = f"{time_mode.value}_relative_distances_to_{normal_year}_normal_{begin_year}_{end_year}.png"

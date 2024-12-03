@@ -411,14 +411,19 @@ class AllRainfall:
         :return: A plotly Figure object of the rainfall averages for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
-        rainfall_values: list[MonthlyRainfall] | list[SeasonalRainfall] = []
+        if time_mode == TimeMode.YEARLY:
+            return None
+
+        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
+            str, SeasonalRainfall
+        ] = {}
         if time_mode == TimeMode.MONTHLY:
-            rainfall_values = list(self.monthly_rainfalls.values())
+            rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:
-            rainfall_values = list(self.seasonal_rainfalls.values())
+            rainfall_instance_by_label = self.seasonal_rainfalls
 
         return plotting.get_bar_figure_of_rainfall_averages(
-            rainfall_values,
+            rainfall_instance_by_label,
             time_mode=time_mode,
             begin_year=begin_year,
             end_year=end_year,
@@ -427,8 +432,9 @@ class AllRainfall:
     def get_bar_figure_of_rainfall_linreg_slopes(
         self,
         time_mode: TimeMode,
+        *,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
     ) -> Figure | None:
         """
         Return a bar graphic displaying linear regression slope for each month or each season.
@@ -437,37 +443,39 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         Is set to last year available is None.
         :return: A Plotly figure of the rainfall LinReg slopes for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
-        end_year = end_year or self.get_last_year()
+        if time_mode == TimeMode.YEARLY:
+            return None
 
+        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
+            str, SeasonalRainfall
+        ] = {}
         if time_mode == TimeMode.MONTHLY:
-            return plotting.get_bar_figure_of_monthly_rainfall_linreg_slopes(
-                list(self.monthly_rainfalls.values()),
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:
-            return plotting.get_bar_figure_of_seasonal_rainfall_linreg_slopes(
-                list(self.seasonal_rainfalls.values()),
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_instance_by_label = self.seasonal_rainfalls
 
-        return None
+        return plotting.get_bar_figure_of_rainfall_linreg_slopes(
+            rainfall_instance_by_label,
+            time_mode=time_mode,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
 
-    def bar_relative_distance_from_normal(
+    def get_bar_figure_of_relative_distance_to_normal(
         self,
         time_mode: TimeMode,
+        *,
         normal_year: int,
         begin_year: int,
-        end_year: int | None = None,
-    ) -> list[float | None] | None:
+        end_year: int,
+    ) -> Figure | None:
         """
-        Plots a bar graphic displaying relative distance to normal for each month or each season.
+        Return a bar graphic displaying relative distances to normal for each month or each season.
 
         :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
         :param normal_year: An integer representing the year
@@ -475,29 +483,29 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         Is set to last year available is None.
-        :return: A list of the relative distances to normal (%) for each month or season.
+        :return: A Plotly figure of the rainfall relative distances to normal (%) for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
-        end_year = end_year or self.get_last_year()
+        if time_mode == TimeMode.YEARLY:
+            return None
 
+        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
+            str, SeasonalRainfall
+        ] = {}
         if time_mode == TimeMode.MONTHLY:
-            return plotting.bar_monthly_relative_distances_to_normal(
-                list(self.monthly_rainfalls.values()),
-                normal_year=normal_year,
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:
-            return plotting.bar_seasonal_relative_distances_to_normal(
-                list(self.seasonal_rainfalls.values()),
-                normal_year=normal_year,
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+            rainfall_instance_by_label = self.seasonal_rainfalls
 
-        return None
+        return plotting.get_bar_figure_of_relative_distances_to_normal(
+            rainfall_instance_by_label,
+            time_mode=time_mode,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
 
     def get_entity_for_time_mode(
         self,

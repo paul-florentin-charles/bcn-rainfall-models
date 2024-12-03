@@ -24,6 +24,7 @@ def _aggregate_json_traces_as_figure(traces_json: list[str]) -> go.Figure:
 
 @flask_app.route("/")
 def index():
+    normal_year = 1971
     begin_year = 1991
     end_year = 2020
 
@@ -34,6 +35,8 @@ def index():
         season="spring",
         plot_average=True,
     )
+
+    ## Averages ##
 
     monthly_averages = api_client.get_rainfall_averages_as_plotly_json(
         time_mode="monthly",
@@ -55,6 +58,8 @@ def index():
     )
     fig_averages.update_yaxes(title_text="Rainfall (mm)")
 
+    ## LinReg slopes ##
+
     monthly_linreg_slopes = api_client.get_rainfall_linreg_slopes_as_plotly_json(
         time_mode="monthly",
         begin_year=begin_year,
@@ -75,6 +80,36 @@ def index():
     )
     fig_linreg_slopes.update_yaxes(title_text="Linear regression slope (mm/year)")
 
+    ## Relative distances to normal ##
+
+    monthly_relative_distances_to_normal = (
+        api_client.get_rainfall_relative_distances_to_normal_as_plotly_json(
+            time_mode="monthly",
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+    )
+
+    seasonal_relative_distances_to_normal = (
+        api_client.get_rainfall_relative_distances_to_normal_as_plotly_json(
+            time_mode="seasonal",
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+    )
+
+    fig_relative_distances_to_normal = _aggregate_json_traces_as_figure(
+        [monthly_relative_distances_to_normal, seasonal_relative_distances_to_normal]
+    )
+    fig_relative_distances_to_normal.update_layout(
+        title=f"Relative distance to {normal_year}-{normal_year + 29} normal (%) between {begin_year} and {end_year}"
+    )
+    fig_relative_distances_to_normal.update_yaxes(
+        title_text=f"Relative distance to {normal_year}-{normal_year + 29} normal (%)"
+    )
+
     csv_data = (
         api_client.get_rainfall_by_year_as_csv(
             time_mode="monthly",
@@ -89,7 +124,8 @@ def index():
     return render_template(
         "index.html",
         plotlyJSON=data,
-        plotlyToggleJSON=fig_averages.to_json(),
+        plotlyAveragesJSON=fig_averages.to_json(),
         plotlyLinRegJSON=fig_linreg_slopes.to_json(),
+        plotlyRelativeDistance2NormalJSON=fig_relative_distances_to_normal.to_json(),
         dataCSV=[csv_line.split(",") for csv_line in csv_data],
     )

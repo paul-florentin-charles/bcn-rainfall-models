@@ -7,8 +7,6 @@ from back.core.utils.functions import plotting
 from tst.back.core.models.test_all_rainfall import begin_year, end_year, normal_year
 from tst.back.core.models.test_yearly_rainfall import YEARLY_RAINFALL, ALL_RAINFALL
 
-BEGIN_YEAR = 1970
-
 
 class TestPlotting:
     @staticmethod
@@ -46,80 +44,61 @@ class TestPlotting:
     @staticmethod
     def test_get_bar_figure_of_rainfall_averages():
         figure = plotting.get_bar_figure_of_rainfall_averages(
-            ALL_RAINFALL.monthly_rainfalls.values(),
+            ALL_RAINFALL.monthly_rainfalls,
             time_mode=TimeMode.MONTHLY,
-            begin_year=BEGIN_YEAR,
+            begin_year=begin_year,
             end_year=end_year,
         )
 
         assert isinstance(figure, Figure)
 
         figure = plotting.get_bar_figure_of_rainfall_averages(
-            ALL_RAINFALL.seasonal_rainfalls.values(),
+            ALL_RAINFALL.seasonal_rainfalls,
             time_mode=TimeMode.SEASONAL,
-            begin_year=BEGIN_YEAR,
+            begin_year=begin_year,
             end_year=end_year,
         )
 
         assert isinstance(figure, Figure)
 
-        figure = plotting.get_bar_figure_of_rainfall_averages(
-            ALL_RAINFALL.seasonal_rainfalls.values(),
-            time_mode=TimeMode.YEARLY,
-            begin_year=BEGIN_YEAR,
-            end_year=end_year,
-        )
-
-        assert figure is None
-
     @staticmethod
-    def test_bar_monthly_rainfall_linreg_slopes():
-        slopes = plotting.get_bar_figure_of_monthly_rainfall_linreg_slopes(
-            list(ALL_RAINFALL.monthly_rainfalls.values()),
+    def test_get_bar_figure_of_rainfall_linreg_slopes():
+        figure = plotting.get_bar_figure_of_rainfall_linreg_slopes(
+            ALL_RAINFALL.monthly_rainfalls,
+            time_mode=TimeMode.MONTHLY,
             begin_year=begin_year,
             end_year=end_year,
         )
 
-        assert isinstance(slopes, Figure)
+        assert isinstance(figure, Figure)
 
-    @staticmethod
-    def test_bar_seasonal_rainfall_linreg_slopes():
-        slopes = plotting.get_bar_figure_of_seasonal_rainfall_linreg_slopes(
-            list(ALL_RAINFALL.seasonal_rainfalls.values()),
+        figure = plotting.get_bar_figure_of_rainfall_linreg_slopes(
+            ALL_RAINFALL.seasonal_rainfalls,
+            time_mode=TimeMode.SEASONAL,
             begin_year=begin_year,
             end_year=end_year,
         )
 
-        assert isinstance(slopes, Figure)
+        assert isinstance(figure, Figure)
 
     @staticmethod
-    def test_bar_monthly_relative_distances_to_normal():
-        relative_distances_to_normal = (
-            plotting.bar_monthly_relative_distances_to_normal(
-                list(ALL_RAINFALL.monthly_rainfalls.values()),
-                normal_year=normal_year,
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+    def test_get_bar_figure_of_relative_distances_to_normal():
+        figure = plotting.get_bar_figure_of_relative_distances_to_normal(
+            ALL_RAINFALL.monthly_rainfalls,
+            time_mode=TimeMode.MONTHLY,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
         )
 
-        assert isinstance(relative_distances_to_normal, list)
-        assert len(relative_distances_to_normal) == len(ALL_RAINFALL.monthly_rainfalls)
-        for relative_distance_to_normal in relative_distances_to_normal:
-            assert isinstance(relative_distance_to_normal, float)
+        assert isinstance(figure, Figure)
 
-    @staticmethod
-    def test_bar_seasonal_relative_distances_to_normal():
-        relative_distances_to_normal = (
-            plotting.bar_seasonal_relative_distances_to_normal(
-                list(ALL_RAINFALL.seasonal_rainfalls.values()),
-                normal_year=normal_year,
-                begin_year=begin_year,
-                end_year=end_year,
-            )
+        figure = plotting.get_bar_figure_of_relative_distances_to_normal(
+            ALL_RAINFALL.seasonal_rainfalls,
+            time_mode=TimeMode.SEASONAL,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
         )
 
-        assert isinstance(relative_distances_to_normal, list)
-        assert len(relative_distances_to_normal) == len(ALL_RAINFALL.seasonal_rainfalls)
-        for relative_distance_to_normal in relative_distances_to_normal:
-            assert isinstance(relative_distance_to_normal, float)
+        assert isinstance(figure, Figure)

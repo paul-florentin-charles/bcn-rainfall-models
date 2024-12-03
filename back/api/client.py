@@ -218,3 +218,22 @@ class APIClient(APISession):
                 "as_json": True,
             },
         )
+
+    def get_rainfall_relative_distances_to_normal_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> str:
+        return self.get_json_api(
+            "/graph/relative_distances_to_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "as_json": True,
+            },
+        )
