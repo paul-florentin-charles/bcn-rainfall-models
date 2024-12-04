@@ -352,6 +352,7 @@ def get_rainfall_by_year(
     month: Month | None = None,
     season: Season | None = None,
     plot_average: bool = False,
+    plot_linear_regression: bool = False,
     as_json: bool = False,
 ):
     if end_year is None:
@@ -367,6 +368,7 @@ def get_rainfall_by_year(
         month=month,
         season=season,
         plot_average=plot_average,
+        plot_linear_regression=plot_linear_regression,
     )
     if figure is None:
         raise HTTPException(

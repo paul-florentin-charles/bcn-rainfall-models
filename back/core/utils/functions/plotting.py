@@ -86,6 +86,7 @@ def get_bar_figure_of_column_according_to_year(
         go.Bar(
             x=yearly_rainfall[Label.YEAR.value],
             y=yearly_rainfall[label.value],
+            name=label.value,
         )
     )
 
@@ -159,14 +160,18 @@ def get_bar_figure_of_rainfall_linreg_slopes(
     to end getting our rainfall values.
     :return: A plotly Figure object of the rainfall LinReg slopes for each month.
     """
-    labels, slopes = [], []
+    labels: list[str] = []
+    slopes: list[float] = []
+    r2_scores: list[float] = []
     for label, rainfall_instance in rainfall_instance_by_label.items():
         labels.append(label)
-        slopes.append(
-            rainfall_instance.get_linear_regression(
-                begin_year=begin_year, end_year=end_year
-            )[1]
+
+        (r2_score, slope), _ = rainfall_instance.get_linear_regression(
+            begin_year=begin_year, end_year=end_year
         )
+
+        slopes.append(slope)
+        r2_scores.append(r2_score)
 
     figure = go.Figure()
     figure.add_trace(
@@ -209,7 +214,8 @@ def get_bar_figure_of_relative_distances_to_normal(
     to end getting our rainfall values.
     :return: A plotly Figure object of the rainfall relative distances to normal for each month or for each season.
     """
-    labels, relative_distances_to_normal = [], []
+    labels: list[str] = []
+    relative_distances_to_normal: list[float] = []
     for label, rainfall_instance in rainfall_instance_by_label.items():
         labels.append(label)
         relative_distances_to_normal.append(

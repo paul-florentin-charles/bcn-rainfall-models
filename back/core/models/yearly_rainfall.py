@@ -8,7 +8,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from plotly.graph_objs import Figure
+import plotly.graph_objs as go
 from scipy import signal
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
@@ -272,8 +272,8 @@ class YearlyRainfall:
         )
 
     def get_linear_regression(
-        self, begin_year: int, end_year: int | None = None
-    ) -> tuple[float, float]:
+        self, begin_year: int, end_year: int
+    ) -> tuple[tuple[float, float], list[float]]:
         """
         Computes Linear Regression of rainfall according to year for a given time interval.
 
@@ -282,7 +282,8 @@ class YearlyRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values (optional).
         If not given, defaults to latest year available.
-        :return: a tuple containing two floats (r2 score, slope).
+        :return: a tuple containing a tuple of floats (r2 score, slope)
+        and a list of rainfall values computed by the linear regression.
         """
         end_year = end_year or self.get_last_year()
 
@@ -293,14 +294,15 @@ class YearlyRainfall:
 
         lin_reg = LinearRegression()
         lin_reg.fit(years, rainfalls)
-        predicted_rainfalls = [
+        predicted_rainfalls: list[float] = [
             round(rainfall_value, self.round_precision)
             for rainfall_value in lin_reg.predict(years).tolist()
         ]
 
-        return r2_score(rainfalls, predicted_rainfalls), round(
-            lin_reg.coef_[0], self.round_precision
-        )
+        return (
+            r2_score(rainfalls, predicted_rainfalls),
+            round(lin_reg.coef_[0], self.round_precision),
+        ), predicted_rainfalls
 
     def add_percentage_of_normal(
         self, begin_year: int, end_year: int | None = None
@@ -397,7 +399,8 @@ class YearlyRainfall:
         *,
         figure_label: str | None = None,
         plot_average=False,
-    ) -> Figure | None:
+        plot_linear_regression=False,
+    ) -> go.Figure | None:
         """
         Return bar figure of Rainfall data according to year.
 
@@ -407,26 +410,47 @@ class YearlyRainfall:
         to end getting our rainfall values.
         :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
-        :param plot_average: Whether to plot average rainfall as an horizontal line or not.
+        :param plot_average: Whether to plot average rainfall as a horizontal line or not.
+        Defaults to False.
+        :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
+        yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
+
         figure = plotting.get_bar_figure_of_column_according_to_year(
-            self.get_yearly_rainfall(begin_year, end_year),
+            yearly_rainfall,
             label=Label.RAINFALL,
             figure_label=figure_label,
         )
 
-        if figure and plot_average:
-            average_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+        if figure:
+            if plot_average:
+                average_rainfall = self.get_average_yearly_rainfall(
+                    begin_year, end_year
+                )
 
-            figure.add_hline(
-                average_rainfall,
-                annotation_text=f"Average rainfall over period – {average_rainfall} mm",
-                annotation_position="top left",
-                opacity=0.9,
-            )
+                figure.add_hline(
+                    average_rainfall,
+                    annotation_text=f"Average rainfall over period – {average_rainfall} mm",
+                    annotation_position="top left",
+                    opacity=0.9,
+                )
+
+            if plot_linear_regression:
+                (
+                    (r2_score, slope),
+                    linear_regression_values,
+                ) = self.get_linear_regression(begin_year, end_year)
+
+                figure.add_trace(
+                    go.Scatter(
+                        x=yearly_rainfall[Label.YEAR.value],
+                        y=linear_regression_values,
+                        name=f"{Label.LINEAR_REGRESSION.value} | (R2 score: {round(r2_score, 2)}, slope: {slope} mm/year)",
+                    )
+                )
 
         return figure
 

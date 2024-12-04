@@ -6,7 +6,7 @@ At a yearly, monthly and seasonal level.
 from pathlib import Path
 
 import pandas as pd
-from plotly.graph_objs import Figure
+import plotly.graph_objs as go
 
 from back.core.utils.enums import Month, Season, TimeMode
 from config import Config
@@ -356,7 +356,8 @@ class AllRainfall:
         month: Month | None = None,
         season: Season | None = None,
         plot_average=False,
-    ) -> Figure | None:
+        plot_linear_regression=False,
+    ) -> go.Figure | None:
         """
         Return a bar graphic displaying rainfall by year computed upon whole years, specific months or seasons.
 
@@ -370,6 +371,8 @@ class AllRainfall:
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
         :param plot_average: Whether to plot average rainfall as a horizontal line or not.
+        Defaults to False.
+        :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
@@ -389,6 +392,7 @@ class AllRainfall:
                 end_year,
                 figure_label=figure_label,
                 plot_average=plot_average,
+                plot_linear_regression=plot_linear_regression,
             )
 
         return None
@@ -399,7 +403,7 @@ class AllRainfall:
         *,
         begin_year: int,
         end_year: int,
-    ) -> Figure | None:
+    ) -> go.Figure | None:
         """
         Return a bar graphic displaying average rainfall for each month or each season.
 
@@ -435,7 +439,7 @@ class AllRainfall:
         *,
         begin_year: int,
         end_year: int,
-    ) -> Figure | None:
+    ) -> go.Figure | None:
         """
         Return a bar graphic displaying linear regression slope for each month or each season.
 
@@ -473,7 +477,7 @@ class AllRainfall:
         normal_year: int,
         begin_year: int,
         end_year: int,
-    ) -> Figure | None:
+    ) -> go.Figure | None:
         """
         Return a bar graphic displaying relative distances to normal for each month or each season.
 

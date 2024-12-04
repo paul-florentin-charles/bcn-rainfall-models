@@ -1,5 +1,5 @@
 import pandas as pd
-from plotly.graph_objs import Figure
+import plotly.graph_objs as go
 
 from back.core.utils.enums import TimeMode
 from back.core.utils.enums.labels import Label
@@ -33,7 +33,7 @@ class TestPlotting:
             YEARLY_RAINFALL.data, Label.RAINFALL
         )
 
-        assert isinstance(bar_fig, Figure)
+        assert isinstance(bar_fig, go.Figure)
 
         bar_fig = plotting.get_bar_figure_of_column_according_to_year(
             pd.DataFrame(), Label.RAINFALL
@@ -50,7 +50,7 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
 
         figure = plotting.get_bar_figure_of_rainfall_averages(
             ALL_RAINFALL.seasonal_rainfalls,
@@ -59,7 +59,7 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
 
     @staticmethod
     def test_get_bar_figure_of_rainfall_linreg_slopes():
@@ -70,7 +70,7 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
 
         figure = plotting.get_bar_figure_of_rainfall_linreg_slopes(
             ALL_RAINFALL.seasonal_rainfalls,
@@ -79,7 +79,7 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
 
     @staticmethod
     def test_get_bar_figure_of_relative_distances_to_normal():
@@ -91,7 +91,7 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
 
         figure = plotting.get_bar_figure_of_relative_distances_to_normal(
             ALL_RAINFALL.seasonal_rainfalls,
@@ -101,4 +101,4 @@ class TestPlotting:
             end_year=end_year,
         )
 
-        assert isinstance(figure, Figure)
+        assert isinstance(figure, go.Figure)
