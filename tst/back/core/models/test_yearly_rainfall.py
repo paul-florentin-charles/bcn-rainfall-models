@@ -1,5 +1,5 @@
 import pandas as pd
-from plotly.graph_objs import Figure
+import plotly.graph_objs as go
 from pytest import raises
 
 from back.core.models.yearly_rainfall import YearlyRainfall
@@ -100,19 +100,24 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation():
-        std = YEARLY_RAINFALL.get_standard_deviation(YEARLY_RAINFALL.starting_year)
+        std = YEARLY_RAINFALL.get_standard_deviation(
+            YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
+        )
 
         assert isinstance(std, float)
 
         YEARLY_RAINFALL.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
         std_none = YEARLY_RAINFALL.get_standard_deviation(
-            YEARLY_RAINFALL.starting_year, label=Label.SAVITZKY_GOLAY_FILTER
+            YEARLY_RAINFALL.starting_year,
+            YEARLY_RAINFALL.get_last_year(),
+            label=Label.SAVITZKY_GOLAY_FILTER,
         )
 
         assert std_none is None
 
         std_weighted_by_avg = YEARLY_RAINFALL.get_standard_deviation(
             YEARLY_RAINFALL.starting_year,
+            YEARLY_RAINFALL.get_last_year(),
             weigh_by_average=True,
         )
 
@@ -120,14 +125,21 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_linear_regression():
-        r2_score, slope = YEARLY_RAINFALL.get_linear_regression(begin_year, end_year)
+        (
+            (r2_score, slope),
+            linear_regression_values,
+        ) = YEARLY_RAINFALL.get_linear_regression(begin_year, end_year)
 
         assert isinstance(r2_score, float) and r2_score <= 1
         assert isinstance(slope, float)
+        assert isinstance(linear_regression_values, list)
+        assert len(linear_regression_values) == end_year - begin_year + 1
 
     @staticmethod
     def test_add_percentage_of_normal():
-        YEARLY_RAINFALL.add_percentage_of_normal(YEARLY_RAINFALL.starting_year)
+        YEARLY_RAINFALL.add_percentage_of_normal(
+            YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
+        )
 
         assert Label.PERCENTAGE_OF_NORMAL in YEARLY_RAINFALL.data
 
@@ -170,7 +182,7 @@ class TestYearlyRainfall:
         bar_fig = YEARLY_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
             begin_year, end_year
         )
-        assert isinstance(bar_fig, Figure)
+        assert isinstance(bar_fig, go.Figure)
 
         YEARLY_RAINFALL.plot_linear_regression()
         YEARLY_RAINFALL.plot_savgol_filter()

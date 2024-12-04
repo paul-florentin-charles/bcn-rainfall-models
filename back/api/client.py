@@ -171,7 +171,8 @@ class APIClient(APISession):
         month: str | None = None,
         season: str | None = None,
         plot_average=False,
-    ) -> dict:
+        plot_linear_regression=False,
+    ) -> str:
         return self.get_json_api(
             "/graph/rainfall_by_year",
             params={
@@ -181,6 +182,7 @@ class APIClient(APISession):
                 "month": month,
                 "season": season,
                 "plot_average": plot_average,
+                "plot_linear_regression": plot_linear_regression,
                 "as_json": True,
             },
         )
@@ -191,11 +193,47 @@ class APIClient(APISession):
         time_mode: str,
         begin_year: int,
         end_year: int | None = None,
-    ) -> dict:
+    ) -> str:
         return self.get_json_api(
             "/graph/rainfall_averages",
             params={
                 "time_mode": time_mode,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "as_json": True,
+            },
+        )
+
+    def get_rainfall_linreg_slopes_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> str:
+        return self.get_json_api(
+            "/graph/rainfall_linreg_slopes",
+            params={
+                "time_mode": time_mode,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "as_json": True,
+            },
+        )
+
+    def get_rainfall_relative_distances_to_normal_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+    ) -> str:
+        return self.get_json_api(
+            "/graph/relative_distances_to_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
                 "begin_year": begin_year,
                 "end_year": end_year,
                 "as_json": True,

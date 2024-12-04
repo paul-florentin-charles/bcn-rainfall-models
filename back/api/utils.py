@@ -4,9 +4,7 @@ Collection of utility functions for API purposes.
 
 from fastapi import HTTPException
 
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
+from back.core.utils.enums import TimeMode, Month, Season
 
 
 def raise_time_mode_error_or_do_nothing(

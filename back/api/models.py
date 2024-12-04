@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
+from back.core.utils.enums import TimeMode, Month, Season
 
 
 class RainfallModel(BaseModel):

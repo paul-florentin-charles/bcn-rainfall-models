@@ -8,7 +8,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from plotly.graph_objs import Figure
+import plotly.graph_objs as go
 from scipy import signal
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
@@ -16,8 +16,7 @@ from sklearn.metrics import r2_score
 
 from back.core.utils.custom_exceptions import DataFormatError
 from back.core.utils.decorators import plots
-from back.core.utils.enums.labels import Label
-from back.core.utils.enums.months import Month
+from back.core.utils.enums import Label, Month
 from back.core.utils.functions import dataframe_operations as df_opr, metrics
 from back.core.utils.functions import plotting
 
@@ -83,16 +82,14 @@ class YearlyRainfall:
             end_month=end_month.get_rank() if end_month else None,
         )
 
-    def get_yearly_rainfall(
-        self, begin_year: int, end_year: int | None = None
-    ) -> pd.DataFrame:
+    def get_yearly_rainfall(self, begin_year: int, end_year: int) -> pd.DataFrame:
         """
         Retrieves Yearly Rainfall within a specific year range.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
@@ -104,7 +101,8 @@ class YearlyRainfall:
     def export_as_csv(
         self,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
+        *,
         path: str | Path | None = None,
     ) -> str | None:
         """
@@ -113,7 +111,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string if no path is set.
         None otherwise.
@@ -123,16 +121,14 @@ class YearlyRainfall:
             path_or_buf=path, index=False
         )
 
-    def get_average_yearly_rainfall(
-        self, begin_year: int, end_year: int | None = None
-    ) -> float:
+    def get_average_yearly_rainfall(self, begin_year: int, end_year: int) -> float:
         """
         Computes Rainfall average for a specific year range.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: A float representing the average Rainfall.
         """
 
@@ -155,7 +151,7 @@ class YearlyRainfall:
         )
 
     def get_years_below_normal(
-        self, normal_year: int, begin_year: int, end_year: int | None = None
+        self, normal_year: int, begin_year: int, end_year: int
     ) -> int:
         """
         Computes the number of years below normal for a specific year range.
@@ -165,7 +161,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: The number of years below the normal as an integer.
         """
 
@@ -176,7 +172,7 @@ class YearlyRainfall:
         )
 
     def get_years_above_normal(
-        self, normal_year: int, begin_year: int, end_year: int | None = None
+        self, normal_year: int, begin_year: int, end_year: int
     ) -> int:
         """
         Computes the number of years above normal for a specific year range.
@@ -186,7 +182,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: The number of years above the normal as an integer.
         """
 
@@ -206,7 +202,7 @@ class YearlyRainfall:
         return int(self.data[Label.YEAR].iloc[-1])
 
     def get_relative_distance_to_normal(
-        self, normal_year: int, begin_year: int, end_year: int | None = None
+        self, normal_year: int, begin_year: int, end_year: int
     ) -> float | None:
         """
         Computes the relative distance between average rainfall within two given years
@@ -217,7 +213,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: The relative distance as a float.
         """
         if end_year is None:
@@ -238,7 +234,7 @@ class YearlyRainfall:
     def get_standard_deviation(
         self,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         *,
         label: Label | None = Label.RAINFALL,
         weigh_by_average=False,
@@ -251,7 +247,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param label: A string corresponding to an existing column label (optional).
         :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
         Defaults to False.
@@ -273,17 +269,18 @@ class YearlyRainfall:
         )
 
     def get_linear_regression(
-        self, begin_year: int, end_year: int | None = None
-    ) -> tuple[float, float]:
+        self, begin_year: int, end_year: int
+    ) -> tuple[tuple[float, float], list[float]]:
         """
         Computes Linear Regression of rainfall according to year for a given time interval.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         If not given, defaults to latest year available.
-        :return: a tuple containing two floats (r2 score, slope).
+        :return: a tuple containing a tuple of floats (r2 score, slope)
+        and a list of rainfall values computed by the linear regression.
         """
         end_year = end_year or self.get_last_year()
 
@@ -294,18 +291,17 @@ class YearlyRainfall:
 
         lin_reg = LinearRegression()
         lin_reg.fit(years, rainfalls)
-        predicted_rainfalls = [
+        predicted_rainfalls: list[float] = [
             round(rainfall_value, self.round_precision)
             for rainfall_value in lin_reg.predict(years).tolist()
         ]
 
-        return r2_score(rainfalls, predicted_rainfalls), round(
-            lin_reg.coef_[0], self.round_precision
-        )
+        return (
+            r2_score(rainfalls, predicted_rainfalls),
+            round(lin_reg.coef_[0], self.round_precision),
+        ), predicted_rainfalls
 
-    def add_percentage_of_normal(
-        self, begin_year: int, end_year: int | None = None
-    ) -> None:
+    def add_percentage_of_normal(self, begin_year: int, end_year: int) -> None:
         """
         Add the percentage of rainfall compared with normal
         to our pandas DataFrame for a specific year range.
@@ -313,7 +309,7 @@ class YearlyRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :return: None
         """
         normal = self.get_average_yearly_rainfall(begin_year, end_year)
@@ -398,7 +394,8 @@ class YearlyRainfall:
         *,
         figure_label: str | None = None,
         plot_average=False,
-    ) -> Figure | None:
+        plot_linear_regression=False,
+    ) -> go.Figure | None:
         """
         Return bar figure of Rainfall data according to year.
 
@@ -408,26 +405,47 @@ class YearlyRainfall:
         to end getting our rainfall values.
         :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
-        :param plot_average: Whether to plot average rainfall as an horizontal line or not.
+        :param plot_average: Whether to plot average rainfall as a horizontal line or not.
+        Defaults to False.
+        :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
+        yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
+
         figure = plotting.get_bar_figure_of_column_according_to_year(
-            self.get_yearly_rainfall(begin_year, end_year),
+            yearly_rainfall,
             label=Label.RAINFALL,
             figure_label=figure_label,
         )
 
-        if figure and plot_average:
-            average_rainfall = self.get_average_yearly_rainfall(begin_year, end_year)
+        if figure:
+            if plot_average:
+                average_rainfall = self.get_average_yearly_rainfall(
+                    begin_year, end_year
+                )
 
-            figure.add_hline(
-                average_rainfall,
-                annotation_text=f"Average rainfall over period – {average_rainfall} mm",
-                annotation_position="top left",
-                opacity=0.9,
-            )
+                figure.add_hline(
+                    average_rainfall,
+                    annotation_text=f"Average rainfall over period – {average_rainfall} mm",
+                    annotation_position="top left",
+                    opacity=0.9,
+                )
+
+            if plot_linear_regression:
+                (
+                    (r2, slope),
+                    linear_regression_values,
+                ) = self.get_linear_regression(begin_year, end_year)
+
+                figure.add_trace(
+                    go.Scatter(
+                        x=yearly_rainfall[Label.YEAR.value],
+                        y=linear_regression_values,
+                        name=f"{Label.LINEAR_REGRESSION.value} | (R2 score: {round(r2, 2)}, slope: {slope} mm/year)",
+                    )
+                )
 
         return figure
 

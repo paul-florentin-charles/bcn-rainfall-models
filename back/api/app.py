@@ -5,7 +5,6 @@ FastAPI application exposing API routes related to rainfall data of Barcelona.
 import io
 from typing import Annotated
 
-import matplotlib.pyplot as plt
 from fastapi import FastAPI, HTTPException, Query
 from starlette.responses import StreamingResponse
 
@@ -65,8 +64,8 @@ async def get_rainfall_average(
             time_mode,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
@@ -99,8 +98,8 @@ async def get_rainfall_normal(
         value=all_rainfall.get_normal(
             time_mode,
             begin_year=begin_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         begin_year=begin_year,
         end_year=begin_year + 29,
@@ -148,8 +147,8 @@ async def get_rainfall_relative_distance_to_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -189,8 +188,8 @@ async def get_rainfall_standard_deviation(
             time_mode,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
             weigh_by_average=weigh_by_average,
         ),  # type: ignore
         begin_year=begin_year,
@@ -235,8 +234,8 @@ async def get_years_below_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -281,8 +280,8 @@ async def get_years_above_normal(
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
-            month=month.value if month else None,
-            season=season.value if season else None,
+            month=month,
+            season=season,
         ),  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
@@ -316,22 +315,19 @@ def get_rainfall_by_year_as_csv(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
-    month_value = month.value if time_mode == TimeMode.MONTHLY else None  # type: ignore
-    season_value = season.value if time_mode == TimeMode.SEASONAL else None  # type: ignore
-
     csv_str = all_rainfall.export_as_csv(
         time_mode,
         begin_year=begin_year,
         end_year=end_year,
-        month=month_value,
-        season=season_value,
+        month=month,
+        season=season,
     )
 
     filename = f"rainfall_{begin_year}_{end_year}"
-    if month_value:
-        filename = f"{filename}_{month_value.lower()}"
-    elif season_value:
-        filename = f"{filename}_{season_value}"
+    if time_mode == TimeMode.MONTHLY:
+        filename = f"{filename}_{month.value}"  # type: ignore
+    elif time_mode == TimeMode.SEASONAL:
+        filename = f"{filename}_{season.value}"  # type: ignore
 
     return StreamingResponse(
         iter(csv_str),
@@ -356,6 +352,7 @@ def get_rainfall_by_year(
     month: Month | None = None,
     season: Season | None = None,
     plot_average: bool = False,
+    plot_linear_regression: bool = False,
     as_json: bool = False,
 ):
     if end_year is None:
@@ -368,9 +365,10 @@ def get_rainfall_by_year(
         time_mode,
         begin_year=begin_year,
         end_year=end_year,
-        month=month.value if month else None,
-        season=season.value if season else None,
+        month=month,
+        season=season,
         plot_average=plot_average,
+        plot_linear_regression=plot_linear_regression,
     )
     if figure is None:
         raise HTTPException(
@@ -447,8 +445,7 @@ def get_rainfall_averages(
 
 @fastapi_app.get(
     "/graph/rainfall_linreg_slopes",
-    response_class=StreamingResponse,
-    summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG.",
+    summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -459,21 +456,28 @@ def get_rainfall_linreg_slopes(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
+    as_json: bool = False,
 ):
-    end_year = end_year or max_year_available
-
-    linreg_slopes = all_rainfall.bar_rainfall_linreg_slopes(
-        time_mode=time_mode, begin_year=begin_year, end_year=end_year
-    )
-    if linreg_slopes is None:
+    if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
             detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
         )
 
+    if end_year is None:
+        end_year = max_year_available
+
+    raise_year_related_error_or_do_nothing(begin_year, end_year)
+
+    figure = all_rainfall.get_bar_figure_of_rainfall_linreg_slopes(
+        time_mode=time_mode, begin_year=begin_year, end_year=end_year
+    )
+
+    if as_json:
+        return figure.to_json()
+
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     filename = f"rainfall_{time_mode.value}_linreg_slopes_{begin_year}_{end_year}.png"
@@ -487,8 +491,7 @@ def get_rainfall_linreg_slopes(
 
 @fastapi_app.get(
     "/graph/relative_distances_to_normal",
-    response_class=StreamingResponse,
-    summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG.",
+    summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
     f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
     tags=["Graph"],
@@ -502,24 +505,29 @@ def get_relative_distances_to_normal(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
+    as_json: bool = False,
 ):
-    end_year = end_year or max_year_available
-
-    relative_distances_to_normal = all_rainfall.bar_relative_distance_from_normal(
-        time_mode=time_mode,
-        normal_year=normal_year,
-        begin_year=begin_year,
-        end_year=end_year,
-    )
-    if relative_distances_to_normal is None:
+    if time_mode == TimeMode.YEARLY:
         raise HTTPException(
             status_code=400,
             detail=f"time_mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.",
         )
 
+    if end_year is None:
+        end_year = max_year_available
+
+    figure = all_rainfall.get_bar_figure_of_relative_distance_to_normal(
+        time_mode=time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+    )
+
+    if as_json:
+        return figure.to_json()
+
     img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format="png")
-    plt.close()
+    figure.write_image(img_buffer, format="png")
     img_buffer.seek(0)
 
     filename = f"{time_mode.value}_relative_distances_to_{normal_year}_normal_{begin_year}_{end_year}.png"

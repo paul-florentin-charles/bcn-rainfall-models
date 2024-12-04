@@ -29,19 +29,23 @@
 <br>
 <div id='chart'></div>
 <br>
-<div id='chart_2'></div>
+<div id='chart_averages'></div>
 <br>
-<div id='chart_3'></div>
+<div id='chart_linreg'></div>
+<br>
+<div id='chart_relative_distanc_to_normal'></div>
 </body>
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
     var graphs = {{ plotlyJSON|safe }};
-    var graphs_2 = {{ plotlyJSON_2|safe }};
-    var graphs_3 = {{ plotlyJSON_3|safe }};
+    var graphs_averages = {{ plotlyAveragesJSON|safe }};
+    var graphs_linreg = {{ plotlyLinRegJSON|safe }};
+    var graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
 
     Plotly.plot('chart', graphs, {});
-    Plotly.plot('chart_2', graphs_2, {});
-    Plotly.plot('chart_3', graphs_3, {});
+    Plotly.plot('chart_averages', graphs_averages, {});
+    Plotly.plot('chart_linreg', graphs_linreg, {});
+    Plotly.plot('chart_relative_distanc_to_normal', graphs_relative_distance_to_normal, {});
 </script>
 </html>
