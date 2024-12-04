@@ -70,7 +70,7 @@ class AllRainfall:
         )
 
     def export_all_data_to_csv(
-        self, begin_year: int, end_year: int | None = None, folder_path="csv_data"
+        self, begin_year: int, end_year: int, *, folder_path="csv_data"
     ) -> str:
         """
         Export all the different data as CSVs into specified folder path.
@@ -78,7 +78,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param folder_path: path to folder where to save our CSV files.
         If not set, defaults to 'csv_data'. Should not end with '/'.
         :return: Path to folder that contains CSV files.
@@ -123,7 +123,7 @@ class AllRainfall:
         time_mode: TimeMode,
         *,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
         path: str | Path | None = None,
@@ -136,7 +136,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -157,7 +157,7 @@ class AllRainfall:
         time_mode: TimeMode,
         *,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
     ) -> float | None:
@@ -168,7 +168,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -212,7 +212,7 @@ class AllRainfall:
         *,
         normal_year: int,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
     ) -> float | None:
@@ -225,7 +225,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -244,7 +244,7 @@ class AllRainfall:
         time_mode: TimeMode,
         *,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
         weigh_by_average=False,
@@ -258,7 +258,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values (optional).
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -281,7 +281,7 @@ class AllRainfall:
         *,
         normal_year: int,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
     ) -> int | None:
@@ -294,7 +294,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -312,7 +312,7 @@ class AllRainfall:
         *,
         normal_year: int,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
     ) -> int | None:
@@ -325,7 +325,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -352,7 +352,7 @@ class AllRainfall:
         time_mode: TimeMode,
         *,
         begin_year: int,
-        end_year: int | None = None,
+        end_year: int,
         month: Month | None = None,
         season: Season | None = None,
         plot_average=False,
@@ -365,7 +365,7 @@ class AllRainfall:
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our rainfall values (optional).
+        to end getting our rainfall values.
         :param month: A Month Enum: ['January', 'February', ..., 'December']
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
@@ -418,9 +418,9 @@ class AllRainfall:
         if time_mode == TimeMode.YEARLY:
             return None
 
-        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
-            str, SeasonalRainfall
-        ] = {}
+        rainfall_instance_by_label: (
+            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+        ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:
@@ -455,9 +455,9 @@ class AllRainfall:
         if time_mode == TimeMode.YEARLY:
             return None
 
-        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
-            str, SeasonalRainfall
-        ] = {}
+        rainfall_instance_by_label: (
+            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+        ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:
@@ -495,9 +495,9 @@ class AllRainfall:
         if time_mode == TimeMode.YEARLY:
             return None
 
-        rainfall_instance_by_label: dict[str, MonthlyRainfall] | dict[
-            str, SeasonalRainfall
-        ] = {}
+        rainfall_instance_by_label: (
+            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+        ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
         elif time_mode == TimeMode.SEASONAL:

@@ -100,19 +100,24 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation():
-        std = YEARLY_RAINFALL.get_standard_deviation(YEARLY_RAINFALL.starting_year)
+        std = YEARLY_RAINFALL.get_standard_deviation(
+            YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
+        )
 
         assert isinstance(std, float)
 
         YEARLY_RAINFALL.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
         std_none = YEARLY_RAINFALL.get_standard_deviation(
-            YEARLY_RAINFALL.starting_year, label=Label.SAVITZKY_GOLAY_FILTER
+            YEARLY_RAINFALL.starting_year,
+            YEARLY_RAINFALL.get_last_year(),
+            label=Label.SAVITZKY_GOLAY_FILTER,
         )
 
         assert std_none is None
 
         std_weighted_by_avg = YEARLY_RAINFALL.get_standard_deviation(
             YEARLY_RAINFALL.starting_year,
+            YEARLY_RAINFALL.get_last_year(),
             weigh_by_average=True,
         )
 
@@ -132,7 +137,9 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_add_percentage_of_normal():
-        YEARLY_RAINFALL.add_percentage_of_normal(YEARLY_RAINFALL.starting_year)
+        YEARLY_RAINFALL.add_percentage_of_normal(
+            YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
+        )
 
         assert Label.PERCENTAGE_OF_NORMAL in YEARLY_RAINFALL.data
 
