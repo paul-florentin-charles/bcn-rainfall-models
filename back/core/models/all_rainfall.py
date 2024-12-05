@@ -86,33 +86,31 @@ class AllRainfall:
         Path(f"{folder_path}/months").mkdir(parents=True, exist_ok=True)
         Path(f"{folder_path}/seasons").mkdir(parents=True, exist_ok=True)
 
-        end_year = end_year or self.yearly_rainfall.get_last_year()
-
         self.yearly_rainfall.export_as_csv(
             begin_year=begin_year,
             end_year=end_year,
             path=Path(folder_path, f"{begin_year}_{end_year}_rainfall.csv"),
         )
 
-        for monthly_rainfall in self.monthly_rainfalls.values():
+        for month, monthly_rainfall in self.monthly_rainfalls.items():
             monthly_rainfall.export_as_csv(
                 begin_year=begin_year,
                 end_year=end_year,
                 path=Path(
                     folder_path,
                     "months",
-                    f"{begin_year}_{end_year}_{monthly_rainfall.month.value.lower()}_rainfall.csv",
+                    f"{begin_year}_{end_year}_{month.lower()}_rainfall.csv",
                 ),
             )
 
-        for season_rainfall in self.seasonal_rainfalls.values():
+        for season, season_rainfall in self.seasonal_rainfalls.items():
             season_rainfall.export_as_csv(
                 begin_year=begin_year,
                 end_year=end_year,
                 path=Path(
                     folder_path,
                     "seasons",
-                    f"{begin_year}_{end_year}_{season_rainfall.season.value}_rainfall.csv",
+                    f"{begin_year}_{end_year}_{season}_rainfall.csv",
                 ),
             )
 
@@ -200,7 +198,6 @@ class AllRainfall:
         Set if time_mode is 'seasonal' (optional).
         :return: A float representing the Rainfall normal.
         """
-
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             return entity.get_normal(begin_year)
 
@@ -376,9 +373,6 @@ class AllRainfall:
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-        if end_year is None:
-            end_year = self.get_last_year()
-
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
             figure_label = "Rainfall (mm)"
             if time_mode == TimeMode.MONTHLY:

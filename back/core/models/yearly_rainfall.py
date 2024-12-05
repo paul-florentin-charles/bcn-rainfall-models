@@ -216,9 +216,6 @@ class YearlyRainfall:
         to end getting our rainfall values.
         :return: The relative distance as a float.
         """
-        if end_year is None:
-            end_year = self.get_last_year()
-
         gap = end_year - begin_year + 1
         if gap <= 0:
             return None
@@ -282,8 +279,6 @@ class YearlyRainfall:
         :return: a tuple containing a tuple of floats (r2 score, slope)
         and a list of rainfall values computed by the linear regression.
         """
-        end_year = end_year or self.get_last_year()
-
         data = self.get_yearly_rainfall(begin_year, end_year)
 
         years = data[Label.YEAR.value].values.reshape(-1, 1)  # type: ignore
@@ -314,7 +309,7 @@ class YearlyRainfall:
         """
         normal = self.get_average_yearly_rainfall(begin_year, end_year)
         if normal == 0.0:
-            return
+            return None
 
         self.data[Label.PERCENTAGE_OF_NORMAL.value] = round(
             self.data[Label.RAINFALL.value] / normal * 100.0, self.round_precision
@@ -419,7 +414,6 @@ class YearlyRainfall:
             label=Label.RAINFALL,
             figure_label=figure_label,
         )
-
         if figure:
             if plot_average:
                 average_rainfall = self.get_average_yearly_rainfall(
