@@ -178,15 +178,22 @@ class TestYearlyRainfall:
         YEARLY_RAINFALL.add_savgol_filter()
 
     @staticmethod
-    def test_plot_rainfall_and_models():
+    def test_get_various_plotly_figures():
         bar_fig = YEARLY_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
             begin_year, end_year
         )
         assert isinstance(bar_fig, go.Figure)
 
-        YEARLY_RAINFALL.plot_linear_regression()
-        YEARLY_RAINFALL.plot_savgol_filter()
+        scatter_fig = YEARLY_RAINFALL.get_scatter_figure_of_linear_regression()
+        assert isinstance(scatter_fig, go.Figure)
+
+        scatter_fig = YEARLY_RAINFALL.get_scatter_figure_of_savgol_filter()
+        assert isinstance(scatter_fig, go.Figure)
 
     @staticmethod
-    def test_plot_normal():
-        YEARLY_RAINFALL.plot_normal()
+    def test_get_scatter_figure_of_normal():
+        figure = YEARLY_RAINFALL.get_scatter_figure_of_normal()
+        assert isinstance(figure, go.Figure)
+
+        figure = YEARLY_RAINFALL.get_scatter_figure_of_normal(display_clusters=True)
+        assert isinstance(figure, go.Figure)

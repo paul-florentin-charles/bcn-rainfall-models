@@ -5,7 +5,6 @@ Provides a rich class to manipulate Yearly Rainfall data.
 import operator as opr
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
@@ -15,7 +14,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 from back.core.utils.custom_exceptions import DataFormatError
-from back.core.utils.decorators import plots
 from back.core.utils.enums import Label, Month
 from back.core.utils.functions import dataframe_operations as df_opr, metrics
 from back.core.utils.functions import plotting
@@ -409,9 +407,10 @@ class YearlyRainfall:
 
         yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
 
-        figure = plotting.get_bar_figure_of_column_according_to_year(
+        figure = plotting.get_figure_of_column_according_to_year(
             yearly_rainfall,
             label=Label.RAINFALL,
+            figure_type="bar",
             figure_label=figure_label,
         )
         if figure:
@@ -443,55 +442,70 @@ class YearlyRainfall:
 
         return figure
 
-    @plots.legend()
-    def plot_linear_regression(self) -> bool:
+    def get_scatter_figure_of_linear_regression(self) -> go.Figure | None:
         """
-        Plot linear regression of Rainfall data according to year.
+        Return plotly figure with scatter trace of rainfall linear regression according to year.
 
-        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.plot_column_according_to_year(
-            self.data, Label.LINEAR_REGRESSION, color="red"
+        return plotting.get_figure_of_column_according_to_year(
+            self.data,
+            Label.LINEAR_REGRESSION,
+            figure_type="scatter",
+            figure_label=f"{Label.LINEAR_REGRESSION.value} (mm/year)",
         )
 
-    @plots.legend()
-    def plot_savgol_filter(self) -> bool:
+    def get_scatter_figure_of_savgol_filter(self) -> go.Figure | None:
         """
-        Plot Savitzky–Golay filter of Rainfall data according to year.
+        Return plotly figure with scatter trace of Savitzky-Golay filter according to year.
 
-        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.plot_column_according_to_year(
-            self.data, Label.SAVITZKY_GOLAY_FILTER, color="orange"
+        return plotting.get_figure_of_column_according_to_year(
+            self.data,
+            Label.SAVITZKY_GOLAY_FILTER,
+            figure_type="scatter",
+            figure_label=f"{Label.SAVITZKY_GOLAY_FILTER.value} (mm)",
         )
 
-    @plots.legend(ylabel=Label.PERCENTAGE_OF_NORMAL.value)
-    def plot_normal(self, display_clusters=False) -> bool:
+    def get_scatter_figure_of_normal(self, display_clusters=False) -> go.Figure | None:
         """
-        Plot Rainfall normals data according to year.
+        Return plotly figure with horizontal line of normal rainfall according to year and scatter rainfall values.
 
         :param display_clusters: Whether to display clusters computed with k-means or not.
         Defaults to False (optional).
-        :return: A boolean set to True if data has been successfully plotted, False otherwise.
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-        plt.axhline(y=100.0, color="orange", linestyle="dashed", label="Normal")
+        figure = go.Figure()
+        figure.add_hline(
+            100.0,
+            annotation_text="Normal (%)",
+            annotation_position="top left",
+            line_dash="dash",
+            line_color="orange",
+        )
 
-        success = False
         if not display_clusters:
-            success = plotting.scatter_column_according_to_year(
-                self.data, Label.PERCENTAGE_OF_NORMAL
-            )
+            if fig_normal := plotting.get_figure_of_column_according_to_year(
+                self.data, Label.PERCENTAGE_OF_NORMAL, figure_type="scatter"
+            ):
+                figure.add_traces(list(fig_normal.select_traces()))
+            else:
+                return None
         else:
             for label_value in range(metrics.get_clusters_number(self.data)):
-                success = plotting.scatter_column_according_to_year(
-                    self.data[self.data[Label.KMEANS.value] == label_value],
-                    Label.PERCENTAGE_OF_NORMAL,
-                    display_label=False,
-                )
+                if (
+                    fig_normal_kmeans_subplot
+                    := plotting.get_figure_of_column_according_to_year(
+                        self.data[self.data[Label.KMEANS.value] == label_value],
+                        Label.PERCENTAGE_OF_NORMAL,
+                        figure_type="scatter",
+                    )
+                ):
+                    figure.add_traces(list(fig_normal_kmeans_subplot.select_traces()))
+                else:
+                    return None
 
-                if not success:
-                    return False
-
-        return success
+        return figure

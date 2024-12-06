@@ -10,36 +10,24 @@ from tst.back.core.models.test_yearly_rainfall import YEARLY_RAINFALL, ALL_RAINF
 
 class TestPlotting:
     @staticmethod
-    def test_plot_column_according_to_year():
-        is_plotted = plotting.plot_column_according_to_year(
-            YEARLY_RAINFALL.data, Label.RAINFALL
-        )
-
-        assert isinstance(is_plotted, bool)
-        assert is_plotted
-
-    @staticmethod
-    def test_scatter_column_according_to_year():
-        is_plotted = plotting.scatter_column_according_to_year(
-            YEARLY_RAINFALL.data, Label.RAINFALL
-        )
-
-        assert isinstance(is_plotted, bool)
-        assert is_plotted
-
-    @staticmethod
-    def test_get_bar_figure_of_column_according_to_year():
-        bar_fig = plotting.get_bar_figure_of_column_according_to_year(
+    def test_get_figure_of_column_according_to_year():
+        bar_fig = plotting.get_figure_of_column_according_to_year(
             YEARLY_RAINFALL.data, Label.RAINFALL
         )
 
         assert isinstance(bar_fig, go.Figure)
 
-        bar_fig = plotting.get_bar_figure_of_column_according_to_year(
+        bar_fig = plotting.get_figure_of_column_according_to_year(
             pd.DataFrame(), Label.RAINFALL
         )
 
         assert bar_fig is None
+
+        scatter_fig = plotting.get_figure_of_column_according_to_year(
+            YEARLY_RAINFALL.data, Label.RAINFALL, figure_type="scatter"
+        )
+
+        assert isinstance(scatter_fig, go.Figure)
 
     @staticmethod
     def test_get_bar_figure_of_rainfall_averages():
