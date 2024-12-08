@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/styles/main.css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    {% block body %}{% endblock %}
+</body>
+
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+    var graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
+    var graphs_averages = {{ plotlyAveragesJSON|safe }};
+    var graphs_linreg = {{ plotlyLinRegJSON|safe }};
+    var graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
+
+    Plotly.plot('chart_summer_rainfall', graphs_summer_rainfall, {});
+    Plotly.plot('chart_averages', graphs_averages, {});
+    Plotly.plot('chart_linreg', graphs_linreg, {});
+    Plotly.plot('chart_relative_distance_to_normal', graphs_relative_distance_to_normal, {});
+</script>
+</html>

@@ -436,7 +436,7 @@ class YearlyRainfall:
                     go.Scatter(
                         x=yearly_rainfall[Label.YEAR.value],
                         y=linear_regression_values,
-                        name=f"{Label.LINEAR_REGRESSION.value} | (R2 score: {round(r2, 2)}, slope: {slope} mm/year)",
+                        name=f"{Label.LINEAR_REGRESSION.value}",  # | (R2 score: {round(r2, 2)}, slope: {slope} mm/year)",
                     )
                 )
 

@@ -201,8 +201,6 @@ def get_bar_figure_of_relative_distances_to_normal(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)"
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(
-        title_text=f"Relative distance to {normal_year}-{normal_year + 29} normal"
-    )
+    figure.update_yaxes(title_text="Relative distance to normal (%)")
 
     return figure

@@ -1,51 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="../static/styles/main.css">
-    <title>Barcelona Rainfall</title>
-</head>
+{% extends "layout.html" %}
 
-<body>
-<h1>Barcelona Rainfall</h1>
-<div id="csv_1">
-    <h2>Rainfall (mm) by year for May</h2>
-    <table>
-        <tr>
-            <th>{{ dataCSV[0][0] }}</th>
+{% block title %}{{ title }}{% endblock %}
 
-            {% for year, _ in dataCSV[1:] %}
-                <td>{{ year }}</td>
-            {% endfor %}
-        </tr>
-        <tr>
-            <th>{{ dataCSV[0][1] }}</th>
+{% block body %}
 
-            {% for _, rainfall in dataCSV[1:] %}
-                <td>{{ rainfall }}</td>
-            {% endfor %}
-        </tr>
-    </table>
+<h1>{{ title }}</h1>
+
+<br>
+
+<div class="row">
+    <div class="column" id='chart_summer_rainfall'></div>
+    <div class="column" id='chart_averages'></div>
 </div>
-<br>
-<div id='chart'></div>
-<br>
-<div id='chart_averages'></div>
-<br>
-<div id='chart_linreg'></div>
-<br>
-<div id='chart_relative_distanc_to_normal'></div>
-</body>
 
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-<script type='text/javascript'>
-    var graphs = {{ plotlyJSON|safe }};
-    var graphs_averages = {{ plotlyAveragesJSON|safe }};
-    var graphs_linreg = {{ plotlyLinRegJSON|safe }};
-    var graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
+<div class="row">
+    <div class="column" id='chart_linreg'></div>
+    <div class="column" id='chart_relative_distance_to_normal'></div>
+</div>
 
-    Plotly.plot('chart', graphs, {});
-    Plotly.plot('chart_averages', graphs_averages, {});
-    Plotly.plot('chart_linreg', graphs_linreg, {});
-    Plotly.plot('chart_relative_distanc_to_normal', graphs_relative_distance_to_normal, {});
-</script>
-</html>
+{% endblock %}
