@@ -28,7 +28,7 @@ def index():
     begin_year = 2014
     end_year = 2023
 
-    data = api_client.get_rainfall_by_year_as_plotly_json(
+    summer_rainfall = api_client.get_rainfall_by_year_as_plotly_json(
         time_mode="seasonal",
         begin_year=begin_year,
         end_year=end_year,
@@ -108,25 +108,14 @@ def index():
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal (%) between {begin_year} and {end_year}"
     )
     fig_relative_distances_to_normal.update_yaxes(
-        title_text=f"Relative distance to {normal_year}-{normal_year + 29} normal (%)"
-    )
-
-    csv_data = (
-        api_client.get_rainfall_by_year_as_csv(
-            time_mode="monthly",
-            begin_year=1995,
-            end_year=2015,
-            month="May",
-        )
-        .content.decode()
-        .splitlines()
+        title_text="Relative distance to normal (%)"
     )
 
     return render_template(
         "index.html",
-        plotlyJSON=data,
+        title="Barcelona Rainfall",
+        plotlySummerRainfallJSON=summer_rainfall,
         plotlyAveragesJSON=fig_averages.to_json(),
         plotlyLinRegJSON=fig_linreg_slopes.to_json(),
         plotlyRelativeDistance2NormalJSON=fig_relative_distances_to_normal.to_json(),
-        dataCSV=[csv_line.split(",") for csv_line in csv_data],
     )

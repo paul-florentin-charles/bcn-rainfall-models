@@ -3,74 +3,34 @@ Provides useful functions for plotting rainfall data in all shapes.
 """
 
 import pandas as pd
-import matplotlib.pyplot as plt
-
 import plotly.graph_objs as go
 
 from back.core.utils.enums import Label, TimeMode
 
-
-def plot_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, *, color: str | None = None
-) -> bool:
-    """
-    Plot specified column data according to year.
-
-    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
-    :param label: A Label enum designating the column to be plotted as y-values.
-    :param color: A string to set plot colour (optional).
-    :return: A boolean set to True if data has been successfully plotted, False otherwise.
-    """
-    if (
-        Label.YEAR not in yearly_rainfall.columns
-        or label not in yearly_rainfall.columns
-    ):
-        return False
-
-    plt.plot(
-        yearly_rainfall[Label.YEAR.value],
-        yearly_rainfall[label.value],
-        label=label.value,
-        c=color,
-    )
-
-    return True
+FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[go.Bar | go.Scatter]] = {
+    "bar": go.Bar,
+    "scatter": go.Scatter,
+}
 
 
-def scatter_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, *, display_label=True
-) -> bool:
-    """
-    Scatter specified column data according to year.
-
-    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
-    :param label: A Label enum designating the column to be scattered as y-values.
-    :param display_label: Whether to display label or not. Default to True (optional)
-    :return: A boolean set to True if data has been successfully plotted, False otherwise.
-    """
-    if (
-        Label.YEAR not in yearly_rainfall.columns
-        or label not in yearly_rainfall.columns
-    ):
-        return False
-
-    plt.scatter(
-        yearly_rainfall[Label.YEAR.value],
-        yearly_rainfall[label.value],
-        label=label.value if display_label else None,
-    )
-
-    return True
+def _get_plotly_trace_by_figure_type(figure_type: str):
+    return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
 
 
-def get_bar_figure_of_column_according_to_year(
-    yearly_rainfall: pd.DataFrame, label: Label, *, figure_label: str | None = None
+def get_figure_of_column_according_to_year(
+    yearly_rainfall: pd.DataFrame,
+    label: Label,
+    *,
+    figure_type="bar",
+    figure_label: str | None = None,
 ) -> go.Figure | None:
     """
-    Return plotly bar figure for specified column data according to year.
+    Return plotly figure for specified column data according to year.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param label: A Label enum designating the column to be displayed as bars for y-values.
+    :param figure_type: A case-insensitive string corresponding to a plotly BaseTraceType mapped in global dictionary;
+    use private function to retrieve plotly trace class.
     :param figure_label: A string to label graphic data (optional).
     If not set or set to "", label value is used.
     :return: A plotly Figure object if data has been successfully plotted, None otherwise.
@@ -81,9 +41,13 @@ def get_bar_figure_of_column_according_to_year(
     ):
         return None
 
+    plotly_trace = _get_plotly_trace_by_figure_type(figure_type)
+    if plotly_trace is None:
+        return None
+
     figure = go.Figure()
     figure.add_trace(
-        go.Bar(
+        plotly_trace(
             x=yearly_rainfall[Label.YEAR.value],
             y=yearly_rainfall[label.value],
             name=label.value,
@@ -237,8 +201,6 @@ def get_bar_figure_of_relative_distances_to_normal(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)"
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(
-        title_text=f"Relative distance to {normal_year}-{normal_year + 29} normal"
-    )
+    figure.update_yaxes(title_text="Relative distance to normal (%)")
 
     return figure

@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify
 from webapp import api_client
 
 metrics = Blueprint(
-    "routes", __name__, static_folder="static", template_folder="templates"
+    "metrics", __name__, static_folder="static", template_folder="templates"
 )
 
 
