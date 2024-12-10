@@ -17,10 +17,7 @@ jobs:
         with:
           token: ${{ secrets.github_token }}
 
-      - run: |
-          ls
-
-      - name: Verify Changed files
+      - name: "Verify Changed files"
         uses: tj-actions/verify-changed-files@v16
         id: verify-changed-files
         with:
