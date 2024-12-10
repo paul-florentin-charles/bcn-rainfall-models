@@ -3,6 +3,7 @@ Provides a rich class to manipulate Monthly Rainfall data.
 """
 
 import pandas as pd
+import plotly.graph_objs as go
 
 from back.core.models.yearly_rainfall import YearlyRainfall
 from back.core.utils.enums import Month
@@ -35,3 +36,26 @@ class MonthlyRainfall(YearlyRainfall):
         """
 
         return self.load_rainfall(self.month)
+
+    def get_bar_figure_of_rainfall_according_to_year(
+        self,
+        begin_year: int,
+        end_year: int,
+        *,
+        figure_label: str | None = None,
+        trace_label: str | None = None,
+        plot_average=False,
+        plot_linear_regression=False,
+    ) -> go.Figure | None:
+        """
+        Overrides parent method by customizing figure and trace labels.
+        """
+        return super().get_bar_figure_of_rainfall_according_to_year(
+            begin_year,
+            end_year,
+            figure_label=figure_label
+            or f"Rainfall (mm) for {self.month.value} between {begin_year} and {end_year}",
+            trace_label=f"{self.month.value} rainfall",
+            plot_average=plot_average,
+            plot_linear_regression=plot_linear_regression,
+        )

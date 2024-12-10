@@ -374,17 +374,9 @@ class AllRainfall:
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
         if entity := self.get_entity_for_time_mode(time_mode, month, season):
-            figure_label = "Rainfall (mm)"
-            if time_mode == TimeMode.MONTHLY:
-                figure_label = f"{figure_label} for {month.value}"  # type: ignore
-            elif time_mode == TimeMode.SEASONAL:
-                figure_label = f"{figure_label} for {season.value}"  # type: ignore
-            figure_label = f"{figure_label} between {begin_year} and {end_year}"
-
             return entity.get_bar_figure_of_rainfall_according_to_year(
                 begin_year,
                 end_year,
-                figure_label=figure_label,
                 plot_average=plot_average,
                 plot_linear_regression=plot_linear_regression,
             )

@@ -386,6 +386,7 @@ class YearlyRainfall:
         end_year: int,
         *,
         figure_label: str | None = None,
+        trace_label: str | None = None,
         plot_average=False,
         plot_linear_regression=False,
     ) -> go.Figure | None:
@@ -397,6 +398,8 @@ class YearlyRainfall:
         :param end_year: An integer representing the year
         to end getting our rainfall values.
         :param figure_label: A string to label graphic data (optional).
+        If not set or set to "", label value is used.
+        :param trace_label: A string to label trace data (optional).
         If not set or set to "", label value is used.
         :param plot_average: Whether to plot average rainfall as a horizontal line or not.
         Defaults to False.
@@ -411,7 +414,8 @@ class YearlyRainfall:
             yearly_rainfall,
             label=Label.RAINFALL,
             figure_type="bar",
-            figure_label=figure_label,
+            figure_label=figure_label or "Rainfall (mm)",
+            trace_label=trace_label,
         )
         if figure:
             if plot_average:
@@ -436,7 +440,11 @@ class YearlyRainfall:
                     go.Scatter(
                         x=yearly_rainfall[Label.YEAR.value],
                         y=linear_regression_values,
-                        name=f"{Label.LINEAR_REGRESSION.value}",  # | (R2 score: {round(r2, 2)}, slope: {slope} mm/year)",
+                        name=f"{Label.LINEAR_REGRESSION.value}"
+                        "<br>"
+                        f"<i>R2 score:</i> <b>{round(r2, 2)}</b>"
+                        "<br>"
+                        f"<i>slope:</i> {slope} mm/year",
                     )
                 )
 

@@ -23,6 +23,7 @@ def get_figure_of_column_according_to_year(
     *,
     figure_type="bar",
     figure_label: str | None = None,
+    trace_label: str | None = None,
 ) -> go.Figure | None:
     """
     Return plotly figure for specified column data according to year.
@@ -32,6 +33,8 @@ def get_figure_of_column_according_to_year(
     :param figure_type: A case-insensitive string corresponding to a plotly BaseTraceType mapped in global dictionary;
     use private function to retrieve plotly trace class.
     :param figure_label: A string to label graphic data (optional).
+    If not set or set to "", label value is used.
+    :param trace_label: A string to label trace data (optional).
     If not set or set to "", label value is used.
     :return: A plotly Figure object if data has been successfully plotted, None otherwise.
     """
@@ -50,7 +53,7 @@ def get_figure_of_column_according_to_year(
         plotly_trace(
             x=yearly_rainfall[Label.YEAR.value],
             y=yearly_rainfall[label.value],
-            name=label.value,
+            name=trace_label or label.value,
         )
     )
 
