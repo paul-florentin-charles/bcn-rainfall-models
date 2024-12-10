@@ -16,6 +16,10 @@ jobs:
         uses: janheinrichmerker/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.github_token }}
+          output: CHANGELOG.md
+
+      - run: |
+          ls
 
       - name: "Commit file"
         if: steps.verify-changed-files.outputs.files_changed == 'true'
