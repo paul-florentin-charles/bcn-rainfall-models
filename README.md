@@ -42,8 +42,8 @@ uv sync
 ## Tests & Coverage
 
 ```commandline
-uv run pytest
-uv run coverage report -m
+uv run coverage run -m pytest
+uv run coverage report
 ```
 
 ## Code quality

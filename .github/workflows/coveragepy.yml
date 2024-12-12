@@ -24,8 +24,8 @@ jobs:
 
     - name: Run tests with pytest and report coverage with coveragepy
       run: |
-        uv run pytest
-        uv run coverage report -m
+        uv run coverage run -m pytest
+        uv run coverage report
 
     - name: Generate coverage badge
       uses: tj-actions/coverage-badge-py@v2
