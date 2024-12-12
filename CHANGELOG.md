@@ -4,8 +4,15 @@
 
 [Full Changelog](https://github.com/paul-florentin-charles/bcn-rainfall-models/compare/v.0.4.0-webapp...HEAD)
 
+**Closed issues:**
+
+- Simplify code architecture by merging some files [\#93](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/93)
+- Think about setting up a project management tool [\#88](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/88)
+
 **Merged pull requests:**
 
+- Use uv to manage dependencies [\#94](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/94) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
+- Added generated CHANGELOG.md [\#92](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/92) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Commit and push CHANGELOG.md generated file within workflow [\#91](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/91) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Push GitHub Action "Generate changelog" on releases \(version v2.4\) [\#89](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/89) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 
