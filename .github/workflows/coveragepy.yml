@@ -21,13 +21,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install uv
         uv sync
-        uv tool install coverage
-        uv tool install pytest
 
     - name: Run tests with pytest and report coverage with coveragepy
       run: |
-        pytest tst
-        coverage report -m
+        uv run pytest
+        uv run coverage report -m
 
     - name: Generate coverage badge
       uses: tj-actions/coverage-badge-py@v2

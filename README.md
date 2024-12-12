@@ -42,16 +42,13 @@ uv sync
 ## Tests & Coverage
 
 ```commandline
-uv tool install coverage
-uv tool install pytest
-pytest tst
-coverage report -m
+uv run pytest
+uv run coverage report -m
 ```
 
 ## Code quality
 
 ```commandline
-uv tool install ruff
-ruff check
-ruff format
+uv run ruff check
+uv run ruff format
 ```
