@@ -8,7 +8,6 @@ Simple python script to either run API with Uvicorn or Webapp with Flask.
 import click
 import uvicorn
 
-from config import Config
 
 SERVERS = ["api", "webapp"]
 
@@ -21,6 +20,8 @@ SERVERS = ["api", "webapp"]
     help="The server that should be run.",
 )
 def run(server: str):
+    from config import Config
+
     config = Config()
     match server:
         case "api":

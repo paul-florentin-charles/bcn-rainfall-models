@@ -2,9 +2,7 @@ from _pytest.python_api import raises
 from fastapi import HTTPException
 
 from back.api import utils
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
+from back.rainfall.utils import Month, Season, TimeMode
 
 
 def test_raise_time_mode_error_or_do_nothing():

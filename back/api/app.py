@@ -8,17 +8,14 @@ from typing import Annotated
 from fastapi import FastAPI, HTTPException, Query
 from starlette.responses import StreamingResponse
 
-from back.api.media_types import MediaType
-from back.api.models import RainfallModel
 from back.api.utils import (
+    MediaType,
+    RainfallModel,
     raise_time_mode_error_or_do_nothing,
     raise_year_related_error_or_do_nothing,
 )
-from back.core.models import AllRainfall
-from back.core.utils.enums.labels import Label
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
+from back.rainfall.models import AllRainfall
+from back.rainfall.utils import Label, Month, Season, TimeMode
 
 all_rainfall = AllRainfall.from_config()
 
