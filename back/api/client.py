@@ -6,12 +6,12 @@ from typing import Any
 
 from api_session import APISession
 
-from config import Config
-
 
 class APIClient(APISession):
     @classmethod
     def from_config(cls, **kwargs):
+        from config import Config
+
         settings = Config().get_api_server_settings()
         base_url = f"http://{settings['host']}:{settings['port']}/api"
 

@@ -6,7 +6,6 @@ from typing import Any
 
 from yaml import safe_load, parser  # type: ignore
 
-CONFIG_FNAME: str = "config.yml"
 
 
 class Config:
@@ -15,7 +14,7 @@ class Config:
     It needs to be instantiated first to be loaded.
     """
 
-    def __init__(self, path=CONFIG_FNAME):
+    def __init__(self, path="config.yml"):
         self.path = path
         try:
             with open(self.path, mode="rt", encoding="utf-8") as stream:

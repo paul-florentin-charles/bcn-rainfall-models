@@ -8,12 +8,11 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.core.utils.enums import Month, Season, TimeMode
+from back.rainfall.utils import Month, Season, TimeMode, plotly_figures as plot
 from config import Config
-from back.core.models.monthly_rainfall import MonthlyRainfall
-from back.core.models.seasonal_rainfall import SeasonalRainfall
-from back.core.models.yearly_rainfall import YearlyRainfall
-from back.core.utils.functions import plotting
+from back.rainfall.models.monthly_rainfall import MonthlyRainfall
+from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
+from back.rainfall.models.yearly_rainfall import YearlyRainfall
 
 
 class AllRainfall:
@@ -412,7 +411,7 @@ class AllRainfall:
         elif time_mode == TimeMode.SEASONAL:
             rainfall_instance_by_label = self.seasonal_rainfalls
 
-        return plotting.get_bar_figure_of_rainfall_averages(
+        return plot.get_bar_figure_of_rainfall_averages(
             rainfall_instance_by_label,
             time_mode=time_mode,
             begin_year=begin_year,
@@ -449,7 +448,7 @@ class AllRainfall:
         elif time_mode == TimeMode.SEASONAL:
             rainfall_instance_by_label = self.seasonal_rainfalls
 
-        return plotting.get_bar_figure_of_rainfall_linreg_slopes(
+        return plot.get_bar_figure_of_rainfall_linreg_slopes(
             rainfall_instance_by_label,
             time_mode=time_mode,
             begin_year=begin_year,
@@ -489,7 +488,7 @@ class AllRainfall:
         elif time_mode == TimeMode.SEASONAL:
             rainfall_instance_by_label = self.seasonal_rainfalls
 
-        return plotting.get_bar_figure_of_relative_distances_to_normal(
+        return plot.get_bar_figure_of_relative_distances_to_normal(
             rainfall_instance_by_label,
             time_mode=time_mode,
             normal_year=normal_year,

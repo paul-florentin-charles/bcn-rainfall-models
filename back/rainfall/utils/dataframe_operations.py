@@ -5,7 +5,7 @@ containing rainfall data over years.
 
 import pandas as pd
 
-from back.core.utils.enums import Label
+from back.rainfall.utils import Label
 
 
 def get_rainfall_within_year_interval(

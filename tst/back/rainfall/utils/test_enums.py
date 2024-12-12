@@ -1,4 +1,26 @@
-from back.core.utils.enums.months import Month
+from back.rainfall.utils import BaseEnum, Label, Season, Month, TimeMode
+
+
+def test_base_enum():
+    class TestEnum(BaseEnum):
+        FOX = 0
+        DOG = 1
+        CAT = 2
+
+    assert set(TestEnum.names()) == {"FOX", "DOG", "CAT"}
+    assert set(TestEnum.values()) == {0, 1, 2}
+
+
+def test_labels():
+    for label in Label:
+        assert isinstance(label.value, str)
+
+
+def test_time_modes():
+    assert len(TimeMode) == 3
+
+    for t_mode in TimeMode.values():
+        assert isinstance(t_mode, str)
 
 
 class TestMonths:
@@ -89,3 +111,37 @@ class TestMonths:
 
         assert isinstance(month.value, str)
         assert month.value == "December"
+
+
+class TestSeasons:
+    @staticmethod
+    def test_seasons_count():
+        assert len(Season) == 4
+
+    @staticmethod
+    def test_winter():
+        season = Season.WINTER
+
+        assert isinstance(season.value, str)
+        assert season.value == "winter"
+
+    @staticmethod
+    def test_spring():
+        season = Season.SPRING
+
+        assert isinstance(season.value, str)
+        assert season.value == "spring"
+
+    @staticmethod
+    def test_summer():
+        season = Season.SUMMER
+
+        assert isinstance(season.value, str)
+        assert season.value == "summer"
+
+    @staticmethod
+    def test_fall():
+        season = Season.FALL
+
+        assert isinstance(season.value, str)
+        assert season.value == "fall"

@@ -13,10 +13,14 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
-from back.core.utils.custom_exceptions import DataFormatError
-from back.core.utils.enums import Label, Month
-from back.core.utils.functions import dataframe_operations as df_opr, metrics
-from back.core.utils.functions import plotting
+from back.rainfall.utils.custom_exceptions import DataFormatError
+from back.rainfall.utils import (
+    Label,
+    Month,
+    dataframe_operations as df_opr,
+    rainfall_metrics as rain,
+    plotly_figures as plot,
+)
 
 
 class YearlyRainfall:
@@ -130,7 +134,7 @@ class YearlyRainfall:
         :return: A float representing the average Rainfall.
         """
 
-        return metrics.get_average_rainfall(
+        return rain.get_average_rainfall(
             self.get_yearly_rainfall(begin_year, end_year),
             round_precision=self.round_precision,
         )
@@ -144,7 +148,7 @@ class YearlyRainfall:
         :return: A float storing the normal.
         """
 
-        return metrics.get_normal(
+        return rain.get_normal(
             self.data, begin_year, round_precision=self.round_precision
         )
 
@@ -163,9 +167,9 @@ class YearlyRainfall:
         :return: The number of years below the normal as an integer.
         """
 
-        return metrics.get_years_compared_to_given_rainfall_value(
+        return rain.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
-            metrics.get_normal(self.data, normal_year),
+            rain.get_normal(self.data, normal_year),
             comparator=opr.lt,
         )
 
@@ -184,9 +188,9 @@ class YearlyRainfall:
         :return: The number of years above the normal as an integer.
         """
 
-        return metrics.get_years_compared_to_given_rainfall_value(
+        return rain.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
-            metrics.get_normal(self.data, normal_year),
+            rain.get_normal(self.data, normal_year),
             comparator=opr.gt,
         )
 
@@ -410,7 +414,7 @@ class YearlyRainfall:
 
         yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
 
-        figure = plotting.get_figure_of_column_according_to_year(
+        figure = plot.get_figure_of_column_according_to_year(
             yearly_rainfall,
             label=Label.RAINFALL,
             figure_type="bar",
@@ -457,7 +461,7 @@ class YearlyRainfall:
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.get_figure_of_column_according_to_year(
+        return plot.get_figure_of_column_according_to_year(
             self.data,
             Label.LINEAR_REGRESSION,
             figure_type="scatter",
@@ -471,7 +475,7 @@ class YearlyRainfall:
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plotting.get_figure_of_column_according_to_year(
+        return plot.get_figure_of_column_according_to_year(
             self.data,
             Label.SAVITZKY_GOLAY_FILTER,
             figure_type="scatter",
@@ -496,17 +500,17 @@ class YearlyRainfall:
         )
 
         if not display_clusters:
-            if fig_normal := plotting.get_figure_of_column_according_to_year(
+            if fig_normal := plot.get_figure_of_column_according_to_year(
                 self.data, Label.PERCENTAGE_OF_NORMAL, figure_type="scatter"
             ):
                 figure.add_traces(list(fig_normal.select_traces()))
             else:
                 return None
         else:
-            for label_value in range(metrics.get_clusters_number(self.data)):
+            for label_value in range(rain.get_clusters_number(self.data)):
                 if (
                     fig_normal_kmeans_subplot
-                    := plotting.get_figure_of_column_according_to_year(
+                    := plot.get_figure_of_column_according_to_year(
                         self.data[self.data[Label.KMEANS.value] == label_value],
                         Label.PERCENTAGE_OF_NORMAL,
                         figure_type="scatter",

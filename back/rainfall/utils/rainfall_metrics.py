@@ -7,8 +7,7 @@ from typing import Callable
 
 import pandas as pd
 
-from back.core.utils.enums import Label
-from back.core.utils.functions import dataframe_operations as df_opr
+from back.rainfall.utils import Label, dataframe_operations as df_opr
 
 
 def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) -> float:

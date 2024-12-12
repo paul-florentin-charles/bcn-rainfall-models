@@ -1,14 +1,11 @@
 from pathlib import Path
 from shutil import rmtree
 
-from back.core.models import AllRainfall
-from back.core.models.monthly_rainfall import MonthlyRainfall
-from back.core.models.seasonal_rainfall import SeasonalRainfall
-from back.core.models.yearly_rainfall import YearlyRainfall
-from back.core.utils.enums import Label
-from back.core.utils.enums.months import Month
-from back.core.utils.enums.seasons import Season
-from back.core.utils.enums.time_modes import TimeMode
+from back.rainfall.models import AllRainfall
+from back.rainfall.models.monthly_rainfall import MonthlyRainfall
+from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
+from back.rainfall.models.yearly_rainfall import YearlyRainfall
+from back.rainfall.utils import Label, Month, Season, TimeMode
 
 ALL_RAINFALL = AllRainfall.from_config()
 

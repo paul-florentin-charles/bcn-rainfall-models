@@ -5,7 +5,7 @@ Provides useful functions for plotting rainfall data in all shapes.
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.core.utils.enums import Label, TimeMode
+from back.rainfall.utils import Label, TimeMode
 
 FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[go.Bar | go.Scatter]] = {
     "bar": go.Bar,
@@ -44,24 +44,23 @@ def get_figure_of_column_according_to_year(
     ):
         return None
 
-    plotly_trace = _get_plotly_trace_by_figure_type(figure_type)
-    if plotly_trace is None:
-        return None
-
-    figure = go.Figure()
-    figure.add_trace(
-        plotly_trace(
-            x=yearly_rainfall[Label.YEAR.value],
-            y=yearly_rainfall[label.value],
-            name=trace_label or label.value,
+    if plotly_trace := _get_plotly_trace_by_figure_type(figure_type):
+        figure = go.Figure()
+        figure.add_trace(
+            plotly_trace(
+                x=yearly_rainfall[Label.YEAR.value],
+                y=yearly_rainfall[label.value],
+                name=trace_label or label.value,
+            )
         )
-    )
 
-    figure.update_layout(title=figure_label or label.value)
-    figure.update_xaxes(title_text=Label.YEAR.value)
-    figure.update_yaxes(title_text=label.value)
+        figure.update_layout(title=figure_label or label.value)
+        figure.update_xaxes(title_text=Label.YEAR.value)
+        figure.update_yaxes(title_text=label.value)
 
-    return figure
+        return figure
+
+    return None
 
 
 def get_bar_figure_of_rainfall_averages(

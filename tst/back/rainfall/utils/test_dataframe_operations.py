@@ -2,10 +2,9 @@ from datetime import datetime
 
 import pandas as pd
 
-import back.core.utils.functions.dataframe_operations as df_opr
-from back.core.utils.enums.labels import Label
-from back.core.utils.enums.months import Month
-from tst.back.core.models.test_yearly_rainfall import YEARLY_RAINFALL
+import back.rainfall.utils.dataframe_operations as df_opr
+from back.rainfall.utils import Label, Month
+from tst.back.rainfall.models.test_yearly_rainfall import YEARLY_RAINFALL
 
 
 class TestDataframeOperations:
