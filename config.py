@@ -7,7 +7,6 @@ from typing import Any
 from yaml import safe_load, parser  # type: ignore
 
 
-
 class Config:
     """
     Provides function to retrieve and/or build fields from YAML Configuration.
