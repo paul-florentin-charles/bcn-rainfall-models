@@ -24,10 +24,10 @@ jobs:
         uv tool install coverage
         uv tool install pytest
 
-    - name: Run coverage report with coveragepy
+    - name: Run tests with pytest and report coverage with coveragepy
       run: |
-        coverage run -m pytest tst
-        coverage report
+        pytest tst
+        coverage report -m
 
     - name: Generate coverage badge
       uses: tj-actions/coverage-badge-py@v2

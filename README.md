@@ -39,13 +39,13 @@ uv sync
 
 `uv run run.py --server webapp`
 
-## Coverage
+## Tests & Coverage
 
 ```commandline
 uv tool install coverage
 uv tool install pytest
-coverage run -m pytest tst
-coverage report
+pytest tst
+coverage report -m
 ```
 
 ## Code quality
