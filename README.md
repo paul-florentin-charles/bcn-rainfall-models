@@ -49,6 +49,7 @@ uv run coverage report -m
 ## Code quality
 
 ```commandline
-uv run ruff check
-uv run ruff format
+uv tool install ruff
+ruff check
+ruff format
 ```
