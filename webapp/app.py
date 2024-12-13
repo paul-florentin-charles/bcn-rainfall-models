@@ -7,11 +7,11 @@ import plotly.graph_objs as go
 from flask import Flask, render_template
 from plotly.io import from_json
 
-from webapp import api_client
+from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
 from webapp.views import metrics
 
 flask_app = Flask(__name__)
-flask_app.register_blueprint(metrics)
+flask_app.register_blueprint(metrics)  # type: ignore
 
 
 def _aggregate_json_traces_as_figure(traces_json: list[str]) -> go.Figure:
@@ -24,14 +24,10 @@ def _aggregate_json_traces_as_figure(traces_json: list[str]) -> go.Figure:
 
 @flask_app.route("/")
 def index():
-    normal_year = 1981
-    begin_year = 1994
-    end_year = 2023
-
     summer_rainfall = api_client.get_rainfall_by_year_as_plotly_json(
         time_mode="seasonal",
-        begin_year=begin_year,
-        end_year=end_year,
+        begin_year=BEGIN_YEAR,
+        end_year=END_YEAR,
         season="summer",
         plot_average=True,
         plot_linear_regression=True,
@@ -41,21 +37,21 @@ def index():
 
     monthly_averages = api_client.get_rainfall_averages_as_plotly_json(
         time_mode="monthly",
-        begin_year=begin_year,
-        end_year=end_year,
+        begin_year=BEGIN_YEAR,
+        end_year=END_YEAR,
     )
 
     seasonal_averages = api_client.get_rainfall_averages_as_plotly_json(
         time_mode="seasonal",
-        begin_year=begin_year,
-        end_year=end_year,
+        begin_year=BEGIN_YEAR,
+        end_year=END_YEAR,
     )
 
     fig_averages = _aggregate_json_traces_as_figure(
         [monthly_averages, seasonal_averages]
     )
     fig_averages.update_layout(
-        title=f"Average rainfall (mm) between {begin_year} and {end_year}"
+        title=f"Average rainfall (mm) between {BEGIN_YEAR} and {END_YEAR}"
     )
     fig_averages.update_yaxes(title_text="Rainfall (mm)")
 
@@ -63,21 +59,21 @@ def index():
 
     monthly_linreg_slopes = api_client.get_rainfall_linreg_slopes_as_plotly_json(
         time_mode="monthly",
-        begin_year=begin_year,
-        end_year=end_year,
+        begin_year=BEGIN_YEAR,
+        end_year=END_YEAR,
     )
 
     seasonal_linreg_slopes = api_client.get_rainfall_linreg_slopes_as_plotly_json(
         time_mode="seasonal",
-        begin_year=begin_year,
-        end_year=end_year,
+        begin_year=BEGIN_YEAR,
+        end_year=END_YEAR,
     )
 
     fig_linreg_slopes = _aggregate_json_traces_as_figure(
         [monthly_linreg_slopes, seasonal_linreg_slopes]
     )
     fig_linreg_slopes.update_layout(
-        title=f"Average linear regression slope (mm/year) between {begin_year} and {end_year}"
+        title=f"Average linear regression slope (mm/year) between {BEGIN_YEAR} and {END_YEAR}"
     )
     fig_linreg_slopes.update_yaxes(title_text="Linear regression slope (mm/year)")
 
@@ -86,18 +82,18 @@ def index():
     monthly_relative_distances_to_normal = (
         api_client.get_rainfall_relative_distances_to_normal_as_plotly_json(
             time_mode="monthly",
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
         )
     )
 
     seasonal_relative_distances_to_normal = (
         api_client.get_rainfall_relative_distances_to_normal_as_plotly_json(
             time_mode="seasonal",
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
         )
     )
 
@@ -105,7 +101,7 @@ def index():
         [monthly_relative_distances_to_normal, seasonal_relative_distances_to_normal]
     )
     fig_relative_distances_to_normal.update_layout(
-        title=f"Relative distance to {normal_year}-{normal_year + 29} normal (%) between {begin_year} and {end_year}"
+        title=f"Relative distance to {NORMAL_YEAR}-{NORMAL_YEAR + 29} normal (%) between {BEGIN_YEAR} and {END_YEAR}"
     )
     fig_relative_distances_to_normal.update_yaxes(
         title_text="Relative distance to normal (%)"

@@ -1,26 +1,26 @@
 from flask import Blueprint, jsonify
 
-from webapp import api_client
+from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
 
 metrics = Blueprint(
     "metrics", __name__, static_folder="static", template_folder="templates"
 )
 
 
-@metrics.route("/average")
+@metrics.route("/rainfall_average")
 def rainfall_average():
     return jsonify(
         api_client.get_rainfall_average(
-            time_mode="yearly", begin_year=1991, end_year=2021
+            time_mode="yearly", begin_year=BEGIN_YEAR, end_year=END_YEAR
         )
     )
 
 
-@metrics.route("/normal")
+@metrics.route("/rainfall_normal")
 def rainfall_normal():
     return jsonify(
         api_client.get_rainfall_normal(
-            time_mode="monthly", begin_year=1985, month="May"
+            time_mode="monthly", begin_year=BEGIN_YEAR, month="May"
         )
     )
 
@@ -30,8 +30,9 @@ def rainfall_relative_distance_to_normal():
     return jsonify(
         api_client.get_rainfall_relative_distance_to_normal(
             time_mode="seasonal",
-            begin_year=1995,
-            normal_year=1975,
+            begin_year=BEGIN_YEAR,
+            normal_year=NORMAL_YEAR,
+            end_year=END_YEAR,
             season="fall",
         )
     )
@@ -42,9 +43,9 @@ def years_below_normal():
     return jsonify(
         api_client.get_years_below_normal(
             time_mode="yearly",
-            normal_year=1981,
-            begin_year=2003,
-            end_year=2023,
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
         )
     )
 
@@ -54,20 +55,20 @@ def years_above_normal():
     return jsonify(
         api_client.get_years_above_normal(
             time_mode="yearly",
-            normal_year=1981,
-            begin_year=2003,
-            end_year=2023,
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
         )
     )
 
 
-@metrics.route("/standard_deviation")
+@metrics.route("/rainfall_standard_deviation")
 def rainfall_standard_deviation():
     return jsonify(
         api_client.get_rainfall_standard_deviation(
             time_mode="seasonal",
-            begin_year=2005,
-            end_year=2020,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
             season="winter",
             weigh_by_average=True,
         )

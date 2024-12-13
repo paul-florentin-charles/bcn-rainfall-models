@@ -13,8 +13,16 @@ body {
     padding: 0.5em 0.5em;
 }
 
+nav {
+    margin-bottom: 0.5em;
+}
+
 a {
     color: #eee6dc;
+}
+
+a.odd-link {
+    color: #bfb9dc;
 }
 
 a:hover {
