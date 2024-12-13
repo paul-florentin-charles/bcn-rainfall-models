@@ -418,7 +418,7 @@ class YearlyRainfall:
             yearly_rainfall,
             label=Label.RAINFALL,
             figure_type="bar",
-            figure_label=figure_label or "Rainfall (mm)",
+            figure_label=figure_label,
             trace_label=trace_label,
         )
         if figure:
@@ -451,6 +451,8 @@ class YearlyRainfall:
                         f"<i>slope:</i> {slope} mm/year",
                     )
                 )
+
+        figure.update_yaxes(title_text=f"{Label.RAINFALL.value} (mm)")
 
         return figure
 

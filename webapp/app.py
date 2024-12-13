@@ -25,7 +25,7 @@ def _aggregate_json_traces_as_figure(traces_json: list[str]) -> go.Figure:
 @flask_app.route("/")
 def index():
     normal_year = 1981
-    begin_year = 2014
+    begin_year = 1994
     end_year = 2023
 
     summer_rainfall = api_client.get_rainfall_by_year_as_plotly_json(
