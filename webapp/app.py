@@ -4,20 +4,21 @@ Work-in-progress!
 """
 
 import plotly.graph_objs as go
+import plotly.io
+
 from flask import Flask, render_template
-from plotly.io import from_json
 
 from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
 from webapp.views import metrics
 
 flask_app = Flask(__name__)
-flask_app.register_blueprint(metrics)  # type: ignore
+flask_app.register_blueprint(metrics)
 
 
-def _aggregate_json_traces_as_figure(traces_json: list[str]) -> go.Figure:
+def _aggregate_traces_json_as_figure(traces_json: list[str]) -> go.Figure:
     figure = go.Figure()
     for trace_json in traces_json:
-        figure.add_traces(list(from_json(trace_json).select_traces()))
+        figure.add_traces(list(plotly.io.from_json(trace_json).select_traces()))
 
     return figure
 
@@ -47,7 +48,7 @@ def index():
         end_year=END_YEAR,
     )
 
-    fig_averages = _aggregate_json_traces_as_figure(
+    fig_averages = _aggregate_traces_json_as_figure(
         [monthly_averages, seasonal_averages]
     )
     fig_averages.update_layout(
@@ -69,7 +70,7 @@ def index():
         end_year=END_YEAR,
     )
 
-    fig_linreg_slopes = _aggregate_json_traces_as_figure(
+    fig_linreg_slopes = _aggregate_traces_json_as_figure(
         [monthly_linreg_slopes, seasonal_linreg_slopes]
     )
     fig_linreg_slopes.update_layout(
@@ -97,7 +98,7 @@ def index():
         )
     )
 
-    fig_relative_distances_to_normal = _aggregate_json_traces_as_figure(
+    fig_relative_distances_to_normal = _aggregate_traces_json_as_figure(
         [monthly_relative_distances_to_normal, seasonal_relative_distances_to_normal]
     )
     fig_relative_distances_to_normal.update_layout(

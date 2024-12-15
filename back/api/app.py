@@ -2,7 +2,6 @@
 FastAPI application exposing API routes related to rainfall data of Barcelona.
 """
 
-import io
 from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Query
@@ -341,7 +340,7 @@ def get_rainfall_by_year_as_csv(
     tags=["Graph"],
     operation_id="getRainfallByYear",
 )
-def get_rainfall_by_year(
+def get_rainfall_by_year_as_plotly_json(
     time_mode: TimeMode,
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
@@ -350,7 +349,6 @@ def get_rainfall_by_year(
     season: Season | None = None,
     plot_average: bool = False,
     plot_linear_regression: bool = False,
-    as_json: bool = False,
 ):
     if end_year is None:
         end_year = max_year_available
@@ -374,24 +372,7 @@ def get_rainfall_by_year(
             f"check if your data has both '{Label.RAINFALL.value}' and '{Label.YEAR.value}' columns",
         )
 
-    if as_json:
-        return figure.to_json()
-
-    img_buffer = io.BytesIO()
-    figure.write_image(img_buffer, format="png")
-    img_buffer.seek(0)
-
-    filename = f"rainfall_by_year_{begin_year}_{end_year}.png"
-    if time_mode == TimeMode.MONTHLY:
-        filename = f"{month.value.lower()}_{filename}"  # type: ignore
-    elif time_mode == TimeMode.SEASONAL:
-        filename = f"{season.value}_{filename}"  # type: ignore
-
-    return StreamingResponse(
-        img_buffer,
-        headers={"Content-Disposition": f"inline; filename={filename}"},
-        media_type=MediaType.IMG_PNG.value,
-    )
+    return figure.to_json()
 
 
 @fastapi_app.get(
@@ -402,12 +383,11 @@ def get_rainfall_by_year(
     tags=["Graph"],
     operation_id="getRainfallAverages",
 )
-def get_rainfall_averages(
+def get_rainfall_averages_as_plotly_json(
     time_mode: TimeMode,
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
-    as_json: bool = False,
 ):
     if time_mode == TimeMode.YEARLY:
         raise HTTPException(
@@ -424,20 +404,7 @@ def get_rainfall_averages(
         time_mode=time_mode, begin_year=begin_year, end_year=end_year
     )
 
-    if as_json:
-        return figure.to_json()
-
-    img_buffer = io.BytesIO()
-    figure.write_image(img_buffer, format="png")
-    img_buffer.seek(0)
-
-    return StreamingResponse(
-        img_buffer,
-        headers={
-            "Content-Disposition": f'inline; filename="rainfall_{time_mode.value}_averages_{begin_year}_{end_year}.png"'
-        },
-        media_type=MediaType.IMG_PNG.value,
-    )
+    return figure.to_json()
 
 
 @fastapi_app.get(
@@ -448,12 +415,11 @@ def get_rainfall_averages(
     tags=["Graph"],
     operation_id="getRainfallLinregSlopes",
 )
-def get_rainfall_linreg_slopes(
+def get_rainfall_linreg_slopes_as_plotly_json(
     time_mode: TimeMode,
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
-    as_json: bool = False,
 ):
     if time_mode == TimeMode.YEARLY:
         raise HTTPException(
@@ -470,20 +436,7 @@ def get_rainfall_linreg_slopes(
         time_mode=time_mode, begin_year=begin_year, end_year=end_year
     )
 
-    if as_json:
-        return figure.to_json()
-
-    img_buffer = io.BytesIO()
-    figure.write_image(img_buffer, format="png")
-    img_buffer.seek(0)
-
-    filename = f"rainfall_{time_mode.value}_linreg_slopes_{begin_year}_{end_year}.png"
-
-    return StreamingResponse(
-        img_buffer,
-        headers={"Content-Disposition": f'inline; filename="{filename}"'},
-        media_type=MediaType.IMG_PNG.value,
-    )
+    return figure.to_json()
 
 
 @fastapi_app.get(
@@ -494,7 +447,7 @@ def get_rainfall_linreg_slopes(
     tags=["Graph"],
     operation_id="geRelativeDistancesToNormal",
 )
-def get_relative_distances_to_normal(
+def get_relative_distances_to_normal_as_plotly_json(
     time_mode: TimeMode,
     normal_year: Annotated[
         int, Query(ge=min_year_available, le=max_normal_year_available)
@@ -502,7 +455,6 @@ def get_relative_distances_to_normal(
     begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
     end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
     | None = None,
-    as_json: bool = False,
 ):
     if time_mode == TimeMode.YEARLY:
         raise HTTPException(
@@ -520,17 +472,4 @@ def get_relative_distances_to_normal(
         end_year=end_year,
     )
 
-    if as_json:
-        return figure.to_json()
-
-    img_buffer = io.BytesIO()
-    figure.write_image(img_buffer, format="png")
-    img_buffer.seek(0)
-
-    filename = f"{time_mode.value}_relative_distances_to_{normal_year}_normal_{begin_year}_{end_year}.png"
-
-    return StreamingResponse(
-        img_buffer,
-        headers={"Content-Disposition": f'inline; filename="{filename}"'},
-        media_type=MediaType.IMG_PNG.value,
-    )
+    return figure.to_json()
