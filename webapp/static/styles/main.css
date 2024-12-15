@@ -30,14 +30,14 @@ a:hover {
 }
 
 .row {
-  display: flex;
+    display: flex;
 }
 
 .column {
-  flex: 50%;
-  margin: 0.2em;
+    flex: 50%;
+    margin: 0.2em;
 }
 
-#header, #footer {
+header, footer {
     text-align: center;
 }

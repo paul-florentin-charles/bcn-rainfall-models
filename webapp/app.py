@@ -110,7 +110,6 @@ def index():
 
     return render_template(
         "index.html",
-        title="Barcelona Rainfall",
         plotlySummerRainfallJSON=summer_rainfall,
         plotlyAveragesJSON=fig_averages.to_json(),
         plotlyLinRegJSON=fig_linreg_slopes.to_json(),

@@ -1,4 +1,6 @@
-from flask import Blueprint, jsonify
+import json
+
+from flask import Blueprint, jsonify, render_template
 
 from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
 
@@ -9,10 +11,13 @@ metrics = Blueprint(
 
 @metrics.route("/rainfall_average")
 def rainfall_average():
-    return jsonify(
-        api_client.get_rainfall_average(
-            time_mode="yearly", begin_year=BEGIN_YEAR, end_year=END_YEAR
-        )
+    rainfall_average = api_client.get_rainfall_average(
+        time_mode="yearly", begin_year=BEGIN_YEAR, end_year=END_YEAR
+    )
+
+    return render_template(
+        "sections/rainfall_average.html",
+        rainfall_average=json.dumps(rainfall_average, indent=" " * 2),
     )
 
 
