@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <link rel="stylesheet" href="../static/styles/main.css">
     <title>Barcelona Rainfall</title>
 </head>
@@ -11,7 +12,6 @@
     {% include 'includes/footer.html' %}
 </body>
 
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
     var graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
     var graphs_averages = {{ plotlyAveragesJSON|safe }};

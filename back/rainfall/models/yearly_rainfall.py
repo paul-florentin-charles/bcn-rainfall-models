@@ -418,7 +418,8 @@ class YearlyRainfall:
             yearly_rainfall,
             label=Label.RAINFALL,
             figure_type="bar",
-            figure_label=figure_label,
+            figure_label=figure_label
+            or f"Rainfall (mm) between {begin_year} and {end_year}",
             trace_label=trace_label,
         )
         if figure:
