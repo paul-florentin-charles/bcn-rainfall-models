@@ -10,7 +10,7 @@ body {
     color: white;
     line-height: 1em;
     margin: 0;
-    padding: 0.5em 0.5em;
+    padding: 0.25em;
 }
 
 nav {
@@ -40,4 +40,12 @@ a:hover {
 
 header, footer {
     text-align: center;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #4d4f89;
+    padding: 0.1em 0 0.25em 0;
 }
