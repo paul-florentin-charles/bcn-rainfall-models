@@ -9,10 +9,10 @@ import plotly.io
 from flask import Flask, render_template
 
 from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
-from webapp.views import metrics
+from webapp.views import navbar
 
 flask_app = Flask(__name__)
-flask_app.register_blueprint(metrics)
+flask_app.register_blueprint(navbar)
 
 
 def _aggregate_traces_json_as_figure(traces_json: list[str]) -> go.Figure:

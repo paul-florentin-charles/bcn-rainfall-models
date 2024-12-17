@@ -33,11 +33,11 @@ uv sync
 
 #### Run **API**
 
-`uv run run.py --server api`
+`uv run run.py -s api`
 
 #### Run **Webapp**
 
-`uv run run.py --server webapp`
+`uv run run.py -s webapp`
 
 ## Tests & Coverage
 
