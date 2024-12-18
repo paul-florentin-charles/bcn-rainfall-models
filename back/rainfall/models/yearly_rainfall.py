@@ -457,19 +457,40 @@ class YearlyRainfall:
 
         return figure
 
-    def get_scatter_figure_of_linear_regression(self) -> go.Figure | None:
+    def get_scatter_figure_of_linear_regression(
+        self,
+        begin_year: int,
+        end_year: int,
+    ) -> go.Figure | None:
         """
         Return plotly figure with scatter trace of rainfall linear regression according to year.
 
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
 
-        return plot.get_figure_of_column_according_to_year(
-            self.data,
+        (r2, slope), predicted_rainfalls = self.get_linear_regression(
+            begin_year, end_year
+        )
+
+        yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
+        yearly_rainfall[Label.LINEAR_REGRESSION.value] = predicted_rainfalls
+
+        figure = plot.get_figure_of_column_according_to_year(
+            yearly_rainfall,
             Label.LINEAR_REGRESSION,
             figure_type="scatter",
-            figure_label=f"{Label.LINEAR_REGRESSION.value} (mm/year)",
+            figure_label=f"{Label.LINEAR_REGRESSION.value}"
+            "<br>"
+            f"<i>R2 score:</i> <b>{round(r2, 2)}</b>"
+            "<br>"
+            f"<i>slope:</i> {slope} mm/year",
         )
+
+        return figure
 
     def get_scatter_figure_of_savgol_filter(self) -> go.Figure | None:
         """

@@ -186,7 +186,9 @@ class TestMonthlyRainfall:
         )
         assert isinstance(bar_fig, go.Figure)
 
-        scatter_fig = SEASONAL_RAINFALL.get_scatter_figure_of_linear_regression()
+        scatter_fig = SEASONAL_RAINFALL.get_scatter_figure_of_linear_regression(
+            begin_year, end_year
+        )
         assert isinstance(scatter_fig, go.Figure)
 
         scatter_fig = SEASONAL_RAINFALL.get_scatter_figure_of_savgol_filter()
