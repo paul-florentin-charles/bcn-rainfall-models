@@ -4,13 +4,27 @@
 }
 
 body {
-    background-color: #4d4f89;
+    background-color: #424242;
     font-family: Khula, sans-serif;
     font-weight: 300;
     color: white;
     line-height: 1em;
     margin: 0;
-    padding: 0.2em;
+}
+
+.body {
+    padding: 0 0.5em;
+}
+
+header, footer {
+    text-align: center;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.1em 0 0.25em 0;
 }
 
 nav {
@@ -38,14 +52,7 @@ a:hover {
     margin: 0.2em;
 }
 
-header, footer {
-    text-align: center;
-}
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: #4d4f89;
-    padding: 0.1em 0 0.25em 0;
+.rounded-corners {
+    border-radius: 15px;
+    overflow: hidden;
 }
