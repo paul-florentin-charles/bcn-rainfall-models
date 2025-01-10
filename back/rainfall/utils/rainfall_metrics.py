@@ -5,12 +5,12 @@ over DataFrame containing rainfall data over years.
 
 from typing import Callable
 
-import pandas as pd
+import fireducks.pandas as fd
 
 from back.rainfall.utils import Label, dataframe_operations as df_opr
 
 
-def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) -> float:
+def get_average_rainfall(yearly_rainfall: fd.DataFrame, *, round_precision=1) -> float:
     """
     Computes Rainfall average.
 
@@ -22,7 +22,7 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) ->
 
 
 def get_years_compared_to_given_rainfall_value(
-    yearly_rainfall: pd.DataFrame, rainfall_value: float, *, comparator: Callable
+    yearly_rainfall: fd.DataFrame, rainfall_value: float, *, comparator: Callable
 ) -> int:
     """
     Computes the number of years that conform specified comparison
@@ -40,7 +40,7 @@ def get_years_compared_to_given_rainfall_value(
     return int(yearly_rainfall[Label.YEAR.value].count())
 
 
-def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
+def get_clusters_number(yearly_rainfall: fd.DataFrame) -> int:
     """
     Computes the number of clusters.
 
@@ -54,7 +54,7 @@ def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
 
 
 def get_normal(
-    yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
+    yearly_rainfall: fd.DataFrame, begin_year, *, round_precision=1
 ) -> float:
     """
     Computes average rainfall over 30 years time frame.
