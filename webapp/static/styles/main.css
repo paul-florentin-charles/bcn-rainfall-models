@@ -24,6 +24,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 1;
+    background-color: #424242;
     padding: 0.1em 0 0.25em 0;
 }
 
@@ -53,6 +54,8 @@ a:hover {
 }
 
 .rounded-corners {
+    border: 3px solid #bfb9dc;
+    height: 30em;
     border-radius: 15px;
     overflow: hidden;
 }
