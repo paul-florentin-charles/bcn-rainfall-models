@@ -453,7 +453,7 @@ class YearlyRainfall:
                     )
                 )
 
-        figure.update_yaxes(title_text=f"{Label.RAINFALL.value} (mm)")
+            figure.update_yaxes(title_text=f"{Label.RAINFALL.value} (mm)")
 
         return figure
 
