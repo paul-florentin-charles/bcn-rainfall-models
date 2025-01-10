@@ -13,11 +13,9 @@ SERVERS = ["api", "webapp"]
 
 
 @click.command()
-@click.option(
-    "--server",
-    "-s",
+@click.argument(
+    "server",
     type=click.Choice(SERVERS, case_sensitive=False),
-    help="The server that should be run.",
 )
 def run(server: str):
     from config import Config
@@ -31,7 +29,7 @@ def run(server: str):
 
             flask_app.run(**config.get_webapp_server_settings())
         case _:  # Should not happen
-            click.echo(f"Option --server/-s should be in {SERVERS} (case-insensitive)")
+            click.echo(f"Argument should be in {SERVERS} (case-insensitive)")
             exit(1)
 
 
