@@ -20,6 +20,10 @@ def _aggregate_traces_json_as_figure(traces_json: list[str]) -> go.Figure:
     for trace_json in traces_json:
         figure.add_traces(list(plotly.io.from_json(trace_json).select_traces()))
 
+    figure.update_layout(
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+
     return figure
 
 
