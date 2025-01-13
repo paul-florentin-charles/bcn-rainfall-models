@@ -51,12 +51,16 @@ a:hover {
 
 .column {
     flex: 50%;
-    margin: 0.2em;
 }
 
 .rounded-corners {
-    border: 2px solid #eee6dc;
+    border: 3px solid #eee6dc;
     height: 30em;
     border-radius: 15px;
+    margin: 0.2em;
     overflow: hidden;
+}
+
+img.logo {
+    padding: 0 0.2em;
 }

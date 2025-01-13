@@ -104,7 +104,7 @@ def get_bar_figure_of_rainfall_averages(
 
     figure.update_layout(
         title=f"Average rainfall (mm) between {begin_year} and {end_year}",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text=Label.RAINFALL.value)
@@ -156,7 +156,7 @@ def get_bar_figure_of_rainfall_linreg_slopes(
 
     figure.update_layout(
         title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
@@ -208,7 +208,7 @@ def get_bar_figure_of_relative_distances_to_normal(
 
     figure.update_layout(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text="Relative distance to normal (%)")
