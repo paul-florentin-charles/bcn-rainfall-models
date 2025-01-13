@@ -2,7 +2,7 @@
 Provides useful functions for plotting rainfall data in all shapes.
 """
 
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 
 from back.rainfall.utils import Label, TimeMode
@@ -18,7 +18,7 @@ def _get_plotly_trace_by_figure_type(figure_type: str):
 
 
 def get_figure_of_column_according_to_year(
-    yearly_rainfall: fd.DataFrame,
+    yearly_rainfall: pd.DataFrame,
     label: Label,
     *,
     figure_type="bar",

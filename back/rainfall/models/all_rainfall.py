@@ -5,7 +5,7 @@ At a yearly, monthly and seasonal level.
 
 from pathlib import Path
 
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 
 from back.rainfall.utils import Month, Season, TimeMode, plotly_figures as plot
@@ -35,7 +35,7 @@ class AllRainfall:
         self.dataset_url = dataset_url_or_path
         self.starting_year = start_year
         self.round_precision = round_precision
-        self.raw_data: fd.DataFrame = fd.read_csv(dataset_url_or_path)
+        self.raw_data: pd.DataFrame = pd.read_csv(dataset_url_or_path)
         self.yearly_rainfall = YearlyRainfall(
             self.raw_data, start_year=start_year, round_precision=round_precision
         )

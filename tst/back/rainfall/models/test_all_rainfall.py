@@ -38,7 +38,6 @@ class TestAllRainfall:
 
         assert isinstance(csv_str, str)
         lines: list[str] = csv_str.splitlines()
-        print(lines)
         assert len(lines) == end_year - begin_year + 2  # With header
         assert set(lines[0].split(",")) == {
             f'"{Label.YEAR.value}"',

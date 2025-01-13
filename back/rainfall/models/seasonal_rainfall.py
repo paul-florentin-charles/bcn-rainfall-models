@@ -2,7 +2,7 @@
 Provides a rich class to manipulate Seasonal Rainfall data.
 """
 
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
@@ -16,7 +16,7 @@ class SeasonalRainfall(YearlyRainfall):
 
     def __init__(
         self,
-        raw_data: fd.DataFrame,
+        raw_data: pd.DataFrame,
         season: Season,
         *,
         start_year: int,
@@ -27,7 +27,7 @@ class SeasonalRainfall(YearlyRainfall):
             raw_data, start_year=start_year, round_precision=round_precision
         )
 
-    def load_yearly_rainfall(self) -> fd.DataFrame:
+    def load_yearly_rainfall(self) -> pd.DataFrame:
         """
         Load Yearly Rainfall for instance season variable into pandas DataFrame.
 

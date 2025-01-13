@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import fireducks.pandas as fd
+import pandas as pd
 
 import back.rainfall.utils.dataframe_operations as df_opr
 from back.rainfall.utils import Label, Month
@@ -40,12 +40,12 @@ class TestDataframeOperations:
     def test_concat_columns():
         result = df_opr.concat_columns(
             [
-                fd.DataFrame(data={"col1": [1, 2, 3]}),
-                fd.DataFrame(data={"col2": [4, 5, 6]}),
+                pd.DataFrame(data={"col1": [1, 2, 3]}),
+                pd.DataFrame(data={"col2": [4, 5, 6]}),
             ]
         )
 
-        assert isinstance(result, fd.DataFrame)
+        assert isinstance(result, pd.DataFrame)
         assert all(column in result.columns for column in ["col1", "col2"])
         assert len(result) == 3
 
@@ -59,5 +59,5 @@ class TestDataframeOperations:
             end_month=Month.SEPTEMBER.get_rank(),
         )
 
-        assert isinstance(result, fd.DataFrame)
+        assert isinstance(result, pd.DataFrame)
         assert len(result) <= datetime.now().year - YEARLY_RAINFALL.starting_year + 1

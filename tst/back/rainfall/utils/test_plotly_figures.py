@@ -1,4 +1,4 @@
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 
 from back.rainfall.utils import Label, TimeMode, plotly_figures as plot
@@ -16,7 +16,7 @@ class TestPlotting:
         assert isinstance(bar_fig, go.Figure)
 
         bar_fig = plot.get_figure_of_column_according_to_year(
-            fd.DataFrame(), Label.RAINFALL
+            pd.DataFrame(), Label.RAINFALL
         )
 
         assert bar_fig is None

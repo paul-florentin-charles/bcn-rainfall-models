@@ -3,17 +3,17 @@ Provides functions to do operations on DataFrame objects
 containing rainfall data over years.
 """
 
-import fireducks.pandas as fd
+import pandas as pd
 
 from back.rainfall.utils import Label
 
 
 def get_rainfall_within_year_interval(
-    yearly_rainfall: fd.DataFrame,
+    yearly_rainfall: pd.DataFrame,
     *,
     begin_year: int,
     end_year: int | None = None,
-) -> fd.DataFrame:
+) -> pd.DataFrame:
     """
     Retrieves Yearly Rainfall within a specific year range.
 
@@ -30,7 +30,7 @@ def get_rainfall_within_year_interval(
     return yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= begin_year]
 
 
-def remove_column(yearly_rainfall: fd.DataFrame, *, label: Label) -> bool:
+def remove_column(yearly_rainfall: pd.DataFrame, *, label: Label) -> bool:
     """
     Remove a column from a DataFrame using its label.
     Removing 'Year' or 'Rainfall' columns is prevented.
@@ -48,7 +48,7 @@ def remove_column(yearly_rainfall: fd.DataFrame, *, label: Label) -> bool:
     return True
 
 
-def concat_columns(data_frames: list[fd.DataFrame | fd.Series]) -> fd.DataFrame:
+def concat_columns(data_frames: list[pd.DataFrame | pd.Series]) -> pd.DataFrame:
     """
     Concatenate pandas DataFrame objects along the column axis.
 
@@ -56,17 +56,17 @@ def concat_columns(data_frames: list[fd.DataFrame | fd.Series]) -> fd.DataFrame:
     :return: The concatenation result as a pandas DataFrame.
     """
 
-    return fd.concat(data_frames, axis="columns")
+    return pd.concat(data_frames, axis="columns")
 
 
 def retrieve_rainfall_data_with_constraints(
-    monthly_rainfall: fd.DataFrame,
+    monthly_rainfall: pd.DataFrame,
     *,
     starting_year: int,
     round_precision: int,
     start_month: int,
     end_month: int | None = None,
-) -> fd.DataFrame:
+) -> pd.DataFrame:
     """
     Apply transformations to a pandas DataFrame depicting Yearly Rainfall data
     for each month of the year.
@@ -81,7 +81,7 @@ def retrieve_rainfall_data_with_constraints(
     If not given, we load rainfall data only for given start_month.
     :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
     """
-    years: fd.DataFrame = monthly_rainfall.iloc[:, :1]
+    years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
     if end_month is not None and end_month < start_month:
         rainfall = concat_columns(
             [

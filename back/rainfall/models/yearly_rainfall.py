@@ -6,7 +6,7 @@ import operator as opr
 from pathlib import Path
 
 import numpy as np
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 from scipy import signal
 from sklearn.cluster import KMeans
@@ -30,7 +30,7 @@ class YearlyRainfall:
 
     def __init__(
         self,
-        raw_data: fd.DataFrame,
+        raw_data: pd.DataFrame,
         *,
         start_year: int,
         round_precision: int,
@@ -43,7 +43,7 @@ class YearlyRainfall:
     def __str__(self):
         return self.data.to_string()
 
-    def load_yearly_rainfall(self) -> fd.DataFrame:
+    def load_yearly_rainfall(self) -> pd.DataFrame:
         """
         Load Yearly Rainfall into pandas DataFrame.
 
@@ -54,7 +54,7 @@ class YearlyRainfall:
 
     def load_rainfall(
         self, start_month: Month, end_month: Month | None = None
-    ) -> fd.DataFrame:
+    ) -> pd.DataFrame:
         """
         Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
         Raw data has to be shaped as rainfall values for each month according to year.
@@ -69,7 +69,7 @@ class YearlyRainfall:
         1 for the year; 12 for every monthly rainfall.
         """
 
-        if not isinstance(self.raw_data, fd.DataFrame) or len(
+        if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
         ) != 1 + len(Month):
             raise DataFormatError(
@@ -84,7 +84,7 @@ class YearlyRainfall:
             end_month=end_month.get_rank() if end_month else None,
         )
 
-    def get_yearly_rainfall(self, begin_year: int, end_year: int) -> fd.DataFrame:
+    def get_yearly_rainfall(self, begin_year: int, end_year: int) -> pd.DataFrame:
         """
         Retrieves Yearly Rainfall within a specific year range.
 

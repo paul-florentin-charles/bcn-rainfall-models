@@ -1,4 +1,4 @@
-import fireducks.pandas as fd
+import pandas as pd
 import plotly.graph_objs as go
 from pytest import raises
 
@@ -21,14 +21,14 @@ class TestYearlyRainfall:
     def test_load_yearly_rainfall():
         data = YEARLY_RAINFALL.load_yearly_rainfall()
 
-        assert isinstance(data, fd.DataFrame)
+        assert isinstance(data, pd.DataFrame)
 
     @staticmethod
     def test_load_rainfall():
         data = YEARLY_RAINFALL.load_rainfall(
             start_month=Month.JUNE, end_month=Month.OCTOBER
         )
-        assert isinstance(data, fd.DataFrame)
+        assert isinstance(data, pd.DataFrame)
         assert len(data.columns) == 2
         assert Label.YEAR in data and Label.RAINFALL in data
 
@@ -36,7 +36,7 @@ class TestYearlyRainfall:
     def test_load_rainfall_fails_because_data_format_error():
         with raises(DataFormatError):
             YearlyRainfall(
-                fd.DataFrame(),
+                pd.DataFrame(),
                 start_year=config.get_start_year(),
                 round_precision=config.get_rainfall_precision(),
             )
@@ -45,7 +45,7 @@ class TestYearlyRainfall:
     def test_get_yearly_rainfall():
         data = YEARLY_RAINFALL.get_yearly_rainfall(begin_year, end_year)
 
-        assert isinstance(data, fd.DataFrame)
+        assert isinstance(data, pd.DataFrame)
         assert len(data) == end_year - begin_year + 1
 
     @staticmethod
