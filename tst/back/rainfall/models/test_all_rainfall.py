@@ -40,8 +40,8 @@ class TestAllRainfall:
         lines: list[str] = csv_str.splitlines()
         assert len(lines) == end_year - begin_year + 2  # With header
         assert set(lines[0].split(",")) == {
-            f'"{Label.YEAR.value}"',
-            f'"{Label.RAINFALL.value}"',
+            f"{Label.YEAR.value}",
+            f"{Label.RAINFALL.value}",
         }
 
         csv_str = ALL_RAINFALL.export_as_csv(
