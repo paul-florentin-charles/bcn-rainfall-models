@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <link rel="stylesheet" href="../static/styles/main.css">
-    <title>{% block title %}{% endblock %}</title>
+    <title>Barcelona Rainfall</title>
 </head>
 
 <body>
-    {% block body %}{% endblock %}
+    {% include 'includes/header.html' %}
+    <div class="body">
+        {% block body %}{% endblock %}
+    </div>
+    {% include 'includes/footer.html' %}
 </body>
 
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
     var graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
     var graphs_averages = {{ plotlyAveragesJSON|safe }};

@@ -382,6 +382,35 @@ class AllRainfall:
 
         return None
 
+    def get_scatter_figure_of_linear_regression(
+        self,
+        time_mode: TimeMode,
+        *,
+        begin_year: int,
+        end_year: int,
+        month: Month | None = None,
+        season: Season | None = None,
+    ) -> go.Figure | None:
+        """
+        Return plotly figure with scatter trace of rainfall linear regression according to year,
+        computed upon whole years, specific months or seasons.
+
+        :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
+        Set if time_mode is 'monthly' (optional).
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
+        Set if time_mode is 'seasonal' (optional).
+        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
+        """
+        if entity := self.get_entity_for_time_mode(time_mode, month, season):
+            return entity.get_scatter_figure_of_linear_regression(begin_year, end_year)
+
+        return None
+
     def get_bar_figure_of_rainfall_averages(
         self,
         time_mode: TimeMode,

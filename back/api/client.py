@@ -183,7 +183,6 @@ class APIClient(APISession):
                 "season": season,
                 "plot_average": plot_average,
                 "plot_linear_regression": plot_linear_regression,
-                "as_json": True,
             },
         )
 
@@ -200,7 +199,6 @@ class APIClient(APISession):
                 "time_mode": time_mode,
                 "begin_year": begin_year,
                 "end_year": end_year,
-                "as_json": True,
             },
         )
 
@@ -217,7 +215,6 @@ class APIClient(APISession):
                 "time_mode": time_mode,
                 "begin_year": begin_year,
                 "end_year": end_year,
-                "as_json": True,
             },
         )
 
@@ -236,6 +233,5 @@ class APIClient(APISession):
                 "normal_year": normal_year,
                 "begin_year": begin_year,
                 "end_year": end_year,
-                "as_json": True,
             },
         )

@@ -1,21 +1,23 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ title }}{% endblock %}
-
 {% block body %}
 
-<h1>{{ title }}</h1>
-
-<br>
-
 <div class="row">
-    <div class="column" id='chart_summer_rainfall'></div>
-    <div class="column" id='chart_averages'></div>
+    <div class="column">
+        <div class="rounded-corners" id='chart_summer_rainfall'></div>
+    </div>
+    <div class="column">
+        <div class="rounded-corners" id='chart_averages'></div>
+    </div>
 </div>
 
 <div class="row">
-    <div class="column" id='chart_linreg'></div>
-    <div class="column" id='chart_relative_distance_to_normal'></div>
+    <div class="column">
+        <div class="rounded-corners" id='chart_linreg'></div>
+    </div>
+    <div class="column">
+        <div class="rounded-corners" id='chart_relative_distance_to_normal'></div>
+    </div>
 </div>
 
 {% endblock %}

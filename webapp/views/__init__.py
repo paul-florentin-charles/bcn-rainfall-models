@@ -1,3 +1,3 @@
-from .metrics import metrics
+from .navbar import navbar
 
-__all__ = ["metrics"]
+__all__ = ["navbar"]

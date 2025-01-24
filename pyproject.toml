@@ -1,6 +1,6 @@
 [project]
 name = "bcn-rainfall-models"
-version = "0.1.0"
+version = "0.4.0"
 description = "A project aiming at delevering tools for visualisation and analysis of Barcelona rainfall data."
 readme = "README.md"
 requires-python = ">=3.12"
