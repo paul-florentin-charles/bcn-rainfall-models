@@ -10,7 +10,6 @@ from back.api.routes import (
     MIN_YEAR_AVAILABLE,
     _get_endpoint_to_api_route_specs,
 )
-from config import Config
 
 
 class FastAPPI(FastAPI):
@@ -27,6 +26,8 @@ class FastAPPI(FastAPI):
 
     @classmethod
     def from_config(cls):
+        from config import Config
+
         return cls(
             **Config().get_fastapi_settings(),
             description=f"Available data is between {MIN_YEAR_AVAILABLE} and {MAX_YEAR_AVAILABLE}.",
