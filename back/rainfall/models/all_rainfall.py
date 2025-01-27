@@ -8,11 +8,12 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.rainfall.utils import Month, Season, TimeMode, plotly_figures as plot
-from config import Config
 from back.rainfall.models.monthly_rainfall import MonthlyRainfall
 from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
+from back.rainfall.utils import Month, Season, TimeMode
+from back.rainfall.utils import plotly_figures as plot
+from config import Config
 
 
 class AllRainfall:
@@ -59,13 +60,14 @@ class AllRainfall:
         }
 
     @classmethod
-    def from_config(cls, from_file=False):
-        cfg = Config()
+    def from_config(cls, config: Config | None = None, from_file=False):
+        if config is None:
+            config = Config()
 
         return cls(
-            cfg.get_dataset_path() if from_file else cfg.get_dataset_url(),
-            start_year=cfg.get_start_year(),
-            round_precision=cfg.get_rainfall_precision(),
+            config.get_dataset_path() if from_file else config.get_dataset_url(),
+            start_year=config.get_start_year(),
+            round_precision=config.get_rainfall_precision(),
         )
 
     def export_all_data_to_csv(

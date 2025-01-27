@@ -3,13 +3,13 @@ import plotly.graph_objs as go
 from pytest import raises
 
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
-from back.rainfall.utils.custom_exceptions import DataFormatError
 from back.rainfall.utils import Label, Month
+from back.rainfall.utils.custom_exceptions import DataFormatError
 from tst.back.rainfall.models.test_all_rainfall import (
     ALL_RAINFALL,
-    normal_year,
     begin_year,
     end_year,
+    normal_year,
 )
 from tst.test_config import config
 

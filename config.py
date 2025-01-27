@@ -4,7 +4,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 
 from typing import Any
 
-from yaml import safe_load, parser  # type: ignore
+from yaml import parser, safe_load  # type: ignore
 
 
 class Config:
@@ -74,7 +74,7 @@ class Config:
 
     def get_api_server_settings(self) -> dict[str, Any]:
         """
-        Return FastAPI server settings.
+        Return Uvicorn server settings to run FastAPI app.
 
         ex:
         {
@@ -83,7 +83,22 @@ class Config:
         }
         """
 
-        return self.yaml_config["api"]
+        return self.yaml_config["api"]["server"]
+
+    def get_fastapi_settings(self) -> dict[str, Any]:
+        """
+        Return FastAPI settings to initiate app.
+
+        ex:
+        {
+            "debug": True,
+            "root_path": "/api",
+            "title": "Barcelona Rainfall API",
+            "summary": "An API that provides rainfall-related data of the city of Barcelona."
+        }
+        """
+
+        return self.yaml_config["api"]["fastapi"]
 
     def get_webapp_server_settings(self) -> dict[str, Any]:
         """

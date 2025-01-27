@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template
 
-from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
+from webapp import BEGIN_YEAR, END_YEAR, NORMAL_YEAR, api_client
 
 navbar = Blueprint(
     "navbar", __name__, static_folder="static", template_folder="templates"

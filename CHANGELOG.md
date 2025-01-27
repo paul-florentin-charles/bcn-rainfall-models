@@ -8,9 +8,13 @@
 
 - Simplify code architecture by merging some files [\#93](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/93)
 - Think about setting up a project management tool [\#88](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/88)
+- Migrate Pandas to FireDucks [\#84](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/84)
+- Build a basic front communicating with FastAPI [\#79](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/79)
 
 **Merged pull requests:**
 
+- A lot of changes, too lazy to sum it up [\#96](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/96) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
+- Solving squash commit diff issue between main/dev branches [\#95](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/95) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Use uv to manage dependencies [\#94](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/94) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Added generated CHANGELOG.md [\#92](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/92) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Commit and push CHANGELOG.md generated file within workflow [\#91](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/91) ([paul-florentin-charles](https://github.com/paul-florentin-charles))

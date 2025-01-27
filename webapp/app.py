@@ -5,10 +5,9 @@ Work-in-progress!
 
 import plotly.graph_objs as go
 import plotly.io
-
 from flask import Flask, render_template
 
-from webapp import api_client, BEGIN_YEAR, END_YEAR, NORMAL_YEAR
+from webapp import BEGIN_YEAR, END_YEAR, NORMAL_YEAR, api_client
 from webapp.views import navbar
 
 flask_app = Flask(__name__)

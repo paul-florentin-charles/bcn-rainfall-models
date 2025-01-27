@@ -13,14 +13,20 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
-from back.rainfall.utils.custom_exceptions import DataFormatError
 from back.rainfall.utils import (
     Label,
     Month,
+)
+from back.rainfall.utils import (
     dataframe_operations as df_opr,
-    rainfall_metrics as rain,
+)
+from back.rainfall.utils import (
     plotly_figures as plot,
 )
+from back.rainfall.utils import (
+    rainfall_metrics as rain,
+)
+from back.rainfall.utils.custom_exceptions import DataFormatError
 
 
 class YearlyRainfall:

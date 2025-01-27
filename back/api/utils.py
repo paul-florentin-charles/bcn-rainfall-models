@@ -7,7 +7,7 @@ import mimetypes
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from back.rainfall.utils import TimeMode, Month, Season, BaseEnum
+from back.rainfall.utils import BaseEnum, Month, Season, TimeMode
 
 
 class MediaType(BaseEnum):

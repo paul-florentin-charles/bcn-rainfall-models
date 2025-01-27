@@ -28,4 +28,4 @@ jobs:
         with:
           checkName: 'mypy'   # NOTE: this needs to be the same as the job name
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.github_token }}
