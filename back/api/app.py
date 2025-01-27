@@ -26,12 +26,9 @@ class FastAPPI(FastAPI):
             )
 
     @classmethod
-    def from_config(cls, config: dict[str, Any] | None = None):
-        if config is None:
-            config = Config()
-
+    def from_config(cls):
         return cls(
-            **config.get_fastapi_settings(),
+            **Config().get_fastapi_settings(),
             description=f"Available data is between {MIN_YEAR_AVAILABLE} and {MAX_YEAR_AVAILABLE}.",
         )
 
