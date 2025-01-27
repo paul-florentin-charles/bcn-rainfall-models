@@ -11,8 +11,8 @@ api:
   fastapi:  # FastAPI app parameters
     debug: true
     root_path: /api
-    title: Barcelona Rainfall API
-    summary: An API that provides rainfall-related data of the city of Barcelona.
+    title: "Barcelona Rainfall API"
+    summary: "An API that provides rainfall-related data of the city of Barcelona."
   server:  # Uvicorn configuration to run FastAPI app
     host: 127.0.0.1
     port: 8000
