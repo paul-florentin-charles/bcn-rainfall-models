@@ -15,20 +15,20 @@ from back.api.utils import (
 )
 from back.rainfall.models import AllRainfall
 from back.rainfall.utils import Label, Month, Season, TimeMode
+from config import Config
 
-all_rainfall = AllRainfall.from_config()
+cfg = Config()
 
-min_year_available = all_rainfall.starting_year
-max_year_available = all_rainfall.get_last_year()
-max_normal_year_available = max_year_available - 29
+all_rainfall = AllRainfall.from_config(config=cfg)
+
+MIN_YEAR_AVAILABLE = all_rainfall.starting_year
+MAX_YEAR_AVAILABLE = all_rainfall.get_last_year()
+MAX_NORMAL_YEAR_AVAILABLE = MAX_YEAR_AVAILABLE - 29
 
 
 fastapi_app = FastAPI(
-    debug=True,
-    root_path="/api",
-    title="Barcelona Rainfall API",
-    summary="An API that provides rainfall-related data of the city of Barcelona.",
-    description=f"Available data is between {min_year_available} and {max_year_available}.",
+    **cfg.get_fastapi_settings(),
+    description=f"Available data is between {MIN_YEAR_AVAILABLE} and {MAX_YEAR_AVAILABLE}.",
 )
 
 
@@ -36,20 +36,20 @@ fastapi_app = FastAPI(
     "/rainfall/average",
     response_model=RainfallModel,
     summary="Retrieve rainfall average for Barcelona between two years.",
-    description=f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    description=f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Rainfall"],
     operation_id="getRainfallAverage",
 )
 async def get_rainfall_average(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -82,7 +82,7 @@ async def get_rainfall_average(
 async def get_rainfall_normal(
     time_mode: TimeMode,
     begin_year: Annotated[
-        int, Query(ge=min_year_available, le=max_normal_year_available)
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
     ],
     month: Month | None = None,
     season: Season | None = None,
@@ -115,23 +115,23 @@ async def get_rainfall_normal(
     "2. `normal` is normal rainfall computed from `normal_year`<br>"
     "If 100%, average is twice the normal. <br>"
     "If -50%, average is half the normal. <br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Rainfall"],
     operation_id="getRainfallRelativeDistanceToNormal",
 )
 async def get_rainfall_relative_distance_to_normal(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
     normal_year: Annotated[
-        int, Query(ge=min_year_available, le=max_normal_year_available)
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
     ],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -159,21 +159,21 @@ async def get_rainfall_relative_distance_to_normal(
     "/rainfall/standard_deviation",
     response_model=RainfallModel,
     summary="Compute the standard deviation of rainfall for Barcelona between two years.",
-    description=f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    description=f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Rainfall"],
     operation_id="getRainfallStandardDeviation",
 )
 async def get_rainfall_standard_deviation(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
     weigh_by_average: bool = False,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -202,23 +202,23 @@ async def get_rainfall_standard_deviation(
     summary="Compute the number of years below normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Year"],
     operation_id="getYearsBelowNormal",
 )
 async def get_years_below_normal(
     time_mode: TimeMode,
     normal_year: Annotated[
-        int, Query(ge=min_year_available, le=max_normal_year_available)
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
     ],
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -248,23 +248,23 @@ async def get_years_below_normal(
     summary="Compute the number of years above normal for a specific year range.",
     description="Normal is computed as a 30 years average "
     "starting from the year set via normal_year. <br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Year"],
     operation_id="getYearsAboveNormal",
 )
 async def get_years_above_normal(
     time_mode: TimeMode,
     normal_year: Annotated[
-        int, Query(ge=min_year_available, le=max_normal_year_available)
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
     ],
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -293,20 +293,20 @@ async def get_years_above_normal(
     response_class=StreamingResponse,
     summary="Retrieve CSV of rainfall by year data: ['Year', 'Rainfall'] columns.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["CSV"],
     operation_id="getRainfallByYearAsCSV",
 )
 def get_rainfall_by_year_as_csv(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -336,14 +336,14 @@ def get_rainfall_by_year_as_csv(
     "/graph/rainfall_by_year",
     summary="Retrieve rainfall by year as a PNG or as a JSON.",
     description="Could either be for rainfall upon a whole year, a specific month or a given season.<br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Graph"],
     operation_id="getRainfallByYear",
 )
 def get_rainfall_by_year_as_plotly_json(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
     month: Month | None = None,
     season: Season | None = None,
@@ -351,7 +351,7 @@ def get_rainfall_by_year_as_plotly_json(
     plot_linear_regression: bool = False,
 ):
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
@@ -379,14 +379,14 @@ def get_rainfall_by_year_as_plotly_json(
     "/graph/rainfall_averages",
     summary="Retrieve rainfall monthly or seasonal averages of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Graph"],
     operation_id="getRainfallAverages",
 )
 def get_rainfall_averages_as_plotly_json(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
 ):
     if time_mode == TimeMode.YEARLY:
@@ -396,7 +396,7 @@ def get_rainfall_averages_as_plotly_json(
         )
 
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
 
@@ -411,14 +411,14 @@ def get_rainfall_averages_as_plotly_json(
     "/graph/rainfall_linreg_slopes",
     summary="Retrieve rainfall monthly or seasonal linear regression slopes of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Graph"],
     operation_id="getRainfallLinregSlopes",
 )
 def get_rainfall_linreg_slopes_as_plotly_json(
     time_mode: TimeMode,
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
 ):
     if time_mode == TimeMode.YEARLY:
@@ -428,7 +428,7 @@ def get_rainfall_linreg_slopes_as_plotly_json(
         )
 
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     raise_year_related_error_or_do_nothing(begin_year, end_year)
 
@@ -443,17 +443,17 @@ def get_rainfall_linreg_slopes_as_plotly_json(
     "/graph/relative_distances_to_normal",
     summary="Retrieve monthly or seasonal relative distances to normal (%) of data as a PNG or as a JSON.",
     description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
-    f"If no ending year is precised, most recent year available is taken: {max_year_available}.",
+    f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
     tags=["Graph"],
     operation_id="geRelativeDistancesToNormal",
 )
 def get_relative_distances_to_normal_as_plotly_json(
     time_mode: TimeMode,
     normal_year: Annotated[
-        int, Query(ge=min_year_available, le=max_normal_year_available)
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
     ],
-    begin_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)],
-    end_year: Annotated[int, Query(ge=min_year_available, le=max_year_available)]
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
     | None = None,
 ):
     if time_mode == TimeMode.YEARLY:
@@ -463,7 +463,7 @@ def get_relative_distances_to_normal_as_plotly_json(
         )
 
     if end_year is None:
-        end_year = max_year_available
+        end_year = MAX_YEAR_AVAILABLE
 
     figure = all_rainfall.get_bar_figure_of_relative_distance_to_normal(
         time_mode=time_mode,
