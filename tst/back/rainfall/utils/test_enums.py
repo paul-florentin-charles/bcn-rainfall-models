@@ -1,4 +1,4 @@
-from back.rainfall.utils import BaseEnum, Label, Season, Month, TimeMode
+from back.rainfall.utils import BaseEnum, Label, Month, Season, TimeMode
 
 
 def test_base_enum():

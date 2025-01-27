@@ -7,9 +7,9 @@ from back.rainfall.utils import Label, Month, Season
 from back.rainfall.utils.custom_exceptions import DataFormatError
 from tst.back.rainfall.models.test_all_rainfall import (
     ALL_RAINFALL,
-    normal_year,
     begin_year,
     end_year,
+    normal_year,
 )
 from tst.test_config import config
 

@@ -4,7 +4,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 
 from typing import Any
 
-from yaml import safe_load, parser  # type: ignore
+from yaml import parser, safe_load  # type: ignore
 
 
 class Config:

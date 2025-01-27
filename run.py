@@ -8,7 +8,6 @@ Simple python script to either run API with Uvicorn or Webapp with Flask.
 import click
 import uvicorn
 
-
 SERVERS = ["api", "webapp"]
 
 

@@ -8,11 +8,12 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.rainfall.utils import Month, Season, TimeMode, plotly_figures as plot
-from config import Config
 from back.rainfall.models.monthly_rainfall import MonthlyRainfall
 from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
+from back.rainfall.utils import Month, Season, TimeMode
+from back.rainfall.utils import plotly_figures as plot
+from config import Config
 
 
 class AllRainfall:

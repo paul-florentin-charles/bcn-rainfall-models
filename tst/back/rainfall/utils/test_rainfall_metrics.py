@@ -1,6 +1,7 @@
 from operator import lt
 
-from back.rainfall.utils import Label, rainfall_metrics as rain
+from back.rainfall.utils import Label
+from back.rainfall.utils import rainfall_metrics as rain
 from tst.back.rainfall.models.test_yearly_rainfall import YEARLY_RAINFALL
 
 
