@@ -53,3 +53,7 @@ uv tool install ruff
 ruff check
 ruff format
 ```
+
+---
+
+<div style="text-align: center;">🄯 2023-2025 Paul Charles</div>
