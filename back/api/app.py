@@ -1,6 +1,7 @@
 """
 FastAPI application exposing API routes related to rainfall data of Barcelona.
 """
+
 from typing import Any, Callable
 
 from fastapi import FastAPI
@@ -8,7 +9,7 @@ from fastapi import FastAPI
 from back.api.routes import (
     MAX_YEAR_AVAILABLE,
     MIN_YEAR_AVAILABLE,
-    _get_endpoint_to_api_route_specs,
+    get_endpoint_to_api_route_specs,
 )
 
 
@@ -18,7 +19,7 @@ class FastAPPI(FastAPI):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        for endpoint, api_route_specs in _get_endpoint_to_api_route_specs().items():
+        for endpoint, api_route_specs in get_endpoint_to_api_route_specs().items():
             self.add_api_route(
                 endpoint=endpoint,
                 **api_route_specs,
