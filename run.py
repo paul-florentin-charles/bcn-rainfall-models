@@ -20,21 +20,15 @@ def run():
 
 
 @run.command()
-def api():
-    """
-    Run FastAPI server.
-    """
-    config = Config()
-    uvicorn.run("back.api.app:fastapi_app", **config.get_api_server_settings)
+@click.pass_context
+def api(ctx):
+    uvicorn.run("back.api.app:fastapi_app", **ctx.ensure_object(Config).get_api_server_settings)
 
 
 @run.command()
-def webapp():
-    """
-    Run Flask server.
-    """
-    config = Config()
-    flask_app.run(**config.get_webapp_server_settings)
+@click.pass_context
+def webapp(ctx):
+    flask_app.run(**ctx.ensure_object(Config).get_webapp_server_settings)
 
 
 if __name__ == "__main__":
