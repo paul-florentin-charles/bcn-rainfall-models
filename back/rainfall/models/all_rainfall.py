@@ -65,9 +65,9 @@ class AllRainfall:
             config = Config()
 
         return cls(
-            config.get_dataset_path() if from_file else config.get_dataset_url(),
-            start_year=config.get_start_year(),
-            round_precision=config.get_rainfall_precision(),
+            config.get_dataset_path if from_file else config.get_dataset_url,
+            start_year=config.get_start_year,
+            round_precision=config.get_rainfall_precision,
         )
 
     def export_all_data_to_csv(

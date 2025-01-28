@@ -2,34 +2,40 @@
 # -*- coding: utf-8 -*-
 
 """
-Simple python script to either run API with Uvicorn or Webapp with Flask.
+CLI to run FastAPI or Flask servers.
 """
 
 import click
-import uvicorn
+import uvicorn  # type: ignore
 
-SERVERS = ["api", "webapp"]
+from back.api.app import fastapi_app
+from config import Config
+from webapp.app import flask_app
 
 
-@click.command()
-@click.argument(
-    "server",
-    type=click.Choice(SERVERS, case_sensitive=False),
-)
-def run(server: str):
-    from config import Config
+@click.group()
+def run():
+    """
+    Run either FastAPI or Flask servers.
+    """
 
+
+@run.command()
+def api():
+    """
+    Run FastAPI server.
+    """
     config = Config()
-    match server:
-        case "api":
-            uvicorn.run("back.api.app:fastapi_app", **config.get_api_server_settings())
-        case "webapp":
-            from webapp.app import flask_app
+    uvicorn.run("back.api.app:fastapi_app", **config.get_api_server_settings)
 
-            flask_app.run(**config.get_webapp_server_settings())
-        case _:  # Should not happen
-            click.echo(f"Argument should be in {SERVERS} (case-insensitive)")
-            exit(1)
+
+@run.command()
+def webapp():
+    """
+    Run Flask server.
+    """
+    config = Config()
+    flask_app.run(**config.get_webapp_server_settings)
 
 
 if __name__ == "__main__":

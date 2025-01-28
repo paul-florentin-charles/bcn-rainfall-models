@@ -14,8 +14,9 @@ class APIClient(APISession):
 
         config = Config()
 
-        settings = config.get_api_server_settings()
-        root_path: str = config.get_fastapi_settings()["root_path"]
+        settings = config.get_api_server_settings
+        fastapi_settings = config.get_fastapi_settings
+        root_path: str = fastapi_settings["root_path"]
         base_url = f"http://{settings['host']}:{settings['port']}{root_path}"
 
         return cls(base_url, **kwargs)

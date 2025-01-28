@@ -38,8 +38,8 @@ class TestMonthlyRainfall:
             SeasonalRainfall(
                 pd.DataFrame(),
                 Season.FALL,
-                start_year=config.get_start_year(),
-                round_precision=config.get_rainfall_precision(),
+                start_year=config.get_start_year,
+                round_precision=config.get_rainfall_precision,
             )
 
     @staticmethod
