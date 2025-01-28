@@ -3,7 +3,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, TypedDict
+from typing import Any, TypedDict, NotRequired
 
 from yaml import parser, safe_load  # type: ignore
 
@@ -18,16 +18,17 @@ class ServerSettings(TypedDict):
 class FastAPISettings(TypedDict):
     """Type definition for FastAPI settings."""
 
-    debug: bool
+    debug: NotRequired[bool]
     root_path: str
     title: str
-    summary: str
+    summary: NotRequired[str]
 
 
 class Config:
     """
-    Provides function to retrieve and/or build fields from YAML Configuration.
+    Provides function to retrieve fields from YAML configuration.
     It needs to be instantiated first to be loaded.
+    Configuration is cached but can be reloaded if needed.
     """
 
     _instance = None
@@ -39,16 +40,15 @@ class Config:
             cls._instance = super(Config, cls).__new__(cls)
             cls._instance.path = path
             cls._instance._load_config()
+
         return cls._instance
 
-    def __init__(self, path="config.yml"):
-        pass
-
-    def _load_config(self) -> None:
+    def _load_config(self):
         """Load and validate the configuration file."""
         try:
             with open(self.path, mode="rt", encoding="utf-8") as stream:
-                self.yaml_config: dict = safe_load(stream)
+                self.yaml_config: dict[str, Any] = safe_load(stream)
+
             self._validate_config()
         except FileNotFoundError as exc:
             raise FileNotFoundError(
@@ -59,7 +59,7 @@ class Config:
                 f'Configuration file at "{self.path}" cannot be parsed: not a valid YAML file!'
             ) from exc
 
-    def _validate_config(self) -> None:
+    def _validate_config(self):
         """Validate the configuration structure."""
         required_keys = {
             "dataset": {"file_url", "local_file_path"},
@@ -76,7 +76,7 @@ class Config:
                     raise ValueError(f"Missing required field: {section}.{field}")
 
     @classmethod
-    def reload(cls) -> None:
+    def reload(cls):
         """
         Reload the configuration from the file.
         This is a class method since we're using the Singleton pattern.
@@ -85,7 +85,7 @@ class Config:
             cls._instance._load_config()
         else:
             raise RuntimeError(
-                "Cannot reload configuration: no instance has been created yet"
+                "Cannot reload configuration: no instance has been created yet."
             )
 
     @cached_property

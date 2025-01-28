@@ -125,7 +125,7 @@ async def get_rainfall_standard_deviation(
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
     return RainfallModel(
-        name=f"rainfall standard deviation {"weighted by average" if weigh_by_average else "(mm)"}",
+        name=f"rainfall standard deviation {'weighted by average' if weigh_by_average else '(mm)'}",
         value=all_rainfall.get_rainfall_standard_deviation(
             time_mode,
             begin_year=begin_year,

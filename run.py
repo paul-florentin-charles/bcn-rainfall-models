@@ -22,7 +22,9 @@ def run():
 @run.command()
 @click.pass_context
 def api(ctx):
-    uvicorn.run("back.api.app:fastapi_app", **ctx.ensure_object(Config).get_api_server_settings)
+    uvicorn.run(
+        "back.api.app:fastapi_app", **ctx.ensure_object(Config).get_api_server_settings
+    )
 
 
 @run.command()
