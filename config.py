@@ -3,7 +3,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, Optional, TypedDict
+from typing import Any, TypedDict
 
 from yaml import parser, safe_load  # type: ignore
 
@@ -31,6 +31,8 @@ class Config:
     """
 
     _instance = None
+    path: str
+    yaml_config: dict[str, Any]
 
     def __new__(cls, path="config.yml"):
         if cls._instance is None:

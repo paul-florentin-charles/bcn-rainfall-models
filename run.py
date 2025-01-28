@@ -8,7 +8,6 @@ CLI to run FastAPI or Flask servers.
 import click
 import uvicorn  # type: ignore
 
-from back.api.app import fastapi_app
 from config import Config
 from webapp.app import flask_app
 
