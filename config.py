@@ -3,7 +3,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, TypedDict, NotRequired
+from typing import Any, NotRequired, TypedDict
 
 from yaml import parser, safe_load  # type: ignore
 

@@ -25,32 +25,26 @@ class TestConfig:
 
     @staticmethod
     def test_get_dataset_url():
-        dataset_url = config.get_dataset_url
-        assert isinstance(dataset_url, str)
+        assert isinstance(config.get_dataset_url, str)
 
     @staticmethod
     def test_get_start_year():
-        start_year = config.get_start_year
-        assert isinstance(start_year, int)
+        assert isinstance(config.get_start_year, int)
 
     @staticmethod
     def test_get_rainfall_precision():
-        rainfall_precision = config.get_rainfall_precision
-        assert isinstance(rainfall_precision, int)
+        assert isinstance(config.get_rainfall_precision, int)
 
     @staticmethod
     def test_get_kmeans_clusters():
-        kmeans_clusters = config.get_kmeans_clusters
-        assert isinstance(kmeans_clusters, int)
+        assert isinstance(config.get_kmeans_clusters, int)
 
     @staticmethod
     def test_get_api_server_settings():
-        settings = config.get_api_server_settings
-        assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port", "reload"}
+        assert isinstance(config.get_api_server_settings, dict)
+        assert config.get_api_server_settings.keys() == {"host", "port", "reload"}
 
     @staticmethod
     def test_get_webapp_server_settings():
-        settings = config.get_webapp_server_settings
-        assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port", "debug"}
+        assert isinstance(config.get_webapp_server_settings, dict)
+        assert config.get_webapp_server_settings.keys() == {"host", "port", "debug"}

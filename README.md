@@ -49,7 +49,9 @@ uv run coverage report
 ## Code quality
 
 ```commandline
+uv tool install mypy
 uv tool install ruff
+mypy --check-untyped-defs .
 ruff check
 ruff format
 ```

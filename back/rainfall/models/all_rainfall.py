@@ -13,7 +13,6 @@ from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
 from back.rainfall.utils import Month, Season, TimeMode
 from back.rainfall.utils import plotly_figures as plot
-from config import Config
 
 
 class AllRainfall:
@@ -60,14 +59,13 @@ class AllRainfall:
         }
 
     @classmethod
-    def from_config(cls, config: Config | None = None, from_file=False):
-        if config is None:
-            config = Config()
+    def from_config(cls, from_file=False):
+        from config import Config
 
         return cls(
-            config.get_dataset_path if from_file else config.get_dataset_url,
-            start_year=config.get_start_year,
-            round_precision=config.get_rainfall_precision,
+            Config().get_dataset_path if from_file else Config().get_dataset_url,
+            start_year=Config().get_start_year,
+            round_precision=Config().get_rainfall_precision,
         )
 
     def export_all_data_to_csv(
