@@ -3,7 +3,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, NotRequired, TypedDict
+from typing import Any, NotRequired, Optional, TypedDict
 
 from yaml import parser, safe_load  # type: ignore
 
@@ -24,6 +24,21 @@ class FastAPISettings(TypedDict):
     summary: NotRequired[str]
 
 
+class DatasetSettings(TypedDict):
+    """Type definition for dataset settings."""
+
+    file_url: str
+    local_file_path: NotRequired[str]
+
+
+class DataSettings(TypedDict):
+    """Type definition for data settings."""
+
+    start_year: int
+    rainfall_precision: int
+    kmeans_clusters: NotRequired[int]
+
+
 class Config:
     """
     Provides function to retrieve fields from YAML configuration.
@@ -31,7 +46,7 @@ class Config:
     Configuration is cached but can be reloaded if needed.
     """
 
-    _instance = None
+    _instance: Optional["Config"] = None
     path: str
     yaml_config: dict[str, Any]
 
@@ -62,10 +77,10 @@ class Config:
     def _validate_config(self):
         """Validate the configuration structure."""
         required_keys = {
-            "dataset": {"file_url", "local_file_path"},
-            "data": {"start_year", "rainfall_precision", "kmeans_clusters"},
+            "dataset": DatasetSettings.__required_keys__,
+            "data": DataSettings.__required_keys__,
             "api": {"server", "fastapi"},
-            "webapp": {"host", "port"},
+            "webapp": ServerSettings.__required_keys__,
         }
 
         for section, fields in required_keys.items():
