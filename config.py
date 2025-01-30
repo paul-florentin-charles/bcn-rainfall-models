@@ -37,7 +37,7 @@ class Config:
 
     def __new__(cls, path="config.yml"):
         if cls._instance is None:
-            cls._instance = super(Config, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
             cls._instance.path = path
             cls._instance._load_config()
 
@@ -46,7 +46,7 @@ class Config:
     def _load_config(self):
         """Load and validate the configuration file."""
         try:
-            with open(self.path, mode="rt", encoding="utf-8") as stream:
+            with open(self.path, encoding="utf-8") as stream:
                 self.yaml_config: dict[str, Any] = safe_load(stream)
 
             self._validate_config()
