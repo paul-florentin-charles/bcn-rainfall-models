@@ -22,7 +22,7 @@ class FastAPPI(FastAPI):
         for endpoint, api_route_specs in get_endpoint_to_api_route_specs().items():
             self.add_api_route(
                 endpoint=endpoint,
-                **api_route_specs,
+                **api_route_specs.model_dump(),
             )
 
     @classmethod
