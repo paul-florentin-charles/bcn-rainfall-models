@@ -68,7 +68,11 @@ def get_endpoint_to_api_route_specs() -> dict[Callable[..., Any], APIRouteSpecs]
             summary="Retrieve the rainfall relative distance to normal for Barcelona between two years.",
             description="The metric is a percentage that can be negative. <br>"
             "Its formula is `(average - normal) / normal * 100`. <br> "
-            "1. `average` is average rainfall computed between `begin_year` and `end_year`<br>",
+            "1. `average` is average rainfall computed between `begin_year` and `end_year`<br>"
+            "2. `normal` is normal rainfall computed from `normal_year`<br>"
+            "If 100%, average is twice the normal. <br>"
+            "If -50%, average is half the normal. <br>"
+            f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
         ),
         get_rainfall_standard_deviation: APIRouteSpecs(
             path="/rainfall/standard_deviation",
