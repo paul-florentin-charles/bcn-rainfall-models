@@ -13,9 +13,8 @@ class APIClient(APISession):
         from config import Config
 
         settings = Config().get_api_server_settings
-        fastapi_settings = Config().get_fastapi_settings
-        root_path: str = fastapi_settings["root_path"]
-        base_url = f"http://{settings['host']}:{settings['port']}{root_path}"
+        root_path = Config().get_fastapi_settings.root_path
+        base_url = f"http://{settings.host}:{settings.port}{root_path}"
 
         return cls(base_url, **kwargs)
 

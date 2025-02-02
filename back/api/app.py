@@ -30,7 +30,7 @@ class FastAPPI(FastAPI):
         from config import Config
 
         return cls(
-            **Config().get_fastapi_settings,
+            **Config().get_fastapi_settings.model_dump(),
             description=f"Available data is between {MIN_YEAR_AVAILABLE} and {MAX_YEAR_AVAILABLE}.",
         )
 

@@ -3,40 +3,43 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, NotRequired, Optional, TypedDict
+from typing import Any, Optional
 
+from pydantic import BaseModel, Field, ValidationError
 from yaml import parser, safe_load  # type: ignore
 
 
-class ServerSettings(TypedDict):
+class ServerSettings(BaseModel):
     """Type definition for server settings (both API and Webapp)."""
 
     host: str
     port: int
+    reload: bool | None = Field(None)  # Specific to API server (Uvicorn)
+    debug: bool | None = Field(None)  # Specific to Webapp (Flask)
 
 
-class FastAPISettings(TypedDict):
+class FastAPISettings(BaseModel):
     """Type definition for FastAPI settings."""
 
-    debug: NotRequired[bool]
     root_path: str
     title: str
-    summary: NotRequired[str]
+    summary: str | None = Field(None)
+    debug: bool | None = Field(None)
 
 
-class DatasetSettings(TypedDict):
+class DatasetSettings(BaseModel):
     """Type definition for dataset settings."""
 
     file_url: str
-    local_file_path: NotRequired[str]
+    local_file_path: str | None = Field(None)
 
 
-class DataSettings(TypedDict):
+class DataSettings(BaseModel):
     """Type definition for data settings."""
 
     start_year: int
     rainfall_precision: int
-    kmeans_clusters: NotRequired[int]
+    kmeans_clusters: int | None = Field(None)
 
 
 class Config:
@@ -63,8 +66,6 @@ class Config:
         try:
             with open(self.path, encoding="utf-8") as stream:
                 self.yaml_config: dict[str, Any] = safe_load(stream)
-
-            self._validate_config()
         except FileNotFoundError as exc:
             raise FileNotFoundError(
                 f'Configuration file not found at "{self.path}"'
@@ -73,22 +74,6 @@ class Config:
             raise parser.ParserError(
                 f'Configuration file at "{self.path}" cannot be parsed: not a valid YAML file!'
             ) from exc
-
-    def _validate_config(self):
-        """Validate the configuration structure."""
-        required_keys = {
-            "dataset": DatasetSettings.__required_keys__,
-            "data": DataSettings.__required_keys__,
-            "api": {"server", "fastapi"},
-            "webapp": ServerSettings.__required_keys__,
-        }
-
-        for section, fields in required_keys.items():
-            if section not in self.yaml_config:
-                raise ValueError(f"Missing required section: {section}")
-            for field in fields:
-                if field not in self.yaml_config[section]:
-                    raise ValueError(f"Missing required field: {section}.{field}")
 
     @classmethod
     def reload(cls):
@@ -106,20 +91,20 @@ class Config:
     @cached_property
     def get_dataset_url(self) -> str:
         """
-        Build the dataset URL location from the configuration.
+        Return the URL pointing to the CSV dataset.
 
         :return: The dataset URL as a String.
         """
-        return self.yaml_config["dataset"]["file_url"]
+        return DatasetSettings(**self.yaml_config["dataset"]).file_url
 
     @cached_property
-    def get_dataset_path(self) -> str:
+    def get_dataset_path(self) -> str | None:
         """
-        Return the path to the local copy of the dataset.
+        Return the path to the local copy of the CSV dataset.
 
         :return: The dataset path as a string.
         """
-        return self.yaml_config["dataset"]["local_file_path"]
+        return DatasetSettings(**self.yaml_config["dataset"]).local_file_path
 
     @cached_property
     def get_start_year(self) -> int:
@@ -128,7 +113,7 @@ class Config:
 
         :return: A year as an Integer.
         """
-        return self.yaml_config["data"]["start_year"]
+        return DataSettings(**self.yaml_config["data"]).start_year
 
     @cached_property
     def get_rainfall_precision(self) -> int:
@@ -137,16 +122,7 @@ class Config:
 
         :return: A rounding precision as an Integer.
         """
-        return self.yaml_config["data"]["rainfall_precision"]
-
-    @cached_property
-    def get_kmeans_clusters(self) -> int:
-        """
-        The number of clusters to use for K-Means clustering of Rainfall data.
-
-        :return: A number of clusters as an Integer.
-        """
-        return self.yaml_config["data"]["kmeans_clusters"]
+        return DataSettings(**self.yaml_config["data"]).rainfall_precision
 
     @cached_property
     def get_api_server_settings(self) -> ServerSettings:
@@ -159,9 +135,10 @@ class Config:
         {
             "host": "127.0.0.1",
             "port": 8000,
+            "reload": True,
         }
         """
-        return self.yaml_config["api"]["server"]
+        return ServerSettings(**self.yaml_config["api"]["server"])
 
     @cached_property
     def get_fastapi_settings(self) -> FastAPISettings:
@@ -178,7 +155,7 @@ class Config:
             "summary": "An API that provides rainfall-related data of the city of Barcelona."
         }
         """
-        return self.yaml_config["api"]["fastapi"]
+        return FastAPISettings(**self.yaml_config["api"]["fastapi"])
 
     @cached_property
     def get_webapp_server_settings(self) -> ServerSettings:
@@ -190,7 +167,8 @@ class Config:
         Example:
         {
             "host": "127.0.0.1",
-            "port": 5000
+            "port": 5000,
+            "debug": True,
         }
         """
-        return self.yaml_config["webapp"]
+        return ServerSettings(**self.yaml_config["webapp"])
