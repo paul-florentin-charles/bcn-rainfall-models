@@ -62,8 +62,15 @@ class AllRainfall:
     def from_config(cls, from_file=False):
         from config import Config
 
+        dataset_path = Config().get_dataset_path
+        if from_file and dataset_path is None:
+            raise RuntimeError(
+                f"Cannot init class because you have set {from_file=} "
+                f"but 'dataset.local_file_path' is not set in your configuration located at {Config().path}."
+            )
+
         return cls(
-            Config().get_dataset_path if from_file else Config().get_dataset_url,
+            dataset_path if from_file else Config().get_dataset_url,  # type: ignore
             start_year=Config().get_start_year,
             round_precision=Config().get_rainfall_precision,
         )

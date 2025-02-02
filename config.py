@@ -5,7 +5,7 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 from functools import cached_property
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field
 from yaml import parser, safe_load  # type: ignore
 
 
