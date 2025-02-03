@@ -10,12 +10,22 @@ from yaml import parser, safe_load  # type: ignore
 
 
 class ServerSettings(BaseModel):
-    """Type definition for server settings (both API and Webapp)."""
+    """Base type definition for server settings"""
 
     host: str
     port: int
-    reload: bool | None = Field(None)  # Specific to API server (Uvicorn)
-    debug: bool | None = Field(None)  # Specific to Webapp (Flask)
+
+
+class APIServerSettings(ServerSettings):
+    """Type definition for Uvicorn server settings."""
+
+    reload: bool | None = Field(None)
+
+
+class WebappServerSettings(ServerSettings):
+    """Type definition for Flask server settings."""
+
+    debug: bool | None = Field(None)
 
 
 class FastAPISettings(BaseModel):
@@ -125,7 +135,7 @@ class Config:
         return DataSettings(**self.yaml_config["data"]).rainfall_precision
 
     @cached_property
-    def get_api_server_settings(self) -> ServerSettings:
+    def get_api_server_settings(self) -> APIServerSettings:
         """
         Return Uvicorn server settings to run FastAPI app.
 
@@ -138,7 +148,7 @@ class Config:
             "reload": True,
         }
         """
-        return ServerSettings(**self.yaml_config["api"]["server"])
+        return APIServerSettings(**self.yaml_config["api"]["server"])
 
     @cached_property
     def get_fastapi_settings(self) -> FastAPISettings:
@@ -158,7 +168,7 @@ class Config:
         return FastAPISettings(**self.yaml_config["api"]["fastapi"])
 
     @cached_property
-    def get_webapp_server_settings(self) -> ServerSettings:
+    def get_webapp_server_settings(self) -> WebappServerSettings:
         """
         Return Flask server settings.
 
@@ -171,4 +181,4 @@ class Config:
             "debug": True,
         }
         """
-        return ServerSettings(**self.yaml_config["webapp"])
+        return WebappServerSettings(**self.yaml_config["webapp"])
