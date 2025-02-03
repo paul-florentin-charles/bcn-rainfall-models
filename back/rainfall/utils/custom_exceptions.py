@@ -14,4 +14,5 @@ class DataFormatError(Exception):
         self.message = (
             f"Data given is incorrectly formatted. Should be: {self.data_format}"
         )
+
         super().__init__(self.message)

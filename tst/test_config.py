@@ -1,7 +1,7 @@
 from pytest import fixture, raises
 from yaml.parser import ParserError  # type: ignore
 
-from config import Config, APIServerSettings, WebappServerSettings
+from config import APIServerSettings, Config, WebappServerSettings
 
 config = Config()
 

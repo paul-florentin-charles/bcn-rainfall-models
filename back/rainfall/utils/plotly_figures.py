@@ -4,16 +4,17 @@ Provides useful functions for plotting rainfall data in all shapes.
 
 import pandas as pd
 import plotly.graph_objs as go
+from plotly.basedatatypes import BaseTraceType
 
 from back.rainfall.utils import Label, TimeMode
 
-FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[go.Bar | go.Scatter]] = {
+FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[BaseTraceType]] = {
     "bar": go.Bar,
     "scatter": go.Scatter,
 }
 
 
-def _get_plotly_trace_by_figure_type(figure_type: str):
+def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | None:
     return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
 
 

@@ -23,7 +23,10 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) ->
 
 
 def get_years_compared_to_given_rainfall_value(
-    yearly_rainfall: pd.DataFrame, rainfall_value: float, *, comparator: Callable
+    yearly_rainfall: pd.DataFrame,
+    rainfall_value: float,
+    *,
+    comparator: Callable[[float, float], bool],
 ) -> int:
     """
     Computes the number of years that conform specified comparison
@@ -31,7 +34,7 @@ def get_years_compared_to_given_rainfall_value(
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param rainfall_value: A float representing the rainfall value.
-    :param comparator: A comparator function that takes exactly two parameters.
+    :param comparator: A comparator function that takes exactly two parameters and return a boolean.
     :return: The number of years compared to the given rainfall value as an integer.
     """
     yearly_rainfall = yearly_rainfall[
