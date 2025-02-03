@@ -14,11 +14,11 @@ body {
   padding: 0 0.7em;
 }
 
-header, footer {
+.header, footer {
   text-align: center;
 }
 
-header {
+.header {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -32,10 +32,6 @@ nav {
 
 a {
   color: #eee6dc;
-}
-
-a.odd-link {
-  color: #bfb9dc;
 }
 
 a:hover {
