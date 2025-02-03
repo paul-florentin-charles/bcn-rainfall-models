@@ -1,9 +1,15 @@
-from pytest import raises
+from pytest import fixture, raises
 from yaml.parser import ParserError  # type: ignore
 
-from config import Config
+from config import APIServerSettings, Config, WebappServerSettings
 
 config = Config()
+
+
+@fixture(autouse=True)
+def reset_config():
+    Config._instance = None
+    yield
 
 
 class TestConfig:
@@ -19,32 +25,30 @@ class TestConfig:
 
     @staticmethod
     def test_get_dataset_url():
-        dataset_url = config.get_dataset_url()
-        assert isinstance(dataset_url, str)
+        assert isinstance(config.get_dataset_url, str)
 
     @staticmethod
     def test_get_start_year():
-        start_year = config.get_start_year()
-        assert isinstance(start_year, int)
+        assert isinstance(config.get_start_year, int)
 
     @staticmethod
     def test_get_rainfall_precision():
-        rainfall_precision = config.get_rainfall_precision()
-        assert isinstance(rainfall_precision, int)
-
-    @staticmethod
-    def test_get_kmeans_clusters():
-        kmeans_clusters = config.get_kmeans_clusters()
-        assert isinstance(kmeans_clusters, int)
+        assert isinstance(config.get_rainfall_precision, int)
 
     @staticmethod
     def test_get_api_server_settings():
-        settings = config.get_api_server_settings()
-        assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port", "reload"}
+        assert isinstance(config.get_api_server_settings, APIServerSettings)
+        assert config.get_api_server_settings.model_fields.keys() == {
+            "host",
+            "port",
+            "reload",
+        }
 
     @staticmethod
     def test_get_webapp_server_settings():
-        settings = config.get_webapp_server_settings()
-        assert isinstance(settings, dict)
-        assert settings.keys() == {"host", "port", "debug"}
+        assert isinstance(config.get_webapp_server_settings, WebappServerSettings)
+        assert config.get_webapp_server_settings.model_fields.keys() == {
+            "host",
+            "port",
+            "debug",
+        }

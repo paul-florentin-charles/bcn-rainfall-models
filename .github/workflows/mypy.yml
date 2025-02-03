@@ -21,7 +21,7 @@ jobs:
         run: pip install mypy
 
       - name: Install stubs
-        run: mypy --install-types --non-interactive --check-untyped-defs --cache-dir=mypy_cache/ .
+        run: mypy --install-types --non-interactive --check-untyped-defs --cache-dir=.mypy_cache/ .
 
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@releases/v1

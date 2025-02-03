@@ -4,16 +4,17 @@ Provides useful functions for plotting rainfall data in all shapes.
 
 import pandas as pd
 import plotly.graph_objs as go
+from plotly.basedatatypes import BaseTraceType
 
 from back.rainfall.utils import Label, TimeMode
 
-FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[go.Bar | go.Scatter]] = {
+FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[BaseTraceType]] = {
     "bar": go.Bar,
     "scatter": go.Scatter,
 }
 
 
-def _get_plotly_trace_by_figure_type(figure_type: str):
+def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | None:
     return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
 
 
@@ -56,9 +57,13 @@ def get_figure_of_column_according_to_year(
 
         figure.update_layout(
             title=figure_label or label.value,
-            legend=dict(
-                orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
-            ),
+            legend={
+                "orientation": "h",
+                "yanchor": "bottom",
+                "y": 1.02,
+                "xanchor": "right",
+                "x": 1,
+            },
         )
         figure.update_xaxes(title_text=Label.YEAR.value)
         figure.update_yaxes(title_text=label.value)
@@ -104,7 +109,12 @@ def get_bar_figure_of_rainfall_averages(
 
     figure.update_layout(
         title=f"Average rainfall (mm) between {begin_year} and {end_year}",
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+        legend={
+            "yanchor": "top",
+            "y": 0.99,
+            "xanchor": "left",
+            "x": 0.01,
+        },
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text=Label.RAINFALL.value)
@@ -156,7 +166,12 @@ def get_bar_figure_of_rainfall_linreg_slopes(
 
     figure.update_layout(
         title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}",
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+        legend={
+            "yanchor": "top",
+            "y": 0.99,
+            "xanchor": "left",
+            "x": 0.01,
+        },
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
@@ -208,7 +223,12 @@ def get_bar_figure_of_relative_distances_to_normal(
 
     figure.update_layout(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+        legend={
+            "yanchor": "top",
+            "y": 0.99,
+            "xanchor": "left",
+            "x": 0.01,
+        },
     )
     figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
     figure.update_yaxes(title_text="Relative distance to normal (%)")

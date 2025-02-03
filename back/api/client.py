@@ -12,11 +12,9 @@ class APIClient(APISession):
     def from_config(cls, **kwargs):
         from config import Config
 
-        config = Config()
-
-        settings = config.get_api_server_settings()
-        root_path: str = config.get_fastapi_settings()["root_path"]
-        base_url = f"http://{settings['host']}:{settings['port']}{root_path}"
+        settings = Config().get_api_server_settings
+        root_path = Config().get_fastapi_settings.root_path
+        base_url = f"http://{settings.host}:{settings.port}{root_path}"
 
         return cls(base_url, **kwargs)
 

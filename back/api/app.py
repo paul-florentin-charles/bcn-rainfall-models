@@ -22,7 +22,7 @@ class FastAPPI(FastAPI):
         for endpoint, api_route_specs in get_endpoint_to_api_route_specs().items():
             self.add_api_route(
                 endpoint=endpoint,
-                **api_route_specs,
+                **api_route_specs.model_dump(),
             )
 
     @classmethod
@@ -30,7 +30,7 @@ class FastAPPI(FastAPI):
         from config import Config
 
         return cls(
-            **Config().get_fastapi_settings(),
+            **Config().get_fastapi_settings.model_dump(),
             description=f"Available data is between {MIN_YEAR_AVAILABLE} and {MAX_YEAR_AVAILABLE}.",
         )
 

@@ -2,22 +2,80 @@
 Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
-from typing import Any
+from functools import cached_property
+from typing import Any, Optional
 
+from pydantic import BaseModel, Field
 from yaml import parser, safe_load  # type: ignore
+
+
+class ServerSettings(BaseModel):
+    """Base type definition for server settings"""
+
+    host: str
+    port: int
+
+
+class APIServerSettings(ServerSettings):
+    """Type definition for Uvicorn server settings."""
+
+    reload: bool | None = Field(None)
+
+
+class WebappServerSettings(ServerSettings):
+    """Type definition for Flask server settings."""
+
+    debug: bool | None = Field(None)
+
+
+class FastAPISettings(BaseModel):
+    """Type definition for FastAPI settings."""
+
+    root_path: str
+    title: str
+    summary: str | None = Field(None)
+    debug: bool | None = Field(None)
+
+
+class DatasetSettings(BaseModel):
+    """Type definition for dataset settings."""
+
+    file_url: str
+    local_file_path: str | None = Field(None)
+
+
+class DataSettings(BaseModel):
+    """Type definition for data settings."""
+
+    start_year: int
+    rainfall_precision: int
+    kmeans_clusters: int | None = Field(None)
 
 
 class Config:
     """
-    Provides function to retrieve and/or build fields from YAML Configuration.
+    Provides function to retrieve fields from YAML configuration.
     It needs to be instantiated first to be loaded.
+    Configuration is cached but can be reloaded if needed.
     """
 
-    def __init__(self, path="config.yml"):
-        self.path = path
+    _instance: Optional["Config"] = None
+    path: str
+    yaml_config: dict[str, Any]
+
+    def __new__(cls, path="config.yml"):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.path = path
+            cls._instance._load_config()
+
+        return cls._instance
+
+    def _load_config(self):
+        """Load and validate the configuration file."""
         try:
-            with open(self.path, mode="rt", encoding="utf-8") as stream:
-                self.yaml_config: dict = safe_load(stream)
+            with open(self.path, encoding="utf-8") as stream:
+                self.yaml_config: dict[str, Any] = safe_load(stream)
         except FileNotFoundError as exc:
             raise FileNotFoundError(
                 f'Configuration file not found at "{self.path}"'
@@ -27,69 +85,79 @@ class Config:
                 f'Configuration file at "{self.path}" cannot be parsed: not a valid YAML file!'
             ) from exc
 
+    @classmethod
+    def reload(cls):
+        """
+        Reload the configuration from the file.
+        This is a class method since we're using the Singleton pattern.
+        """
+        if cls._instance is not None:
+            cls._instance._load_config()
+        else:
+            raise RuntimeError(
+                "Cannot reload configuration: no instance has been created yet."
+            )
+
+    @cached_property
     def get_dataset_url(self) -> str:
         """
-        Build the dataset URL location from the configuration.
+        Return the URL pointing to the CSV dataset.
 
         :return: The dataset URL as a String.
         """
+        return DatasetSettings(**self.yaml_config["dataset"]).file_url
 
-        return self.yaml_config["dataset"]["file_url"]
-
-    def get_dataset_path(self) -> str:
+    @cached_property
+    def get_dataset_path(self) -> str | None:
         """
-        Return the path to the local copy of the dataset.
+        Return the path to the local copy of the CSV dataset.
 
         :return: The dataset path as a string.
         """
+        return DatasetSettings(**self.yaml_config["dataset"]).local_file_path
 
-        return self.yaml_config["dataset"]["local_file_path"]
-
+    @cached_property
     def get_start_year(self) -> int:
         """
         Retrieve the year the data should start at.
 
         :return: A year as an Integer.
         """
+        return DataSettings(**self.yaml_config["data"]).start_year
 
-        return self.yaml_config["data"]["start_year"]
-
+    @cached_property
     def get_rainfall_precision(self) -> int:
         """
         The decimal precision of Rainfall values.
 
         :return: A rounding precision as an Integer.
         """
+        return DataSettings(**self.yaml_config["data"]).rainfall_precision
 
-        return self.yaml_config["data"]["rainfall_precision"]
-
-    def get_kmeans_clusters(self) -> int:
-        """
-        The number of clusters to use for K-Means clustering of Rainfall data.
-
-        :return: A number of clusters as an Integer.
-        """
-
-        return self.yaml_config["data"]["kmeans_clusters"]
-
-    def get_api_server_settings(self) -> dict[str, Any]:
+    @cached_property
+    def get_api_server_settings(self) -> APIServerSettings:
         """
         Return Uvicorn server settings to run FastAPI app.
 
-        ex:
+        :return: A dictionary containing server settings with typed keys.
+
+        Example:
         {
             "host": "127.0.0.1",
             "port": 8000,
+            "reload": True,
         }
         """
+        return APIServerSettings(**self.yaml_config["api"]["server"])
 
-        return self.yaml_config["api"]["server"]
-
-    def get_fastapi_settings(self) -> dict[str, Any]:
+    @cached_property
+    def get_fastapi_settings(self) -> FastAPISettings:
         """
         Return FastAPI settings to initiate app.
 
-        ex:
+        :return: A dictionary containing FastAPI settings with typed keys.
+
+        Example:
         {
             "debug": True,
             "root_path": "/api",
@@ -97,18 +165,20 @@ class Config:
             "summary": "An API that provides rainfall-related data of the city of Barcelona."
         }
         """
+        return FastAPISettings(**self.yaml_config["api"]["fastapi"])
 
-        return self.yaml_config["api"]["fastapi"]
-
-    def get_webapp_server_settings(self) -> dict[str, Any]:
+    @cached_property
+    def get_webapp_server_settings(self) -> WebappServerSettings:
         """
         Return Flask server settings.
 
-        ex:
+        :return: A dictionary containing server settings with typed keys.
+
+        Example:
         {
             "host": "127.0.0.1",
-            "port": 5000
+            "port": 5000,
+            "debug": True,
         }
         """
-
-        return self.yaml_config["webapp"]
+        return WebappServerSettings(**self.yaml_config["webapp"])
