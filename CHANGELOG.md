@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/paul-florentin-charles/bcn-rainfall-models/tree/HEAD)
+## [v0.5.0](https://github.com/paul-florentin-charles/bcn-rainfall-models/tree/v0.5.0) (2025-02-03)
 
-[Full Changelog](https://github.com/paul-florentin-charles/bcn-rainfall-models/compare/v.0.4.0-webapp...HEAD)
+[Full Changelog](https://github.com/paul-florentin-charles/bcn-rainfall-models/compare/v.0.4.0-webapp...v0.5.0)
 
 **Closed issues:**
 
@@ -13,6 +13,8 @@
 
 **Merged pull requests:**
 
+- Backend refactoring, API routes split & config optimization [\#100](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/100) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
+- Big modif in API module architecture [\#98](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/98) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - A lot of changes, too lazy to sum it up [\#96](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/96) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Solving squash commit diff issue between main/dev branches [\#95](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/95) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
 - Use uv to manage dependencies [\#94](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/94) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
