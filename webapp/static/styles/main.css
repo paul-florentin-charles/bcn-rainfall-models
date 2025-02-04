@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #424242;
+  background-color: #525252;
   font: 300 18px Khula, sans-serif;
   color: white;
   line-height: 1em;
@@ -22,7 +22,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: #424242;
+  background-color: #525252;
   padding: 0.1em 0 0.25em 0;
 }
 
@@ -38,19 +38,11 @@ a:hover {
   color: #bd4f37;
 }
 
-.row {
-  display: flex;
-}
-
-.column {
-  flex: 50%;
-}
-
-.rounded-corners {
-  border: 3px solid #eee6dc;
+.plotly-graph {
+  border: 2px solid black;
   height: 30em;
-  border-radius: 15px;
-  margin: 0.2em;
+  border-radius: 25px;
+  margin: 0.4em;
   overflow: hidden;
 }
 
