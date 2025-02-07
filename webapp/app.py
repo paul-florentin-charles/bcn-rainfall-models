@@ -33,6 +33,8 @@ def _aggregate_traces_json_as_figure(
         },
         font={
             "color": "white",
+            "family": "Khula, sans-serif",
+            "size": 11,
         },
         paper_bgcolor="rgba(34, 34, 34, 0.75)",
         plot_bgcolor="rgba(123, 104, 75, 0.55)",

@@ -18,6 +18,32 @@ def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | 
     return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
 
 
+def _update_plotly_figure_layout(
+    figure: go.Figure, *, title: str, xaxis_title: str, yaxis_title: str
+):
+    figure.update_layout(
+        title=title,
+        xaxis={"title": xaxis_title},
+        yaxis={"title": yaxis_title},
+        legend={
+            "yanchor": "top",
+            "y": 0.99,
+            "xanchor": "left",
+            "x": 0.01,
+            "bgcolor": "rgba(255, 255, 255, 0.5)",
+        },
+        font={
+            "color": "white",
+            "family": "Khula, sans-serif",
+            "size": 11,
+        },
+        paper_bgcolor="rgba(34, 34, 34, 0.75)",
+        plot_bgcolor="rgba(123, 104, 75, 0.55)",
+        margin={"t": 75, "r": 75},
+        autosize=True,
+    )
+
+
 def get_figure_of_column_according_to_year(
     yearly_rainfall: pd.DataFrame,
     label: Label,
@@ -55,19 +81,11 @@ def get_figure_of_column_according_to_year(
             )
         )
 
-        figure.update_layout(
+        _update_plotly_figure_layout(
+            figure,
             title=figure_label or label.value,
-            legend={
-                "yanchor": "top",
-                "y": 0.99,
-                "xanchor": "left",
-                "x": 0.01,
-                "bgcolor": "rgba(255, 255, 255, 0.5)",
-            },
-            xaxis={"title": Label.YEAR.value},
-            yaxis={"title": label.value},
-            margin={"t": 75, "r": 75},
-            autosize=True,
+            xaxis_title=Label.YEAR.value,
+            yaxis_title=label.value,
         )
 
         return figure
@@ -109,16 +127,11 @@ def get_bar_figure_of_rainfall_averages(
     figure = go.Figure()
     figure.add_trace(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"Average rainfall (mm) between {begin_year} and {end_year}",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
-        xaxis={"title": time_mode.value.capitalize()[:-2]},
-        yaxis={"title": Label.RAINFALL.value},
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title=Label.RAINFALL.value,
     )
 
     return figure
@@ -166,16 +179,11 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         )
     )
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
-        xaxis={"title": time_mode.value.capitalize()[:-2]},
-        yaxis={"title": f"{Label.LINEAR_REGRESSION.value} slope (mm/year)"},
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)",
     )
 
     return figure
@@ -223,16 +231,11 @@ def get_bar_figure_of_relative_distances_to_normal(
         )
     )
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
-        xaxis={"title": time_mode.value.capitalize()[:-2]},
-        yaxis={"title": "Relative distance to normal (%)"},
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title="Relative distance to normal (%)",
     )
 
     return figure
