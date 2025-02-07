@@ -4,7 +4,7 @@
 
 body {
   background-color: #525252;
-  font: 300 18px Khula, sans-serif;
+  font: 300 16px Khula, sans-serif;
   color: white;
   line-height: 1em;
   margin: 0;
@@ -20,10 +20,13 @@ body {
 
 .header {
   position: sticky;
-  top: 0;
+  top: 0.4em;
   z-index: 1;
-  background-color: #525252;
-  padding: 0.1em 0 0.25em 0;
+  background-color: #323232;
+  margin: 1em;
+  padding-bottom: 0.25em;
+  border-radius: 2em;
+  opacity: 0.85;
 }
 
 nav {
@@ -36,7 +39,7 @@ a {
 }
 
 a:hover {
-  color: #bd4f37;
+  color: #cb9f57;
   text-decoration: underline;
 }
 
@@ -47,12 +50,16 @@ a:hover {
 }
 
 .plotly-graph {
-  border: 2px solid black;
+  border: 2px solid rgba(123, 104, 75, 0.85);
   height: 30em;
   width: 100% !important;
   border-radius: 1em;
   margin: 0.4em;
   overflow: hidden;
+}
+
+.plotly-graph:hover {
+    box-shadow: 0 0 0.5em #cb9f57;
 }
 
 img.logo {

@@ -29,7 +29,14 @@ def _aggregate_traces_json_as_figure(
             "y": 0.99,
             "xanchor": "left",
             "x": 0.01,
+            "bgcolor": "rgba(125, 125, 125, 0.5)",
         },
+        font={
+            "color": "white",
+        },
+        paper_bgcolor="rgba(34, 34, 34, 0.75)",
+        plot_bgcolor="rgba(123, 104, 75, 0.55)",
+        margin={"t": 75, "r": 75},
         autosize=True,
         **(layout or {}),
     )

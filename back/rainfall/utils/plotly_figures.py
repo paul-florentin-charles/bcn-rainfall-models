@@ -58,14 +58,15 @@ def get_figure_of_column_according_to_year(
         figure.update_layout(
             title=figure_label or label.value,
             legend={
-                "orientation": "h",
-                "yanchor": "bottom",
-                "y": 1.02,
-                "xanchor": "right",
-                "x": 1,
+                "yanchor": "top",
+                "y": 0.99,
+                "xanchor": "left",
+                "x": 0.01,
+                "bgcolor": "rgba(255, 255, 255, 0.5)",
             },
             xaxis={"title": Label.YEAR.value},
             yaxis={"title": label.value},
+            margin={"t": 75, "r": 75},
             autosize=True,
         )
 
@@ -116,9 +117,9 @@ def get_bar_figure_of_rainfall_averages(
             "xanchor": "left",
             "x": 0.01,
         },
+        xaxis={"title": time_mode.value.capitalize()[:-2]},
+        yaxis={"title": Label.RAINFALL.value},
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text=Label.RAINFALL.value)
 
     return figure
 
@@ -173,9 +174,9 @@ def get_bar_figure_of_rainfall_linreg_slopes(
             "xanchor": "left",
             "x": 0.01,
         },
+        xaxis={"title": time_mode.value.capitalize()[:-2]},
+        yaxis={"title": f"{Label.LINEAR_REGRESSION.value} slope (mm/year)"},
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
 
     return figure
 
@@ -230,8 +231,8 @@ def get_bar_figure_of_relative_distances_to_normal(
             "xanchor": "left",
             "x": 0.01,
         },
+        xaxis={"title": time_mode.value.capitalize()[:-2]},
+        yaxis={"title": "Relative distance to normal (%)"},
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text="Relative distance to normal (%)")
 
     return figure
