@@ -6,6 +6,19 @@
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
+> As of 07/02/2025, project is split into 2 main entities:
+> 1. A "backend" made of:
+>    1. **Custom classes** to easily load and manipulate _rainfall data_ from Barcelona.
+>    2. An **API** written with FastAPI that exposes this data.
+> 2. A **Webapp** run with Flask that calls the latter API to display data.
+>
+> The idea is the mid-run would be to split both entities into different repositories. 
+> 
+> Perhaps even make 3 repositories, and package them by the following order of priority:
+> 1. Custom classes
+> 2. API
+> 3. Webapp
+
 ## Requirements
 
 - Python 3.12
@@ -49,13 +62,11 @@ uv run coverage report
 ## Code quality
 
 ```commandline
-uv tool install mypy
-uv tool install ruff
-mypy --check-untyped-defs .
-ruff check
-ruff format
+uv tool run mypy --check-untyped-defs .
+uv tool run ruff check
+uv tool run ruff format
 ```
 
 ---
 
-<div style="text-align: center;">🄯 2023-2025 Paul Charles</div>
+<center>🄯 2023-2025 Paul Charles</center>
