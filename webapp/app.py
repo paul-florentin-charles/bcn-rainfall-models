@@ -30,6 +30,7 @@ def _aggregate_traces_json_as_figure(
             "xanchor": "left",
             "x": 0.01,
         },
+        autosize=True,
         **(layout or {}),
     )
 

@@ -18,19 +18,22 @@
 {% include 'includes/footer.html' %}
 </body>
 
+<script src="https://pure-css.github.io/js/menus.js"></script>
 <script type='text/javascript'>
     const graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
     const graphs_averages = {{ plotlyAveragesJSON|safe }};
     const graphs_linreg = {{ plotlyLinRegJSON|safe }};
     const graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
 
-    const config = {responsive: true, scrollZoom: true};
+    const config = {
+        responsive: true,
+        scrollZoom: true,
+    };
 
     Plotly.newPlot('chart_summer_rainfall', graphs_summer_rainfall, {}, config);
     Plotly.newPlot('chart_averages', graphs_averages, {}, config);
     Plotly.newPlot('chart_linreg', graphs_linreg, {}, config);
     Plotly.newPlot('chart_relative_distance_to_normal', graphs_relative_distance_to_normal, {}, config);
 </script>
-<script src="https://pure-css.github.io/js/menus.js"></script>
 
 </html>

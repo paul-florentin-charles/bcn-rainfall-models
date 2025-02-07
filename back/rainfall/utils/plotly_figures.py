@@ -64,9 +64,10 @@ def get_figure_of_column_according_to_year(
                 "xanchor": "right",
                 "x": 1,
             },
+            xaxis={"title": Label.YEAR.value},
+            yaxis={"title": label.value},
+            autosize=True,
         )
-        figure.update_xaxes(title_text=Label.YEAR.value)
-        figure.update_yaxes(title_text=label.value)
 
         return figure
 
