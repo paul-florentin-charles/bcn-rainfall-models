@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
           integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
-    <link rel="stylesheet" href="../static/styles/main.css">
+    <link rel="stylesheet" href="../static/css/main.css">
     <title>Barcelona Rainfall</title>
 </head>
 
@@ -19,12 +19,12 @@
 </body>
 
 <script type='text/javascript'>
-    var graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
-    var graphs_averages = {{ plotlyAveragesJSON|safe }};
-    var graphs_linreg = {{ plotlyLinRegJSON|safe }};
-    var graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
+    const graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
+    const graphs_averages = {{ plotlyAveragesJSON|safe }};
+    const graphs_linreg = {{ plotlyLinRegJSON|safe }};
+    const graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
 
-    var config = {responsive: true, scrollZoom: true};
+    const config = {responsive: true, scrollZoom: true};
 
     Plotly.newPlot('chart_summer_rainfall', graphs_summer_rainfall, {}, config);
     Plotly.newPlot('chart_averages', graphs_averages, {}, config);

@@ -32,10 +32,12 @@ nav {
 
 a {
   color: #eee6dc;
+  text-decoration: none;
 }
 
 a:hover {
   color: #bd4f37;
+  text-decoration: underline;
 }
 
 .plotly-graph {

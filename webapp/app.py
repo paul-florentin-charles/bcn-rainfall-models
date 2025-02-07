@@ -3,6 +3,8 @@ Webapp run with Flask that communicates with an API (FastAPI/Uvicorn) to display
 Work-in-progress!
 """
 
+from typing import Any
+
 import plotly.graph_objs as go
 import plotly.io
 from flask import Flask, render_template
@@ -14,7 +16,9 @@ flask_app = Flask(__name__)
 flask_app.register_blueprint(navbar)
 
 
-def _aggregate_traces_json_as_figure(traces_json: list[str]) -> go.Figure:
+def _aggregate_traces_json_as_figure(
+    traces_json: list[str], *, layout: dict[str, Any] | None = None
+) -> go.Figure:
     figure = go.Figure()
     for trace_json in traces_json:
         figure.add_traces(list(plotly.io.from_json(trace_json).select_traces()))
@@ -26,6 +30,7 @@ def _aggregate_traces_json_as_figure(traces_json: list[str]) -> go.Figure:
             "xanchor": "left",
             "x": 0.01,
         },
+        **(layout or {}),
     )
 
     return figure
@@ -57,12 +62,12 @@ def index():
     )
 
     fig_averages = _aggregate_traces_json_as_figure(
-        [monthly_averages, seasonal_averages]
+        [monthly_averages, seasonal_averages],
+        layout={
+            "title": f"Average rainfall (mm) between {BEGIN_YEAR} and {END_YEAR}",
+            "yaxis": {"title": "Rainfall (mm)"},
+        },
     )
-    fig_averages.update_layout(
-        title=f"Average rainfall (mm) between {BEGIN_YEAR} and {END_YEAR}"
-    )
-    fig_averages.update_yaxes(title_text="Rainfall (mm)")
 
     ## LinReg slopes ##
 
@@ -79,12 +84,12 @@ def index():
     )
 
     fig_linreg_slopes = _aggregate_traces_json_as_figure(
-        [monthly_linreg_slopes, seasonal_linreg_slopes]
+        [monthly_linreg_slopes, seasonal_linreg_slopes],
+        layout={
+            "title": f"Average linear regression slope (mm/year) between {BEGIN_YEAR} and {END_YEAR}",
+            "yaxis": {"title": "Linear regression slope (mm/year)"},
+        },
     )
-    fig_linreg_slopes.update_layout(
-        title=f"Average linear regression slope (mm/year) between {BEGIN_YEAR} and {END_YEAR}"
-    )
-    fig_linreg_slopes.update_yaxes(title_text="Linear regression slope (mm/year)")
 
     ## Relative distances to normal ##
 
@@ -107,13 +112,11 @@ def index():
     )
 
     fig_relative_distances_to_normal = _aggregate_traces_json_as_figure(
-        [monthly_relative_distances_to_normal, seasonal_relative_distances_to_normal]
-    )
-    fig_relative_distances_to_normal.update_layout(
-        title=f"Relative distance to {NORMAL_YEAR}-{NORMAL_YEAR + 29} normal (%) between {BEGIN_YEAR} and {END_YEAR}"
-    )
-    fig_relative_distances_to_normal.update_yaxes(
-        title_text="Relative distance to normal (%)"
+        [monthly_relative_distances_to_normal, seasonal_relative_distances_to_normal],
+        layout={
+            "title": f"Relative distance to {NORMAL_YEAR}-{NORMAL_YEAR + 29} normal (%) between {BEGIN_YEAR} and {END_YEAR}",
+            "yaxis": {"title": "Relative distance to normal (%)"},
+        },
     )
 
     return render_template(
