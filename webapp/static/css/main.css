@@ -50,11 +50,11 @@ a:hover {
 }
 
 .plotly-graph {
-  border: 2px solid rgba(123, 104, 75, 0.85);
+  border: 1px solid rgba(123, 104, 75, 0.9);
   height: 30em;
   width: 100% !important;
-  border-radius: 1em;
-  margin: 0.4em;
+  border-radius: 0.8em;
+  margin: 0.3em;
   overflow: hidden;
 }
 

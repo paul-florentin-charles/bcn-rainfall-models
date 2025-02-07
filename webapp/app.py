@@ -38,7 +38,7 @@ def _aggregate_traces_json_as_figure(
         },
         paper_bgcolor="rgba(34, 34, 34, 0.75)",
         plot_bgcolor="rgba(123, 104, 75, 0.55)",
-        margin={"t": 75, "r": 75},
+        margin={"t": 65, "r": 65, "b": 70, "l": 75},
         autosize=True,
         **(layout or {}),
     )
