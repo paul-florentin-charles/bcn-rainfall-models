@@ -4,7 +4,7 @@
 
 <div class="pure-g">
     <div class="pure-u-1 flex-center">
-        <div class="plotly-graph" id='chart_rainfall_relative_distance_to_normal'></div>
+        <div class="plotly-graph" id="chart_rainfall_relative_distance_to_normal"></div>
     </div>
 </div>
 
@@ -14,7 +14,9 @@
         scrollZoom: true,
     };
 
-    Plotly.newPlot('chart_rainfall_relative_distance_to_normal', {{ plotlyRainfallRelativeDistance2NormalJSON|safe }}, {}, config);
+    ['load', 'resize'].forEach(event => window.addEventListener(event, function() {
+        Plotly.newPlot('chart_rainfall_relative_distance_to_normal', {{ plotlyRainfallRelativeDistance2NormalJSON|safe }}, {}, config);
+    }))
 </script>
 
 {% endblock %}
