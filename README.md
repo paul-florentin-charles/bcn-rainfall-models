@@ -69,4 +69,4 @@ uv tool run ruff format
 
 ---
 
-<center>🄯 2023-2025 Paul Charles</center>
+<div style="text-align: center">🄯 2023-2025 Paul Charles</div>
