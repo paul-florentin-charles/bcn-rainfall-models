@@ -452,8 +452,8 @@ class YearlyRainfall:
                         x=yearly_rainfall[Label.YEAR.value],
                         y=linear_regression_values,
                         name=f"{Label.LINEAR_REGRESSION.value}"
-                        f" – <i>R2 score:</i> <b>{round(r2, 2)}</b>"
-                        f" – <i>slope:</i> {slope} mm/year",
+                        f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
+                        f"<br><i>slope:</i> {slope} mm/year",
                     )
                 )
 
