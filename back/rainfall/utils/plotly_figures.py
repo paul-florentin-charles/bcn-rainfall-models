@@ -30,7 +30,7 @@ def _update_plotly_figure_layout(
             "y": 0.99,
             "xanchor": "left",
             "x": 0.01,
-            "bgcolor": "rgba(255, 255, 255, 0.5)",
+            "bgcolor": "rgba(125, 125, 125, 0.6)",
         },
         font={
             "color": "white",

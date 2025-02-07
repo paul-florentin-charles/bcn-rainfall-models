@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
           integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
-    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/style.css">
     <title>Barcelona Rainfall</title>
 </head>
 
@@ -24,18 +24,7 @@
     const graphs_averages = {{ plotlyAveragesJSON|safe }};
     const graphs_linreg = {{ plotlyLinRegJSON|safe }};
     const graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
-
-    const config = {
-        responsive: true,
-        scrollZoom: true,
-    };
-
-    ['load', 'resize'].forEach(event => window.addEventListener(event, function() {
-        Plotly.newPlot('chart_summer_rainfall', graphs_summer_rainfall, {}, config);
-        Plotly.newPlot('chart_averages', graphs_averages, {}, config);
-        Plotly.newPlot('chart_linreg', graphs_linreg, {}, config);
-        Plotly.newPlot('chart_relative_distance_to_normal', graphs_relative_distance_to_normal, {}, config);
-    }))
 </script>
+<script src="../static/js/main.js"></script>
 
 </html>
