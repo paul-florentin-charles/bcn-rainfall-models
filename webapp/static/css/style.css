@@ -3,38 +3,42 @@
 }
 
 body {
-  background-color: #525252;
+  background-color: #3e3a36;
   font: 300 16px Khula, sans-serif;
   color: white;
-  line-height: 1em;
+  line-height: 0.8em;
   margin: 0;
 }
 
 .body {
-  padding: 0 0.7em;
+  padding: 0 0.8em;
 }
 
-.header, footer {
+.header, .footer {
   text-align: center;
+  top: 0.4em;
+  z-index: 1;
+  background-color: #201c17;
+  margin: 0.8em;
+  padding: 0.1em 0 0.4em 0;
+  border-radius: 2em;
+  opacity: 0.8;
 }
 
 .header {
   position: sticky;
-  top: 0.4em;
-  z-index: 1;
-  background-color: #323232;
-  margin: 1em;
-  padding-bottom: 0.25em;
-  border-radius: 2em;
-  opacity: 0.85;
 }
 
-nav {
-  margin-bottom: 0.5em;
+.menu-father {
+  color: #ecdabe;
+}
+
+.menu-father:hover {
+  text-decoration: none;
 }
 
 a {
-  color: #eee6dc;
+  color: #dac8b5;
   text-decoration: none;
 }
 
@@ -50,10 +54,10 @@ a:hover {
 }
 
 .plotly-graph {
-  border: 1px solid rgba(123, 104, 75, 0.9);
+  border: 1px solid rgba(85, 78, 71, 0.9);
   height: 30em;
   width: 100% !important;
-  border-radius: 0.8em;
+  border-radius: 1em;
   margin: 0.3em;
   overflow: hidden;
 }
@@ -63,7 +67,7 @@ a:hover {
 }
 
 img.logo {
-  padding: 0 0.2em;
+  margin: 0.1em 0.2em 0.3em 0.2em;
   filter: brightness(0) saturate(100%) invert(99%) sepia(33%) saturate(2112%) hue-rotate(304deg) brightness(119%) contrast(81%);
 }
 
