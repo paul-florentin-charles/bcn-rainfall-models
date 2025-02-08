@@ -434,11 +434,12 @@ class YearlyRainfall:
                     begin_year, end_year
                 )
 
-                figure.add_hline(
-                    average_rainfall,
-                    annotation_text=f"Average rainfall over period – {average_rainfall} mm",
-                    annotation_position="top left",
-                    opacity=0.9,
+                figure.add_trace(
+                    go.Scatter(
+                        x=yearly_rainfall[Label.YEAR.value],
+                        y=[average_rainfall] * len(yearly_rainfall),
+                        name="Average rainfall",
+                    )
                 )
 
             if plot_linear_regression:
