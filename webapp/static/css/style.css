@@ -1,76 +1,88 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  background-color: #3e3a36;
-  font: 300 16px Khula, sans-serif;
-  color: white;
-  line-height: 0.8em;
-  margin: 0;
+    background-color: #3e3a36;
+    font: 300 16px Khula, sans-serif;
+    color: white;
+    line-height: 0.8em;
+    margin: 0;
 }
 
 .body {
-  padding: 0 0.8em;
+    padding: 0 0.8em;
 }
 
 .header, .footer {
-  text-align: center;
-  top: 0.4em;
-  z-index: 1;
-  background-color: #201c17;
-  margin: 0.8em;
-  padding: 0.1em 0 0.4em 0;
-  border-radius: 2em;
-  opacity: 0.8;
+    text-align: center;
+    top: 0.4em;
+    z-index: 1;
+    background-color: #201c17;
+    margin: 0.8em;
+    padding: 0.1em 0 0.4em 0;
+    border-radius: 2em;
+    opacity: 0.8;
 }
 
 .header {
-  position: sticky;
+    position: sticky;
 }
 
 .menu-father {
-  color: #ecdabe;
+    color: #ecdabe;
 }
 
 .menu-father:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 a {
-  color: #dac8b5;
-  text-decoration: none;
+    color: #dac8b5;
+    text-decoration: none;
 }
 
 a:hover {
-  color: #cb9f57;
-  text-decoration: underline;
+    color: #cb9f57;
+    text-decoration: underline;
 }
 
 .flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .plotly-graph {
-  border: 1px solid rgba(85, 78, 71, 0.9);
-  height: 30em;
-  width: 100% !important;
-  border-radius: 1em;
-  margin: 0.3em;
-  overflow: hidden;
+    border: 1px solid rgba(85, 78, 71, 0.9);
+    height: 30em;
+    width: 100% !important;
+    border-radius: 1em;
+    margin: 0.3em;
+    overflow: hidden;
 }
 
 .plotly-graph:hover {
+    transition: box-shadow 350ms ease-in-out;
     box-shadow: 0 0 0.5em #cb9f57;
 }
 
 img.logo {
-  margin: 0.1em 0.2em 0.3em 0.2em;
-  filter: brightness(0) saturate(100%) invert(99%) sepia(33%) saturate(2112%) hue-rotate(304deg) brightness(119%) contrast(81%);
+    height: 1.8em;
+    margin: 0.1em 0.2em 0.3em 0.2em;
+    filter: brightness(0) saturate(100%) invert(99%) sepia(33%) saturate(2112%) hue-rotate(304deg) brightness(119%) contrast(81%);
 }
 
 img.logo:hover {
-  filter: brightness(0) saturate(100%) invert(49%) sepia(47%) saturate(451%) hue-rotate(353deg) brightness(96%) contrast(90%);
+    filter: brightness(0) saturate(100%) invert(49%) sepia(47%) saturate(451%) hue-rotate(353deg) brightness(96%) contrast(90%);
+}
+
+@media screen and (max-width: 767px) {
+    body {
+        font-size: 14px;
+    }
+
+    img.logo {
+        height: 1.6em;
+    }
 }
