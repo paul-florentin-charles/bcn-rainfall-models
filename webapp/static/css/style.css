@@ -78,7 +78,7 @@ a:hover {
 
 img.logo {
     height: 1.6em;
-    margin: 0.1em 0.2em 0.3em 0.2em;
+    margin: 0.1em 0.2em 0.4em 0.2em;
     filter: brightness(0) saturate(100%) invert(99%) sepia(33%) saturate(2112%) hue-rotate(304deg) brightness(119%) contrast(81%);
 }
 
@@ -88,12 +88,12 @@ img.logo:hover {
 
 .scroll-to-top {
     position: fixed;
-    bottom: 2.1em;
-    right: 2.1em;
+    bottom: 2.3em;
+    right: 2.3em;
     background-color: var(--link-color);
     color: black;
-    width: 2.75em;
-    height: 2.75em;
+    width: 2.5em;
+    height: 2.5em;
     border-radius: 25%;
     cursor: pointer;
     display: flex;
