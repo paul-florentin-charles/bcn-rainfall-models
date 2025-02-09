@@ -1,9 +1,17 @@
+:root {
+    --background-color: #3e3a36;
+    --header-background-color: #201c17;
+    --link-color: #dac8b5;
+    --link-hover-color: #cb9f57;
+    --graph-border-color: rgba(85, 78, 71, 0.65);
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
-    background-color: #3e3a36;
+    background-color: var(--background-color);
     font: 300 16px Khula, sans-serif;
     color: white;
     line-height: 0.8em;
@@ -18,7 +26,7 @@ body {
     text-align: center;
     top: 0.4em;
     z-index: 1;
-    background-color: #201c17;
+    background-color: var(--header-background-color);
     margin: 0.8em;
     padding: 0.1em 0 0.4em 0;
     border-radius: 2em;
@@ -30,7 +38,7 @@ body {
 }
 
 .menu-father {
-    color: #ecdabe;
+    color: var(--link-color);
 }
 
 .menu-father:hover {
@@ -38,12 +46,12 @@ body {
 }
 
 a {
-    color: #dac8b5;
+    color: var(--link-color);
     text-decoration: none;
 }
 
 a:hover {
-    color: #cb9f57;
+    color: var(--link-hover-color);
     text-decoration: underline;
 }
 
@@ -54,7 +62,7 @@ a:hover {
 }
 
 .plotly-graph {
-    border: 1px solid rgba(85, 78, 71, 0.9);
+    border: 1px solid var(--graph-border-color);
     height: 30em;
     width: 100% !important;
     border-radius: 1em;
@@ -63,12 +71,12 @@ a:hover {
 }
 
 .plotly-graph:hover {
-    transition: box-shadow 350ms ease-in-out;
-    box-shadow: 0 0 0.5em #cb9f57;
+    transition: box-shadow 300ms ease-in-out;
+    box-shadow: 0 0 0.5em var(--link-hover-color);
 }
 
 img.logo {
-    height: 1.8em;
+    height: 1.6em;
     margin: 0.1em 0.2em 0.3em 0.2em;
     filter: brightness(0) saturate(100%) invert(99%) sepia(33%) saturate(2112%) hue-rotate(304deg) brightness(119%) contrast(81%);
 }
@@ -80,9 +88,5 @@ img.logo:hover {
 @media screen and (max-width: 767px) {
     body {
         font-size: 14px;
-    }
-
-    img.logo {
-        height: 1.6em;
     }
 }

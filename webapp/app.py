@@ -54,7 +54,6 @@ def index():
         end_year=END_YEAR,
         season="summer",
         plot_average=True,
-        plot_linear_regression=True,
     )
 
     ## Averages ##

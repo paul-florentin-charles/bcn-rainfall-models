@@ -16,7 +16,14 @@ def rainfall_average():
             begin_year=BEGIN_YEAR,
             end_year=END_YEAR,
             plot_average=True,
+        ),
+        plotlyRainfallAverageJSON2=api_client.get_rainfall_by_year_as_plotly_json(
+            time_mode="seasonal",
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
+            plot_average=True,
             plot_linear_regression=True,
+            season="winter",
         ),
     )
 
