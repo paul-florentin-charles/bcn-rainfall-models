@@ -86,8 +86,7 @@ def get_figure_of_column_according_to_year(
         return None
 
     if plotly_trace := _get_plotly_trace_by_figure_type(figure_type):
-        figure = go.Figure()
-        figure.add_trace(
+        figure = go.Figure(
             plotly_trace(
                 x=yearly_rainfall[Label.YEAR.value],
                 y=yearly_rainfall[label.value],
@@ -138,8 +137,7 @@ def get_bar_figure_of_rainfall_averages(
             )
         )
 
-    figure = go.Figure()
-    figure.add_trace(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
+    figure = go.Figure(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
 
     _update_plotly_figure_layout(
         figure,
@@ -184,8 +182,7 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         slopes.append(slope)
         r2_scores.append(r2_score)
 
-    figure = go.Figure()
-    figure.add_trace(
+    figure = go.Figure(
         go.Bar(
             x=labels,
             y=slopes,
@@ -236,8 +233,7 @@ def get_bar_figure_of_relative_distances_to_normal(
             )
         )
 
-    figure = go.Figure()
-    figure.add_trace(
+    figure = go.Figure(
         go.Bar(
             x=labels,
             y=relative_distances_to_normal,
