@@ -73,6 +73,12 @@ def years_above_normal():
             end_year=END_YEAR,
             season="fall",
         ),
+        plotlyYearsAboveNormalJSON2=api_client.get_pourcentage_of_years_above_and_below_normal_as_plotly_json(
+            time_mode="yearly",
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
+        ),
     )
 
 
