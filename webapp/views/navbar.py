@@ -57,13 +57,15 @@ def years_below_normal():
 
 @navbar.route("/years_above_normal")
 def years_above_normal():
-    return jsonify(
-        api_client.get_years_above_normal(
-            time_mode="yearly",
+    return render_template(
+        "sections/years_above_normal.html",
+        plotlyYearsAboveNormalJSON=api_client.get_pourcentage_of_years_above_and_below_normal_as_plotly_json(
+            time_mode="seasonal",
             normal_year=NORMAL_YEAR,
             begin_year=BEGIN_YEAR,
             end_year=END_YEAR,
-        )
+            season="fall",
+        ),
     )
 
 

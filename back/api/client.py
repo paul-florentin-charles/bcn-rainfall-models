@@ -236,3 +236,25 @@ class APIClient(APISession):
                 "end_year": end_year,
             },
         )
+
+    def get_pourcentage_of_years_above_and_below_normal_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ):
+        return self.get_json_api(
+            "/graph/pourcentage_of_years_above_and_below_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month,
+                "season": season,
+            },
+        )

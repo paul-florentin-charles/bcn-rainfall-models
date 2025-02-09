@@ -124,3 +124,29 @@ def get_relative_distances_to_normal_as_plotly_json(
     )
 
     return figure.to_json()
+
+
+def get_pourcentage_of_years_above_and_below_normal_as_plotly_json(
+    time_mode: TimeMode,
+    normal_year: Annotated[
+        int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_NORMAL_YEAR_AVAILABLE)
+    ],
+    begin_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)],
+    end_year: Annotated[int, Query(ge=MIN_YEAR_AVAILABLE, le=MAX_YEAR_AVAILABLE)]
+    | None = None,
+    month: Month | None = None,
+    season: Season | None = None,
+):
+    if end_year is None:
+        end_year = MAX_YEAR_AVAILABLE
+
+    figure = all_rainfall.get_pie_figure_of_years_above_and_below_normal(
+        time_mode=time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+    )
+
+    return figure.to_json()

@@ -2,6 +2,8 @@
 Provides useful functions for plotting rainfall data in all shapes.
 """
 
+from typing import Any
+
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.basedatatypes import BaseTraceType
@@ -19,12 +21,14 @@ def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | 
 
 
 def _update_plotly_figure_layout(
-    figure: go.Figure, *, title: str, xaxis_title: str, yaxis_title: str
+    figure: go.Figure,
+    *,
+    title: str,
+    xaxis_title: str | None = None,
+    yaxis_title: str | None = None,
 ):
     figure.update_layout(
         title=title,
-        xaxis={"title": xaxis_title},
-        yaxis={"title": yaxis_title},
         legend={
             "yanchor": "top",
             "y": 0.99,
@@ -42,6 +46,16 @@ def _update_plotly_figure_layout(
         margin={"t": 65, "r": 65, "b": 70, "l": 75},
         autosize=True,
     )
+
+    if xaxis_title is not None:
+        figure.update_layout(
+            xaxis={"title": xaxis_title},
+        )
+
+    if yaxis_title is not None:
+        figure.update_layout(
+            yaxis={"title": yaxis_title},
+        )
 
 
 def get_figure_of_column_according_to_year(
@@ -236,6 +250,57 @@ def get_bar_figure_of_relative_distances_to_normal(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
         xaxis_title=time_mode.value.capitalize()[:-2],
         yaxis_title="Relative distance to normal (%)",
+    )
+
+    return figure
+
+
+def get_pie_figure_of_years_above_and_below_normal(
+    rainfall_instance: Any,
+    *,
+    normal_year: int,
+    begin_year: int,
+    end_year: int,
+) -> go.Figure:
+    """
+    Return plotly pie figure displaying the pourcentage of years above and below normal for the given time mode,
+    between the given years, and for the normal computed from the given year.
+
+    :param rainfall_instance: An instance of one these 3 classes: [YearlyRainfall, MonthlyRainfall, SeasonalRainfall].
+    :param normal_year: An integer representing the year
+    to start computing the 30 years normal of the rainfall.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the pourcentage of years above and below normal as a pie chart.
+    """
+    from back.rainfall.models.monthly_rainfall import MonthlyRainfall
+    from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
+
+    figure = go.Figure(
+        go.Pie(
+            labels=["Years above normal", "Years below normal"],
+            values=[
+                rainfall_instance.get_years_above_normal(
+                    normal_year, begin_year, end_year
+                ),
+                rainfall_instance.get_years_below_normal(
+                    normal_year, begin_year, end_year
+                ),
+            ],
+        )
+    )
+
+    figure_title = f"Years compared to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year}"
+    if isinstance(rainfall_instance, MonthlyRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.month.value}"
+    elif isinstance(rainfall_instance, SeasonalRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.season.value}"
+
+    _update_plotly_figure_layout(
+        figure,
+        title=f"{figure_title} (%)",
     )
 
     return figure

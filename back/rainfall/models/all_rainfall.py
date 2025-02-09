@@ -532,6 +532,54 @@ class AllRainfall:
             end_year=end_year,
         )
 
+    def get_pie_figure_of_years_above_and_below_normal(
+        self,
+        *,
+        time_mode: TimeMode,
+        normal_year: int,
+        begin_year: int,
+        end_year: int,
+        month: Month | None = None,
+        season: Season | None = None,
+    ) -> go.Figure | None:
+        """
+        Return plotly pie figure displaying the pourcentage of years above and below normal for the given time mode,
+        between the given years, and for the normal computed from the given year.
+
+        :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param month: A Month Enum: ['January', 'February', ..., 'December']
+        Set if time_mode is 'monthly' (optional).
+        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
+        Set if time_mode is 'seasonal' (optional).
+        :return: A plotly Figure object of the pourcentage of years above and below normal as a pie chart.
+        None if time_mode is 'monthly' but 'month' is None or if time_mode is 'seasonal' but 'season' is None.
+        """
+        rainfall_instance: (
+            YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None
+        ) = None
+        if time_mode == TimeMode.YEARLY:
+            rainfall_instance = self.yearly_rainfall
+        elif time_mode == TimeMode.MONTHLY and month:
+            rainfall_instance = self.monthly_rainfalls[month.value]
+        elif time_mode == TimeMode.SEASONAL and season:
+            rainfall_instance = self.seasonal_rainfalls[season.value]
+
+        if rainfall_instance is None:
+            return None
+
+        return plot.get_pie_figure_of_years_above_and_below_normal(
+            rainfall_instance,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+
     def get_entity_for_time_mode(
         self,
         time_mode: TimeMode,
