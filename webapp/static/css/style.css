@@ -3,6 +3,7 @@
     --header-background-color: #201c17;
     --link-color: #dacbbb;
     --link-hover-color: #cb9f57;
+    --scroll-button-hover-color: #b6993e;
     --graph-border-color: rgba(85, 78, 71, 0.65);
 }
 
@@ -83,6 +84,41 @@ img.logo {
 
 img.logo:hover {
     filter: brightness(0) saturate(100%) invert(49%) sepia(47%) saturate(451%) hue-rotate(353deg) brightness(96%) contrast(90%);
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 2.1em;
+    right: 2.1em;
+    background-color: var(--link-color);
+    color: black;
+    width: 2.75em;
+    height: 2.75em;
+    border-radius: 25%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 300ms ease;
+    z-index: 2;
+}
+
+.scroll-to-top.visible {
+    opacity: 0.8;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover, .scroll-to-top:active {
+    background-color: var(--scroll-button-hover-color);
+    box-shadow: 0 0 0.25em var(--link-color);
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-4px);
 }
 
 @media screen and (max-width: 767px) {
