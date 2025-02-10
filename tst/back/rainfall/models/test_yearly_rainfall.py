@@ -3,8 +3,7 @@ import plotly.graph_objs as go
 from pytest import raises
 
 from back.rainfall.models.yearly_rainfall import YearlyRainfall
-from back.rainfall.utils import Label, Month
-from back.rainfall.utils.custom_exceptions import DataFormatError
+from back.rainfall.utils import DataFormatError, Label, Month
 from tst.back.rainfall.models.test_all_rainfall import (
     ALL_RAINFALL,
     begin_year,

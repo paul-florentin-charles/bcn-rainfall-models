@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.rainfall.utils import Label, TimeMode, Month, Season
+from back.rainfall.utils import Label, Month, Season, TimeMode
 from back.rainfall.utils import plotly_figures as plot
 from tst.back.rainfall.models.test_all_rainfall import begin_year, end_year, normal_year
 from tst.back.rainfall.models.test_yearly_rainfall import ALL_RAINFALL, YEARLY_RAINFALL

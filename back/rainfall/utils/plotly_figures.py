@@ -48,14 +48,10 @@ def _update_plotly_figure_layout(
     )
 
     if xaxis_title is not None:
-        figure.update_layout(
-            xaxis={"title": xaxis_title},
-        )
+        figure.update_xaxes(title_text=xaxis_title)
 
     if yaxis_title is not None:
-        figure.update_layout(
-            yaxis={"title": yaxis_title},
-        )
+        figure.update_yaxes(title_text=yaxis_title)
 
 
 def get_figure_of_column_according_to_year(
@@ -259,7 +255,7 @@ def get_pie_figure_of_years_above_and_below_normal(
     end_year: int,
 ) -> go.Figure:
     """
-    Return plotly pie figure displaying the pourcentage of years above and below normal for the given time mode,
+    Return plotly pie figure displaying the percentage of years above and below normal for the given time mode,
     between the given years, and for the normal computed from the given year.
 
     :param rainfall_instance: An instance of one these 3 classes: [YearlyRainfall, MonthlyRainfall, SeasonalRainfall].
@@ -269,7 +265,7 @@ def get_pie_figure_of_years_above_and_below_normal(
     to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values.
-    :return: A plotly Figure object of the pourcentage of years above and below normal as a pie chart.
+    :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
     """
     from back.rainfall.models.monthly_rainfall import MonthlyRainfall
     from back.rainfall.models.seasonal_rainfall import SeasonalRainfall

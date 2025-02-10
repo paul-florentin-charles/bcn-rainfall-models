@@ -2,21 +2,10 @@
 Collection of utility functions for API purposes.
 """
 
-import mimetypes
-
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from back.rainfall.utils import BaseEnum, Month, Season, TimeMode
-
-
-class MediaType(BaseEnum):
-    """
-    An Enum listing useful MIME types.
-    """
-
-    TXT_CSV = mimetypes.types_map[".csv"]
-    IMG_PNG = mimetypes.types_map[".png"]
+from back.rainfall.utils import Month, Season, TimeMode
 
 
 class RainfallModel(BaseModel):
@@ -28,7 +17,7 @@ class RainfallModel(BaseModel):
     name: str
     value: float | int
     begin_year: int
-    end_year: int | None = None
+    end_year: int
     normal_year: int | None = None
     time_mode: TimeMode = TimeMode.YEARLY
     month: Month | None = None

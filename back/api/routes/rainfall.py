@@ -30,15 +30,17 @@ async def get_rainfall_average(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    rainfall_average = all_rainfall.get_rainfall_average(
+        time_mode,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+    )
+
     return RainfallModel(
         name="rainfall average (mm)",
-        value=all_rainfall.get_rainfall_average(
-            time_mode,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month,
-            season=season,
-        ),  # type: ignore
+        value=rainfall_average,  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
         time_mode=time_mode,
@@ -57,14 +59,16 @@ async def get_rainfall_normal(
 ):
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    normal = all_rainfall.get_normal(
+        time_mode,
+        begin_year=begin_year,
+        month=month,
+        season=season,
+    )
+
     return RainfallModel(
         name="rainfall normal (mm)",
-        value=all_rainfall.get_normal(
-            time_mode,
-            begin_year=begin_year,
-            month=month,
-            season=season,
-        ),  # type: ignore
+        value=normal,  # type: ignore
         begin_year=begin_year,
         end_year=begin_year + 29,
         time_mode=time_mode,
@@ -90,16 +94,18 @@ async def get_rainfall_relative_distance_to_normal(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    relative_distance_to_normal = all_rainfall.get_relative_distance_to_normal(
+        time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+    )
+
     return RainfallModel(
         name="relative distance to rainfall normal (%)",
-        value=all_rainfall.get_relative_distance_to_normal(
-            time_mode,
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month,
-            season=season,
-        ),  # type: ignore
+        value=relative_distance_to_normal,  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
         end_year=end_year,
@@ -124,16 +130,18 @@ async def get_rainfall_standard_deviation(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    rainfall_standard_deviation = all_rainfall.get_rainfall_standard_deviation(
+        time_mode,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+        weigh_by_average=weigh_by_average,
+    )
+
     return RainfallModel(
         name=f"rainfall standard deviation {'weighted by average' if weigh_by_average else '(mm)'}",
-        value=all_rainfall.get_rainfall_standard_deviation(
-            time_mode,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month,
-            season=season,
-            weigh_by_average=weigh_by_average,
-        ),  # type: ignore
+        value=rainfall_standard_deviation,  # type: ignore
         begin_year=begin_year,
         end_year=end_year,
         time_mode=time_mode,

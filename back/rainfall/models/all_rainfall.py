@@ -543,7 +543,7 @@ class AllRainfall:
         season: Season | None = None,
     ) -> go.Figure | None:
         """
-        Return plotly pie figure displaying the pourcentage of years above and below normal for the given time mode,
+        Return plotly pie figure displaying the percentage of years above and below normal for the given time mode,
         between the given years, and for the normal computed from the given year.
 
         :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
@@ -557,7 +557,7 @@ class AllRainfall:
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
-        :return: A plotly Figure object of the pourcentage of years above and below normal as a pie chart.
+        :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
         None if time_mode is 'monthly' but 'month' is None or if time_mode is 'seasonal' but 'season' is None.
         """
         rainfall_instance: (

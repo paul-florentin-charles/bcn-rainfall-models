@@ -39,7 +39,7 @@ class APIRouteSpecs(BaseModel):
 def get_endpoint_to_api_route_specs() -> dict[Callable[..., Any], APIRouteSpecs]:
     from back.api.routes.csv import get_rainfall_by_year_as_csv
     from back.api.routes.graph import (
-        get_pourcentage_of_years_above_and_below_normal_as_plotly_json,
+        get_percentage_of_years_above_and_below_normal_as_plotly_json,
         get_rainfall_averages_as_plotly_json,
         get_rainfall_by_year_as_plotly_json,
         get_rainfall_linreg_slopes_as_plotly_json,
@@ -132,8 +132,8 @@ def get_endpoint_to_api_route_specs() -> dict[Callable[..., Any], APIRouteSpecs]
             description=f"Time mode should be either '{TimeMode.MONTHLY.value}' or '{TimeMode.SEASONAL.value}'.<br>"
             f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
         ),
-        get_pourcentage_of_years_above_and_below_normal_as_plotly_json: APIRouteSpecs(
-            path="/graph/pourcentage_of_years_above_and_below_normal",
+        get_percentage_of_years_above_and_below_normal_as_plotly_json: APIRouteSpecs(
+            path="/graph/percentage_of_years_above_and_below_normal",
             summary="Retrieve pie chart of years above compared to years below normal (%) of data as a JSON.",
             description=f"If no ending year is precised, most recent year available is taken: {MAX_YEAR_AVAILABLE}.",
         ),

@@ -6,17 +6,13 @@ from typing import Any, Callable
 
 from fastapi import FastAPI
 
-from back.api.routes import (
-    MAX_YEAR_AVAILABLE,
-    MIN_YEAR_AVAILABLE,
-    get_endpoint_to_api_route_specs,
-)
-
 
 class FastAPPI(FastAPI):
     """Overrides FastAPI class to initiate our own app."""
 
     def __init__(self, **kwargs):
+        from back.api.routes import get_endpoint_to_api_route_specs
+
         super().__init__(**kwargs)
 
         for endpoint, api_route_specs in get_endpoint_to_api_route_specs().items():
@@ -27,6 +23,7 @@ class FastAPPI(FastAPI):
 
     @classmethod
     def from_config(cls):
+        from back.api.routes import MAX_YEAR_AVAILABLE, MIN_YEAR_AVAILABLE
         from config import Config
 
         return cls(

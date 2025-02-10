@@ -14,6 +14,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 from back.rainfall.utils import (
+    DataFormatError,
     Label,
     Month,
 )
@@ -26,7 +27,6 @@ from back.rainfall.utils import (
 from back.rainfall.utils import (
     rainfall_metrics as rain,
 )
-from back.rainfall.utils.custom_exceptions import DataFormatError
 
 
 class YearlyRainfall:
