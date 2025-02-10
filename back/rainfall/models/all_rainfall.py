@@ -4,13 +4,12 @@ At a yearly, monthly and seasonal level.
 """
 
 from pathlib import Path
+from typing import Union
 
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.rainfall.models.monthly_rainfall import MonthlyRainfall
-from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
-from back.rainfall.models.yearly_rainfall import YearlyRainfall
+import back.rainfall.models as models
 from back.rainfall.utils import Month, Season, TimeMode
 from back.rainfall.utils import plotly_figures as plot
 
@@ -36,11 +35,11 @@ class AllRainfall:
         self.starting_year = start_year
         self.round_precision = round_precision
         self.raw_data: pd.DataFrame = pd.read_csv(dataset_url_or_path)
-        self.yearly_rainfall = YearlyRainfall(
+        self.yearly_rainfall = models.YearlyRainfall(
             self.raw_data, start_year=start_year, round_precision=round_precision
         )
         self.monthly_rainfalls = {
-            month.value: MonthlyRainfall(
+            month.value: models.MonthlyRainfall(
                 self.raw_data,
                 month,
                 start_year=start_year,
@@ -49,7 +48,7 @@ class AllRainfall:
             for month in Month
         }
         self.seasonal_rainfalls = {
-            season.value: SeasonalRainfall(
+            season.value: models.SeasonalRainfall(
                 self.raw_data,
                 season,
                 start_year=start_year,
@@ -440,7 +439,7 @@ class AllRainfall:
             return None
 
         rainfall_instance_by_label: (
-            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+            dict[str, models.MonthlyRainfall] | dict[str, models.SeasonalRainfall]
         ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
@@ -477,7 +476,7 @@ class AllRainfall:
             return None
 
         rainfall_instance_by_label: (
-            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+            dict[str, models.MonthlyRainfall] | dict[str, models.SeasonalRainfall]
         ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
@@ -517,7 +516,7 @@ class AllRainfall:
             return None
 
         rainfall_instance_by_label: (
-            dict[str, MonthlyRainfall] | dict[str, SeasonalRainfall]
+            dict[str, models.MonthlyRainfall] | dict[str, models.SeasonalRainfall]
         ) = {}
         if time_mode == TimeMode.MONTHLY:
             rainfall_instance_by_label = self.monthly_rainfalls
@@ -561,7 +560,10 @@ class AllRainfall:
         None if time_mode is 'monthly' but 'month' is None or if time_mode is 'seasonal' but 'season' is None.
         """
         rainfall_instance: (
-            YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None
+            models.YearlyRainfall
+            | models.MonthlyRainfall
+            | models.SeasonalRainfall
+            | None
         ) = None
         if time_mode == TimeMode.YEARLY:
             rainfall_instance = self.yearly_rainfall
@@ -585,7 +587,12 @@ class AllRainfall:
         time_mode: TimeMode,
         month: Month | None = None,
         season: Season | None = None,
-    ) -> YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None:
+    ) -> Union[
+        "models.YearlyRainfall",
+        "models.MonthlyRainfall",
+        "models.SeasonalRainfall",
+        None,
+    ]:
         """
         Retrieve current entity for specified time mode,
         amongst instances of YearlyRainfall, MonthlyRainfall or SeasonsalRainfall.
@@ -600,7 +607,12 @@ class AllRainfall:
         None if time mode is unknown, time mode is 'monthly' and month is None
         or time mode is 'seasonal' and season is None.
         """
-        entity: YearlyRainfall | MonthlyRainfall | SeasonalRainfall | None = None
+        entity: (
+            models.YearlyRainfall
+            | models.MonthlyRainfall
+            | models.SeasonalRainfall
+            | None
+        ) = None
 
         if time_mode == TimeMode.YEARLY:
             entity = self.yearly_rainfall

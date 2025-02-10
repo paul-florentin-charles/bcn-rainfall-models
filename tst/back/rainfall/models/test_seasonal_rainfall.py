@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from pytest import raises
 
-from back.rainfall.models.seasonal_rainfall import SeasonalRainfall
+from back.rainfall.models import SeasonalRainfall
 from back.rainfall.utils import DataFormatError, Label, Month, Season
 from tst.back.rainfall.models.test_all_rainfall import (
     ALL_RAINFALL,
