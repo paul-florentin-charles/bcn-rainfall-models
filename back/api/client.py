@@ -2,9 +2,7 @@
 API client built to interact with FastAPI application without needing the knowledge of the routes URLs.
 """
 
-from typing import Any
-
-from api_session import APISession
+from api_session import APISession, JSONDict
 
 
 class APIClient(APISession):
@@ -26,7 +24,7 @@ class APIClient(APISession):
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> JSONDict:
         return self.get_json_api(
             "/rainfall/average",
             params={
@@ -45,7 +43,7 @@ class APIClient(APISession):
         begin_year: int,
         month: str | None = None,
         season: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> JSONDict:
         return self.get_json_api(
             "/rainfall/normal",
             params={
@@ -65,7 +63,7 @@ class APIClient(APISession):
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> JSONDict:
         return self.get_json_api(
             "/rainfall/relative_distance_to_normal",
             params={
@@ -109,7 +107,7 @@ class APIClient(APISession):
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> JSONDict:
         return self.get_json_api(
             "/year/below_normal",
             params={
@@ -131,7 +129,7 @@ class APIClient(APISession):
         end_year: int | None = None,
         month: str | None = None,
         season: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> JSONDict:
         return self.get_json_api(
             "/year/above_normal",
             params={
@@ -234,5 +232,27 @@ class APIClient(APISession):
                 "normal_year": normal_year,
                 "begin_year": begin_year,
                 "end_year": end_year,
+            },
+        )
+
+    def get_percentage_of_years_above_and_below_normal_as_plotly_json(
+        self,
+        *,
+        time_mode: str,
+        normal_year: int,
+        begin_year: int,
+        end_year: int | None = None,
+        month: str | None = None,
+        season: str | None = None,
+    ):
+        return self.get_json_api(
+            "/graph/percentage_of_years_above_and_below_normal",
+            params={
+                "time_mode": time_mode,
+                "normal_year": normal_year,
+                "begin_year": begin_year,
+                "end_year": end_year,
+                "month": month,
+                "season": season,
             },
         )

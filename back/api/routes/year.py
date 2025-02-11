@@ -33,16 +33,18 @@ async def get_years_below_normal(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    years_below_normal = all_rainfall.get_years_below_normal(
+        time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+    )
+
     return RainfallModel(
         name="years below rainfall normal",
-        value=all_rainfall.get_years_below_normal(
-            time_mode,
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month,
-            season=season,
-        ),  # type: ignore
+        value=years_below_normal,  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
         end_year=end_year,
@@ -69,16 +71,18 @@ async def get_years_above_normal(
     raise_year_related_error_or_do_nothing(begin_year, end_year)
     raise_time_mode_error_or_do_nothing(time_mode, month, season)
 
+    years_above_normal = all_rainfall.get_years_above_normal(
+        time_mode,
+        normal_year=normal_year,
+        begin_year=begin_year,
+        end_year=end_year,
+        month=month,
+        season=season,
+    )
+
     return RainfallModel(
         name="years above rainfall normal",
-        value=all_rainfall.get_years_above_normal(
-            time_mode,
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
-            month=month,
-            season=season,
-        ),  # type: ignore
+        value=years_above_normal,  # type: ignore
         normal_year=normal_year,
         begin_year=begin_year,
         end_year=end_year,

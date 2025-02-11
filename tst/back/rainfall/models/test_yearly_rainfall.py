@@ -2,9 +2,8 @@ import pandas as pd
 import plotly.graph_objs as go
 from pytest import raises
 
-from back.rainfall.models.yearly_rainfall import YearlyRainfall
-from back.rainfall.utils import Label, Month
-from back.rainfall.utils.custom_exceptions import DataFormatError
+from back.rainfall.models import YearlyRainfall
+from back.rainfall.utils import DataFormatError, Label, Month
 from tst.back.rainfall.models.test_all_rainfall import (
     ALL_RAINFALL,
     begin_year,
@@ -67,7 +66,18 @@ class TestYearlyRainfall:
         assert isinstance(normal, float)
 
     @staticmethod
-    def test_get_years_below_average():
+    def test_get_years_below_percentage_of_normal():
+        n_years_below_normal_percentage = (
+            YEARLY_RAINFALL.get_years_below_percentage_of_normal(
+                normal_year, begin_year, end_year, percentage=75.0
+            )
+        )
+
+        assert isinstance(n_years_below_normal_percentage, int)
+        assert n_years_below_normal_percentage <= end_year - begin_year + 1
+
+    @staticmethod
+    def test_get_years_below_normal():
         n_years_below_avg = YEARLY_RAINFALL.get_years_below_normal(
             normal_year, begin_year, end_year
         )
@@ -76,7 +86,18 @@ class TestYearlyRainfall:
         assert n_years_below_avg <= end_year - begin_year + 1
 
     @staticmethod
-    def test_get_years_above_average():
+    def test_get_years_above_percentage_of_normal():
+        n_years_above_normal_percentage = (
+            YEARLY_RAINFALL.get_years_above_percentage_of_normal(
+                normal_year, begin_year, end_year, percentage=125.0
+            )
+        )
+
+        assert isinstance(n_years_above_normal_percentage, int)
+        assert n_years_above_normal_percentage <= end_year - begin_year + 1
+
+    @staticmethod
+    def test_get_years_above_normal():
         n_years_above_avg = YEARLY_RAINFALL.get_years_above_normal(
             normal_year, begin_year, end_year
         )

@@ -9,7 +9,6 @@ from back.api.routes import (
     all_rainfall,
 )
 from back.api.utils import (
-    MediaType,
     raise_time_mode_error_or_do_nothing,
     raise_year_related_error_or_do_nothing,
 )
@@ -47,5 +46,5 @@ def get_rainfall_by_year_as_csv(
     return StreamingResponse(
         iter(csv_str),
         headers={"Content-Disposition": f'inline; filename="{filename}.csv"'},
-        media_type=MediaType.TXT_CSV.value,
+        media_type="text/csv",
     )

@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.graph_objs as go
 
-from back.rainfall.utils import Label, TimeMode
+from back.rainfall.utils import Label, Month, Season, TimeMode
 from back.rainfall.utils import plotly_figures as plot
 from tst.back.rainfall.models.test_all_rainfall import begin_year, end_year, normal_year
 from tst.back.rainfall.models.test_yearly_rainfall import ALL_RAINFALL, YEARLY_RAINFALL
@@ -83,6 +83,26 @@ class TestPlotting:
         figure = plot.get_bar_figure_of_relative_distances_to_normal(
             ALL_RAINFALL.seasonal_rainfalls,
             time_mode=TimeMode.SEASONAL,
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+
+        assert isinstance(figure, go.Figure)
+
+    @staticmethod
+    def test_get_pie_figure_of_years_above_and_below_normal():
+        figure = plot.get_pie_figure_of_years_above_and_below_normal(
+            ALL_RAINFALL.monthly_rainfalls[Month.SEPTEMBER.value],
+            normal_year=normal_year,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+
+        assert isinstance(figure, go.Figure)
+
+        figure = plot.get_pie_figure_of_years_above_and_below_normal(
+            ALL_RAINFALL.seasonal_rainfalls[Season.WINTER.value],
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,

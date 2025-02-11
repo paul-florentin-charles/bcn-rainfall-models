@@ -22,7 +22,7 @@ class SeasonalRainfall(YearlyRainfall):
         start_year: int,
         round_precision: int,
     ):
-        self.season: Season = season
+        self.season = season
         super().__init__(
             raw_data, start_year=start_year, round_precision=round_precision
         )
@@ -34,10 +34,11 @@ class SeasonalRainfall(YearlyRainfall):
         :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance season according to year.
         """
+        months = self.season.get_months()
 
         return self.load_rainfall(
-            self.season.get_months()[0],
-            self.season.get_months()[-1],
+            months[0],
+            months[-1],
         )
 
     def get_bar_figure_of_rainfall_according_to_year(

@@ -2,10 +2,13 @@
 Provides useful functions for plotting rainfall data in all shapes.
 """
 
+from typing import Union
+
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.basedatatypes import BaseTraceType
 
+import back.rainfall.models as models
 from back.rainfall.utils import Label, TimeMode
 
 FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[BaseTraceType]] = {
@@ -16,6 +19,40 @@ FIGURE_TYPE_TO_PLOTLY_TRACE: dict[str, type[BaseTraceType]] = {
 
 def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | None:
     return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
+
+
+def _update_plotly_figure_layout(
+    figure: go.Figure,
+    *,
+    title: str,
+    xaxis_title: str | None = None,
+    yaxis_title: str | None = None,
+):
+    figure.update_layout(
+        title=title,
+        legend={
+            "yanchor": "top",
+            "y": 0.99,
+            "xanchor": "left",
+            "x": 0.01,
+            "bgcolor": "rgba(125, 125, 125, 0.7)",
+        },
+        font={
+            "color": "white",
+            "family": "Khula, sans-serif",
+            "size": 11,
+        },
+        paper_bgcolor="rgba(34, 34, 34, 0.6)",
+        plot_bgcolor="rgba(123, 104, 75, 0.3)",
+        margin={"t": 65, "r": 65, "b": 70, "l": 75},
+        autosize=True,
+    )
+
+    if xaxis_title is not None:
+        figure.update_xaxes(title_text=xaxis_title)
+
+    if yaxis_title is not None:
+        figure.update_yaxes(title_text=yaxis_title)
 
 
 def get_figure_of_column_according_to_year(
@@ -46,8 +83,7 @@ def get_figure_of_column_according_to_year(
         return None
 
     if plotly_trace := _get_plotly_trace_by_figure_type(figure_type):
-        figure = go.Figure()
-        figure.add_trace(
+        figure = go.Figure(
             plotly_trace(
                 x=yearly_rainfall[Label.YEAR.value],
                 y=yearly_rainfall[label.value],
@@ -55,18 +91,12 @@ def get_figure_of_column_according_to_year(
             )
         )
 
-        figure.update_layout(
+        _update_plotly_figure_layout(
+            figure,
             title=figure_label or label.value,
-            legend={
-                "orientation": "h",
-                "yanchor": "bottom",
-                "y": 1.02,
-                "xanchor": "right",
-                "x": 1,
-            },
+            xaxis_title=Label.YEAR.value,
+            yaxis_title=label.value,
         )
-        figure.update_xaxes(title_text=Label.YEAR.value)
-        figure.update_yaxes(title_text=label.value)
 
         return figure
 
@@ -74,7 +104,8 @@ def get_figure_of_column_according_to_year(
 
 
 def get_bar_figure_of_rainfall_averages(
-    rainfall_instance_by_label: dict,
+    rainfall_instance_by_label: dict[str, "models.MonthlyRainfall"]
+    | dict[str, "models.SeasonalRainfall"],
     *,
     time_mode: TimeMode,
     begin_year: int,
@@ -104,26 +135,21 @@ def get_bar_figure_of_rainfall_averages(
             )
         )
 
-    figure = go.Figure()
-    figure.add_trace(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
+    figure = go.Figure(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"Average rainfall (mm) between {begin_year} and {end_year}",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title=Label.RAINFALL.value,
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text=Label.RAINFALL.value)
 
     return figure
 
 
 def get_bar_figure_of_rainfall_linreg_slopes(
-    rainfall_instance_by_label: dict,
+    rainfall_instance_by_label: dict[str, "models.MonthlyRainfall"]
+    | dict[str, "models.SeasonalRainfall"],
     *,
     time_mode: TimeMode,
     begin_year: int,
@@ -155,8 +181,7 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         slopes.append(slope)
         r2_scores.append(r2_score)
 
-    figure = go.Figure()
-    figure.add_trace(
+    figure = go.Figure(
         go.Bar(
             x=labels,
             y=slopes,
@@ -164,23 +189,19 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         )
     )
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)",
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)")
 
     return figure
 
 
 def get_bar_figure_of_relative_distances_to_normal(
-    rainfall_instance_by_label: dict,
+    rainfall_instance_by_label: dict[str, "models.MonthlyRainfall"]
+    | dict[str, "models.SeasonalRainfall"],
     *,
     time_mode: TimeMode,
     normal_year: int,
@@ -203,7 +224,7 @@ def get_bar_figure_of_relative_distances_to_normal(
     :return: A plotly Figure object of the rainfall relative distances to normal for each month or for each season.
     """
     labels: list[str] = []
-    relative_distances_to_normal: list[float] = []
+    relative_distances_to_normal: list[float | None] = []
     for label, rainfall_instance in rainfall_instance_by_label.items():
         labels.append(label)
         relative_distances_to_normal.append(
@@ -212,8 +233,7 @@ def get_bar_figure_of_relative_distances_to_normal(
             )
         )
 
-    figure = go.Figure()
-    figure.add_trace(
+    figure = go.Figure(
         go.Bar(
             x=labels,
             y=relative_distances_to_normal,
@@ -221,16 +241,85 @@ def get_bar_figure_of_relative_distances_to_normal(
         )
     )
 
-    figure.update_layout(
+    _update_plotly_figure_layout(
+        figure,
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
-        legend={
-            "yanchor": "top",
-            "y": 0.99,
-            "xanchor": "left",
-            "x": 0.01,
-        },
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title="Relative distance to normal (%)",
     )
-    figure.update_xaxes(title_text=time_mode.value.capitalize()[:-2])
-    figure.update_yaxes(title_text="Relative distance to normal (%)")
+
+    return figure
+
+
+def get_pie_figure_of_years_above_and_below_normal(
+    rainfall_instance: Union[
+        "models.YearlyRainfall", "models.MonthlyRainfall", "models.SeasonalRainfall"
+    ],
+    *,
+    normal_year: int,
+    begin_year: int,
+    end_year: int,
+) -> go.Figure:
+    """
+    Return plotly pie figure displaying the percentage of years above and below normal for the given time mode,
+    between the given years, and for the normal computed from the given year.
+
+    :param rainfall_instance: An instance of one these 3 classes: [YearlyRainfall, MonthlyRainfall, SeasonalRainfall].
+    :param normal_year: An integer representing the year
+    to start computing the 30 years normal of the rainfall.
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
+    """
+    years_above_normal = rainfall_instance.get_years_above_normal(
+        normal_year, begin_year, end_year
+    )
+    years_above_150_percent_of_normal = (
+        rainfall_instance.get_years_above_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=150
+        )
+    )
+    years_below_normal = rainfall_instance.get_years_below_normal(
+        normal_year, begin_year, end_year
+    )
+    years_below_50_percent_of_normal = (
+        rainfall_instance.get_years_below_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=50
+        )
+    )
+
+    color_map: dict[str, str] = {
+        "Years above 150% of normal": "darkblue",
+        "Years between 150% and 100% of normal": "dodgerblue",
+        "Years between 100% and 50% of normal": "crimson",
+        "Years below 50% of normal": "darkred",
+    }
+
+    figure = go.Figure(
+        go.Pie(
+            labels=list(color_map.keys()),
+            values=[
+                years_above_150_percent_of_normal,
+                years_above_normal - years_above_150_percent_of_normal,
+                years_below_normal - years_below_50_percent_of_normal,
+                years_below_50_percent_of_normal,
+            ],
+            marker={"colors": list(color_map.values())},
+            sort=False,
+        )
+    )
+
+    figure_title = f"Years compared to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year}"
+    if isinstance(rainfall_instance, models.MonthlyRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.month.value}"
+    elif isinstance(rainfall_instance, models.SeasonalRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.season.value}"
+
+    _update_plotly_figure_layout(
+        figure,
+        title=f"{figure_title} (%)",
+    )
 
     return figure

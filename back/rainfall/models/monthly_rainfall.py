@@ -22,7 +22,7 @@ class MonthlyRainfall(YearlyRainfall):
         start_year: int,
         round_precision: int,
     ):
-        self.month: Month = month
+        self.month = month
         super().__init__(
             raw_data, start_year=start_year, round_precision=round_precision
         )

@@ -16,7 +16,14 @@ def rainfall_average():
             begin_year=BEGIN_YEAR,
             end_year=END_YEAR,
             plot_average=True,
+        ),
+        plotlyRainfallAverageJSON2=api_client.get_rainfall_by_year_as_plotly_json(
+            time_mode="seasonal",
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
+            plot_average=True,
             plot_linear_regression=True,
+            season="winter",
         ),
     )
 
@@ -57,13 +64,21 @@ def years_below_normal():
 
 @navbar.route("/years_above_normal")
 def years_above_normal():
-    return jsonify(
-        api_client.get_years_above_normal(
+    return render_template(
+        "sections/years_above_normal.html",
+        plotlyYearsAboveNormalJSON=api_client.get_percentage_of_years_above_and_below_normal_as_plotly_json(
+            time_mode="seasonal",
+            normal_year=NORMAL_YEAR,
+            begin_year=BEGIN_YEAR,
+            end_year=END_YEAR,
+            season="fall",
+        ),
+        plotlyYearsAboveNormalJSON2=api_client.get_percentage_of_years_above_and_below_normal_as_plotly_json(
             time_mode="yearly",
             normal_year=NORMAL_YEAR,
             begin_year=BEGIN_YEAR,
             end_year=END_YEAR,
-        )
+        ),
     )
 
 

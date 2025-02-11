@@ -3,8 +3,9 @@ Provides functions parsing the YAML Configuration file to retrieve parameters.
 """
 
 from functools import cached_property
-from typing import Any, Optional
+from typing import Optional
 
+from api_session import JSONDict
 from pydantic import BaseModel, Field
 from yaml import parser, safe_load  # type: ignore
 
@@ -61,7 +62,7 @@ class Config:
 
     _instance: Optional["Config"] = None
     path: str
-    yaml_config: dict[str, Any]
+    yaml_config: JSONDict
 
     def __new__(cls, path="config.yml"):
         if cls._instance is None:
@@ -75,7 +76,7 @@ class Config:
         """Load and validate the configuration file."""
         try:
             with open(self.path, encoding="utf-8") as stream:
-                self.yaml_config: dict[str, Any] = safe_load(stream)
+                self.yaml_config: JSONDict = safe_load(stream)
         except FileNotFoundError as exc:
             raise FileNotFoundError(
                 f'Configuration file not found at "{self.path}"'

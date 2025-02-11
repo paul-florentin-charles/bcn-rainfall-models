@@ -8,12 +8,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
+from pydantic import PositiveFloat
 from scipy import signal
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 from back.rainfall.utils import (
+    DataFormatError,
     Label,
     Month,
 )
@@ -26,7 +28,6 @@ from back.rainfall.utils import (
 from back.rainfall.utils import (
     rainfall_metrics as rain,
 )
-from back.rainfall.utils.custom_exceptions import DataFormatError
 
 
 class YearlyRainfall:
@@ -74,7 +75,6 @@ class YearlyRainfall:
         :raise DataFormatError: If raw_data attribute of instance doesn't have exactly 13 columns.
         1 for the year; 12 for every monthly rainfall.
         """
-
         if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
         ) != 1 + len(Month):
@@ -158,6 +158,36 @@ class YearlyRainfall:
             self.data, begin_year, round_precision=self.round_precision
         )
 
+    def get_years_below_percentage_of_normal(
+        self,
+        normal_year: int,
+        begin_year: int,
+        end_year: int,
+        *,
+        percentage: PositiveFloat,
+    ) -> int:
+        """
+        Computes the count of years within a specific year range that are below
+        the percentage of a rainfall normal computed from a given normal year.
+
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param percentage: The percentage of the rainfall normal
+        to compare against.
+
+        :return: The count of years that are below the percentage of the rainfall normal.
+        """
+
+        return rain.get_years_compared_to_given_rainfall_value(
+            self.get_yearly_rainfall(begin_year, end_year),
+            rain.get_normal(self.data, normal_year) * percentage / 100,
+            comparator=opr.lt,
+        )
+
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int
     ) -> int:
@@ -173,10 +203,38 @@ class YearlyRainfall:
         :return: The number of years below the normal as an integer.
         """
 
+        return self.get_years_below_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=100
+        )
+
+    def get_years_above_percentage_of_normal(
+        self,
+        normal_year: int,
+        begin_year: int,
+        end_year: int,
+        *,
+        percentage: PositiveFloat,
+    ) -> int:
+        """
+        Computes the count of years within a specific year range that are above
+        the percentage of a rainfall normal computed from a given normal year.
+
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param percentage: The percentage of the rainfall normal
+        to compare against.
+
+        :return: The count of years that are above the percentage of the rainfall normal.
+        """
+
         return rain.get_years_compared_to_given_rainfall_value(
             self.get_yearly_rainfall(begin_year, end_year),
-            rain.get_normal(self.data, normal_year),
-            comparator=opr.lt,
+            rain.get_normal(self.data, normal_year) * percentage / 100,
+            comparator=opr.gt,
         )
 
     def get_years_above_normal(
@@ -194,10 +252,8 @@ class YearlyRainfall:
         :return: The number of years above the normal as an integer.
         """
 
-        return rain.get_years_compared_to_given_rainfall_value(
-            self.get_yearly_rainfall(begin_year, end_year),
-            rain.get_normal(self.data, normal_year),
-            comparator=opr.gt,
+        return self.get_years_above_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=100
         )
 
     def get_last_year(self) -> int:
@@ -361,12 +417,12 @@ class YearlyRainfall:
             self.data[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision
         )
 
-    def add_kmeans(self, kmeans_clusters: int | None = 4) -> int:
+    def add_kmeans(self, kmeans_clusters=4) -> int:
         """
         Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
 
-        :param kmeans_clusters: The number of clusters to compute. Defaults to 4. (optional)
+        :param kmeans_clusters: The number of clusters to compute. Defaults to 4.
         :return: The number of computed clusters as an integer
         """
         fit_data: np.ndarray = self.data[
@@ -417,7 +473,6 @@ class YearlyRainfall:
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-
         yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
 
         figure = plot.get_figure_of_column_according_to_year(
@@ -434,11 +489,12 @@ class YearlyRainfall:
                     begin_year, end_year
                 )
 
-                figure.add_hline(
-                    average_rainfall,
-                    annotation_text=f"Average rainfall over period – {average_rainfall} mm",
-                    annotation_position="top left",
-                    opacity=0.9,
+                figure.add_trace(
+                    go.Scatter(
+                        x=yearly_rainfall[Label.YEAR.value],
+                        y=[average_rainfall] * len(yearly_rainfall),
+                        name="Average rainfall",
+                    )
                 )
 
             if plot_linear_regression:
@@ -452,8 +508,8 @@ class YearlyRainfall:
                         x=yearly_rainfall[Label.YEAR.value],
                         y=linear_regression_values,
                         name=f"{Label.LINEAR_REGRESSION.value}"
-                        f" – <i>R2 score:</i> <b>{round(r2, 2)}</b>"
-                        f" – <i>slope:</i> {slope} mm/year",
+                        f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
+                        f"<br><i>slope:</i> {slope} mm/year",
                     )
                 )
 
@@ -475,7 +531,6 @@ class YearlyRainfall:
         to end getting our rainfall values.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-
         (r2, slope), predicted_rainfalls = self.get_linear_regression(
             begin_year, end_year
         )
@@ -488,10 +543,8 @@ class YearlyRainfall:
             Label.LINEAR_REGRESSION,
             figure_type="scatter",
             figure_label=f"{Label.LINEAR_REGRESSION.value}"
-            "<br>"
-            f"<i>R2 score:</i> <b>{round(r2, 2)}</b>"
-            "<br>"
-            f"<i>slope:</i> {slope} mm/year",
+            f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
+            f"<br><i>slope:</i> {slope} mm/year",
         )
 
         return figure
