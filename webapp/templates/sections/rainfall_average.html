@@ -24,9 +24,28 @@
         scrollZoom: true,
     };
 
-    ['load', 'resize'].forEach(event => window.addEventListener(event, function() {
-        Plotly.newPlot('chart_rainfall_average', {{ plotlyRainfallAverageJSON|safe }}, {}, config);
-        Plotly.newPlot('chart_rainfall_average_2', {{ plotlyRainfallAverageJSON2|safe }}, {}, config);
+    const graph_rainfall_average = {{ plotlyRainfallAverageJSON|safe }}
+    const graph_rainfall_average_2 = {{ plotlyRainfallAverageJSON2|safe }}
+
+    const graph_div_id_to_graph_json = {
+        chart_rainfall_average: graph_rainfall_average,
+        chart_rainfall_average_2: graph_rainfall_average_2,
+    };
+
+    ['load', 'resize'].forEach(event => window.addEventListener(event, function () {
+        if (window.screen.width < 768) {
+            Object.values(graph_div_id_to_graph_json).forEach((graph_json) => {
+                graph_json.layout.font.size = 9;
+            })
+        } else {
+            Object.values(graph_div_id_to_graph_json).forEach((graph_json) => {
+                graph_json.layout.font.size = 11;
+            })
+        }
+
+        Object.entries(graph_div_id_to_graph_json).forEach(([graph_div_id, graph_json]) => {
+            Plotly.newPlot(graph_div_id, graph_json, {}, config);
+        })
     }))
 </script>
 
