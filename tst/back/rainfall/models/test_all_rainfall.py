@@ -1,8 +1,8 @@
 from pathlib import Path
 from shutil import rmtree
 
+from back.rainfall import AllRainfall
 from back.rainfall.models import (
-    AllRainfall,
     MonthlyRainfall,
     SeasonalRainfall,
     YearlyRainfall,

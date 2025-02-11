@@ -273,17 +273,41 @@ def get_pie_figure_of_years_above_and_below_normal(
     to end getting our rainfall values.
     :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
     """
+    years_above_normal = rainfall_instance.get_years_above_normal(
+        normal_year, begin_year, end_year
+    )
+    years_above_150_percent_of_normal = (
+        rainfall_instance.get_years_above_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=150
+        )
+    )
+    years_below_normal = rainfall_instance.get_years_below_normal(
+        normal_year, begin_year, end_year
+    )
+    years_below_50_percent_of_normal = (
+        rainfall_instance.get_years_below_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=50
+        )
+    )
+
+    color_map: dict[str, str] = {
+        "Years above 150% of normal": "darkblue",
+        "Years between 150% and 100% of normal": "dodgerblue",
+        "Years between 100% and 50% of normal": "crimson",
+        "Years below 50% of normal": "darkred",
+    }
+
     figure = go.Figure(
         go.Pie(
-            labels=["Years above normal", "Years below normal"],
+            labels=list(color_map.keys()),
             values=[
-                rainfall_instance.get_years_above_normal(
-                    normal_year, begin_year, end_year
-                ),
-                rainfall_instance.get_years_below_normal(
-                    normal_year, begin_year, end_year
-                ),
+                years_above_150_percent_of_normal,
+                years_above_normal - years_above_150_percent_of_normal,
+                years_below_normal - years_below_50_percent_of_normal,
+                years_below_50_percent_of_normal,
             ],
+            marker={"colors": list(color_map.values())},
+            sort=False,
         )
     )
 

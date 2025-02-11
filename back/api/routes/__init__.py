@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from starlette.responses import JSONResponse, StreamingResponse
 
 from back.api.utils import RainfallModel
-from back.rainfall.models import AllRainfall
+from back.rainfall import AllRainfall
 from back.rainfall.utils import TimeMode
 
 all_rainfall = AllRainfall.from_config()
