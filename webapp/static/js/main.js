@@ -12,6 +12,8 @@ const config = {
     Plotly.newPlot('chart_relative_distance_to_normal', graphs_relative_distance_to_normal, {}, config);
 }))
 
+/** Enable drop-down menus when device is tablet or phone **/
+
 /** Scroll to top button **/
 
 const scrollToTopBtn = document.getElementById('scrollToTop');

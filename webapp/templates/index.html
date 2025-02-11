@@ -21,3 +21,14 @@
 </div>
 
 {% endblock %}
+
+{% block scripts %}
+
+<script type='text/javascript'>
+    const graphs_summer_rainfall = {{ plotlySummerRainfallJSON|safe }};
+    const graphs_averages = {{ plotlyAveragesJSON|safe }};
+    const graphs_linreg = {{ plotlyLinRegJSON|safe }};
+    const graphs_relative_distance_to_normal = {{ plotlyRelativeDistance2NormalJSON|safe }};
+</script>
+
+{% endblock %}

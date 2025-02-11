@@ -35,15 +35,15 @@ def _update_plotly_figure_layout(
             "y": 0.99,
             "xanchor": "left",
             "x": 0.01,
-            "bgcolor": "rgba(125, 125, 125, 0.6)",
+            "bgcolor": "rgba(125, 125, 125, 0.7)",
         },
         font={
             "color": "white",
             "family": "Khula, sans-serif",
             "size": 11,
         },
-        paper_bgcolor="rgba(34, 34, 34, 0.75)",
-        plot_bgcolor="rgba(123, 104, 75, 0.55)",
+        paper_bgcolor="rgba(34, 34, 34, 0.6)",
+        plot_bgcolor="rgba(123, 104, 75, 0.3)",
         margin={"t": 65, "r": 65, "b": 70, "l": 75},
         autosize=True,
     )

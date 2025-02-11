@@ -1,7 +1,7 @@
 :root {
-    --background-color: #3e3a36;
-    --header-background-color: #201c17;
-    --link-color: #dacbbb;
+    --background-color: #554038;
+    --header-background-color: #2b251f;
+    --link-color: #dfd0c1;
     --link-hover-color: #cb9f57;
     --scroll-button-hover-color: #b6993e;
     --graph-border-color: rgba(85, 78, 71, 0.65);
@@ -31,11 +31,15 @@ body {
     margin: 0.8em;
     padding: 0.1em 0 0.4em 0;
     border-radius: 2em;
-    opacity: 0.8;
 }
 
 .header {
     position: sticky;
+    opacity: 0.8;
+}
+
+.footer {
+    opacity: 0.85;
 }
 
 .menu-father {
