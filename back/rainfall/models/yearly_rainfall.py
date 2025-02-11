@@ -75,7 +75,6 @@ class YearlyRainfall:
         :raise DataFormatError: If raw_data attribute of instance doesn't have exactly 13 columns.
         1 for the year; 12 for every monthly rainfall.
         """
-
         if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
         ) != 1 + len(Month):
@@ -418,12 +417,12 @@ class YearlyRainfall:
             self.data[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision
         )
 
-    def add_kmeans(self, kmeans_clusters: int | None = 4) -> int:
+    def add_kmeans(self, kmeans_clusters=4) -> int:
         """
         Compute and add K-Mean clustering of Rainfall according to Year
         to our pandas DataFrame.
 
-        :param kmeans_clusters: The number of clusters to compute. Defaults to 4. (optional)
+        :param kmeans_clusters: The number of clusters to compute. Defaults to 4.
         :return: The number of computed clusters as an integer
         """
         fit_data: np.ndarray = self.data[
@@ -474,7 +473,6 @@ class YearlyRainfall:
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-
         yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
 
         figure = plot.get_figure_of_column_according_to_year(
@@ -533,7 +531,6 @@ class YearlyRainfall:
         to end getting our rainfall values.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-
         (r2, slope), predicted_rainfalls = self.get_linear_regression(
             begin_year, end_year
         )
@@ -546,10 +543,8 @@ class YearlyRainfall:
             Label.LINEAR_REGRESSION,
             figure_type="scatter",
             figure_label=f"{Label.LINEAR_REGRESSION.value}"
-            "<br>"
-            f"<i>R2 score:</i> <b>{round(r2, 2)}</b>"
-            "<br>"
-            f"<i>slope:</i> {slope} mm/year",
+            f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
+            f"<br><i>slope:</i> {slope} mm/year",
         )
 
         return figure
