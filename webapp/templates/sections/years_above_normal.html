@@ -16,11 +16,6 @@
 {% block scripts %}
 
 <script type='text/javascript'>
-    const config = {
-        responsive: true,
-        scrollZoom: true,
-    };
-
     const graph_years_above_normal = {{ plotlyYearsAboveNormalJSON|safe }}
     const graph_years_above_normal_2 = {{ plotlyYearsAboveNormalJSON2|safe }}
 
@@ -41,7 +36,7 @@
         }
 
         Object.entries(graph_div_id_to_graph_json).forEach(([graph_div_id, graph_json]) => {
-            Plotly.newPlot(graph_div_id, graph_json, {}, config);
+            Plotly.react(graph_div_id, graph_json, {}, config);
         })
     }))
 </script>

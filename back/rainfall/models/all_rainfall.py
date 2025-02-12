@@ -59,19 +59,19 @@ class AllRainfall:
 
     @classmethod
     def from_config(cls, from_file=False):
-        from config import Config
+        from back.rainfall.config import Config
 
-        dataset_path = Config().get_dataset_path
-        if from_file and dataset_path is None:
+        data_settings = Config().get_data_settings
+        if from_file and data_settings.local_file_path is None:
             raise RuntimeError(
                 f"Cannot init class because you have set {from_file=} "
                 f"but 'dataset.local_file_path' is not set in your configuration located at {Config().path}."
             )
 
         return cls(
-            dataset_path if from_file else Config().get_dataset_url,  # type: ignore
-            start_year=Config().get_start_year,
-            round_precision=Config().get_rainfall_precision,
+            data_settings.local_file_path if from_file else data_settings.file_url,  # type: ignore
+            start_year=data_settings.start_year,
+            round_precision=data_settings.rainfall_precision,
         )
 
     def export_all_data_to_csv(

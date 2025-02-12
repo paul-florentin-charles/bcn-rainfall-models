@@ -19,11 +19,6 @@
 {% block scripts %}
 
 <script type='text/javascript'>
-    const config = {
-        responsive: true,
-        scrollZoom: true,
-    };
-
     const graph_rainfall_average = {{ plotlyRainfallAverageJSON|safe }}
     const graph_rainfall_average_2 = {{ plotlyRainfallAverageJSON2|safe }}
 
@@ -44,7 +39,7 @@
         }
 
         Object.entries(graph_div_id_to_graph_json).forEach(([graph_div_id, graph_json]) => {
-            Plotly.newPlot(graph_div_id, graph_json, {}, config);
+            Plotly.react(graph_div_id, graph_json, {}, config);
         })
     }))
 </script>

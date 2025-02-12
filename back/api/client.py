@@ -4,14 +4,19 @@ API client built to interact with FastAPI application without needing the knowle
 
 from api_session import APISession, JSONDict
 
+from back.api.config import APISettings
+
 
 class APIClient(APISession):
     @classmethod
-    def from_config(cls, **kwargs):
-        from config import Config
+    def from_config(cls, config_: APISettings | None = None, **kwargs):
+        if config_ is None:
+            from back.api.config import Config
 
-        settings = Config().get_api_server_settings
-        root_path = Config().get_fastapi_settings.root_path
+            config_ = Config().get_api_settings
+
+        settings = config_.server
+        root_path = config_.fastapi.root_path
         base_url = f"http://{settings.host}:{settings.port}{root_path}"
 
         return cls(base_url, **kwargs)

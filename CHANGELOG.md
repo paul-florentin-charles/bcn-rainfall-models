@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/paul-florentin-charles/bcn-rainfall-models/tree/HEAD)
+
+[Full Changelog](https://github.com/paul-florentin-charles/bcn-rainfall-models/compare/v0.5.0...HEAD)
+
+**Closed issues:**
+
+- Use a lightweight CSS "framework" to smoothen out WebApp style [\#97](https://github.com/paul-florentin-charles/bcn-rainfall-models/issues/97)
+
+**Merged pull requests:**
+
+- Big webapp improvements [\#101](https://github.com/paul-florentin-charles/bcn-rainfall-models/pull/101) ([paul-florentin-charles](https://github.com/paul-florentin-charles))
+
 ## [v0.5.0](https://github.com/paul-florentin-charles/bcn-rainfall-models/tree/v0.5.0) (2025-02-03)
 
 [Full Changelog](https://github.com/paul-florentin-charles/bcn-rainfall-models/compare/v.0.4.0-webapp...v0.5.0)
