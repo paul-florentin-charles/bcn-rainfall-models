@@ -22,7 +22,7 @@ def api(ctx):
 
     uvicorn.run(
         "back.api.app:fastapi_app",
-        **ctx.ensure_object(Config).get_api_server_settings.model_dump(),
+        **ctx.ensure_object(Config).get_api_settings.server.model_dump(),
     )
 
 

@@ -10,44 +10,41 @@ from pydantic import BaseModel, Field
 from yaml import parser, safe_load  # type: ignore
 
 
-class ServerSettings(BaseModel):
-    """Base type definition for server settings"""
+class WebappServerSettings(BaseModel):
+    """Type definition for Flask server settings."""
 
     host: str
     port: int
-
-
-class APIServerSettings(ServerSettings):
-    """Type definition for Uvicorn server settings."""
-
-    reload: bool | None = Field(None)
-
-
-class WebappServerSettings(ServerSettings):
-    """Type definition for Flask server settings."""
-
     debug: bool | None = Field(None)
 
 
-class FastAPISettings(BaseModel):
-    """Type definition for FastAPI settings."""
+class APISettings(BaseModel):
+    """Type definition for API settings: FastAPI settings & Uvicorn server settings."""
 
-    root_path: str
-    title: str
-    summary: str | None = Field(None)
-    debug: bool | None = Field(None)
+    class FastAPISettings(BaseModel):
+        """Type definition for FastAPI settings."""
 
+        root_path: str
+        title: str
+        summary: str | None = Field(None)
+        debug: bool | None = Field(None)
 
-class DatasetSettings(BaseModel):
-    """Type definition for dataset settings."""
+    class APIServerSettings(BaseModel):
+        """Type definition for Uvicorn server settings."""
 
-    file_url: str
-    local_file_path: str | None = Field(None)
+        host: str
+        port: int
+        reload: bool | None = Field(None)
+
+    fastapi: FastAPISettings
+    server: APIServerSettings
 
 
 class DataSettings(BaseModel):
     """Type definition for data settings."""
 
+    file_url: str
+    local_file_path: str | None = Field(None)
     start_year: int
     rainfall_precision: int
     kmeans_clusters: int | None = Field(None)
@@ -100,80 +97,48 @@ class Config:
             )
 
     @cached_property
-    def get_dataset_url(self) -> str:
+    def get_data_settings(self) -> DataSettings:
         """
-        Return the URL pointing to the CSV dataset.
-
-        :return: The dataset URL as a String.
-        """
-        return DatasetSettings(**self.yaml_config["dataset"]).file_url
-
-    @cached_property
-    def get_dataset_path(self) -> str | None:
-        """
-        Return the path to the local copy of the CSV dataset.
-
-        :return: The dataset path as a string.
-        """
-        return DatasetSettings(**self.yaml_config["dataset"]).local_file_path
-
-    @cached_property
-    def get_start_year(self) -> int:
-        """
-        Retrieve the year the data should start at.
-
-        :return: A year as an Integer.
-        """
-        return DataSettings(**self.yaml_config["data"]).start_year
-
-    @cached_property
-    def get_rainfall_precision(self) -> int:
-        """
-        The decimal precision of Rainfall values.
-
-        :return: A rounding precision as an Integer.
-        """
-        return DataSettings(**self.yaml_config["data"]).rainfall_precision
-
-    @cached_property
-    def get_api_server_settings(self) -> APIServerSettings:
-        """
-        Return Uvicorn server settings to run FastAPI app.
-
-        :return: A dictionary containing server settings with typed keys.
+        Return data settings to load and manipulate rainfall data.
 
         Example:
         {
-            "host": "127.0.0.1",
-            "port": 8000,
-            "reload": True,
+            "file_url": "https://opendata-ajuntament.barcelona.cat/data/dataset/5334c15e-0d70-410b-85f3-d97740ffc1ed/resource/6f1fb778-0767-478b-b332-c64a833d26d2/download/precipitacionsbarcelonadesde1786.csv",
+            "local_file_path": "resources/bcn_rainfall_1786_2024.csv",
+            "start_year": 1971,
+            "rainfall_precision": 1,
         }
         """
-        return APIServerSettings(**self.yaml_config["api"]["server"])
+        return DataSettings(**self.yaml_config["data"])
 
     @cached_property
-    def get_fastapi_settings(self) -> FastAPISettings:
+    def get_api_settings(self) -> APISettings:
         """
-        Return FastAPI settings to initiate app.
-
-        :return: A dictionary containing FastAPI settings with typed keys.
+        Return both FastAPI settings and Uvicorn server settings to run FastAPI app.
 
         Example:
         {
-            "debug": True,
-            "root_path": "/api",
-            "title": "Barcelona Rainfall API",
-            "summary": "An API that provides rainfall-related data of the city of Barcelona."
+            "fastapi": {
+                "debug": True,
+                "root_path": "/api",
+                "title": "Barcelona Rainfall API",
+                "summary": "An API that provides rainfall-related data of the city of Barcelona.",
+            },
+            "server": {
+                "host": "127.0.0.1",
+                "port": 8000,
+                "reload": True,
+            },
         }
+
         """
-        return FastAPISettings(**self.yaml_config["api"]["fastapi"])
+
+        return APISettings(**self.yaml_config["api"])
 
     @cached_property
     def get_webapp_server_settings(self) -> WebappServerSettings:
         """
         Return Flask server settings.
-
-        :return: A dictionary containing server settings with typed keys.
 
         Example:
         {
@@ -182,4 +147,5 @@ class Config:
             "debug": True,
         }
         """
+
         return WebappServerSettings(**self.yaml_config["webapp"])

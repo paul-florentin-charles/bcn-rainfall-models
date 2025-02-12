@@ -1,7 +1,7 @@
 from pytest import fixture, raises
 from yaml.parser import ParserError  # type: ignore
 
-from config import APIServerSettings, Config, WebappServerSettings
+from config import APISettings, Config, WebappServerSettings
 
 config = Config()
 
@@ -25,20 +25,26 @@ class TestConfig:
 
     @staticmethod
     def test_get_dataset_url():
-        assert isinstance(config.get_dataset_url, str)
+        assert isinstance(config.get_data_settings.file_url, str)
+
+    @staticmethod
+    def test_get_dataset_path():
+        assert isinstance(config.get_data_settings.local_file_path, str)
 
     @staticmethod
     def test_get_start_year():
-        assert isinstance(config.get_start_year, int)
+        assert isinstance(config.get_data_settings.start_year, int)
 
     @staticmethod
     def test_get_rainfall_precision():
-        assert isinstance(config.get_rainfall_precision, int)
+        assert isinstance(config.get_data_settings.rainfall_precision, int)
 
     @staticmethod
     def test_get_api_server_settings():
-        assert isinstance(config.get_api_server_settings, APIServerSettings)
-        assert config.get_api_server_settings.model_fields.keys() == {
+        api_server_settings = config.get_api_settings.server
+
+        assert isinstance(api_server_settings, APISettings.APIServerSettings)
+        assert api_server_settings.model_fields.keys() == {
             "host",
             "port",
             "reload",
