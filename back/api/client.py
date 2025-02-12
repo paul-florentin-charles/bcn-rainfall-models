@@ -4,14 +4,14 @@ API client built to interact with FastAPI application without needing the knowle
 
 from api_session import APISession, JSONDict
 
-from config import APISettings
+from back.api.config import APISettings
 
 
 class APIClient(APISession):
     @classmethod
     def from_config(cls, config_: APISettings | None = None, **kwargs):
         if config_ is None:
-            from config import Config
+            from back.api.config import Config
 
             config_ = Config().get_api_settings
 

@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from pytest import raises
 
+from back.rainfall.config import Config
 from back.rainfall.models import SeasonalRainfall
 from back.rainfall.utils import DataFormatError, Label, Month, Season
 from tst.back.rainfall.models.test_all_rainfall import (
@@ -10,7 +11,6 @@ from tst.back.rainfall.models.test_all_rainfall import (
     end_year,
     normal_year,
 )
-from tst.test_config import config
 
 SEASONAL_RAINFALL = ALL_RAINFALL.seasonal_rainfalls[Season.FALL.value]
 
@@ -37,8 +37,8 @@ class TestMonthlyRainfall:
             SeasonalRainfall(
                 pd.DataFrame(),
                 Season.FALL,
-                start_year=config.get_data_settings.start_year,
-                round_precision=config.get_data_settings.rainfall_precision,
+                start_year=Config().get_data_settings.start_year,
+                round_precision=Config().get_data_settings.rainfall_precision,
             )
 
     @staticmethod

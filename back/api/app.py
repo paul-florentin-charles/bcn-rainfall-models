@@ -23,8 +23,8 @@ class FastAPPI(FastAPI):
 
     @classmethod
     def from_config(cls):
+        from back.api.config import Config
         from back.api.routes import MAX_YEAR_AVAILABLE, MIN_YEAR_AVAILABLE
-        from config import Config
 
         return cls(
             **Config().get_api_settings.fastapi.model_dump(),

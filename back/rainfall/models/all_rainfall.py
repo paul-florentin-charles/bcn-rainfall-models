@@ -59,7 +59,7 @@ class AllRainfall:
 
     @classmethod
     def from_config(cls, from_file=False):
-        from config import Config
+        from back.rainfall.config import Config
 
         data_settings = Config().get_data_settings
         if from_file and data_settings.local_file_path is None:
