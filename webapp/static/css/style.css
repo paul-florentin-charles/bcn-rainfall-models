@@ -5,6 +5,7 @@
     --link-hover-color: #cb9f57;
     --scroll-button-hover-color: #b6993e;
     --graph-border-color: rgba(85, 78, 71, 0.65);
+    --header-border-color: rgba(182, 130, 62, 0.65);
 }
 
 * {
@@ -29,17 +30,20 @@ h2#title {
 
 .header, .footer {
     text-align: center;
+    width: 65%;
     top: 0.4em;
     z-index: 1;
     background-color: var(--header-background-color);
-    margin: 0.8em;
-    padding: 0.1em 0 0.4em 0;
-    border-radius: 2em;
+    margin: 0.8em auto;
+    padding: 0.2em 0 0.6em 0;
+    border-radius: 2.5em;
+    border: 1px solid var(--header-border-color);
+    box-shadow: 0 0 0.25em var(--header-border-color);
 }
 
 .header {
     position: sticky;
-    opacity: 0.8;
+    opacity: 0.75;
 }
 
 .footer {
@@ -132,5 +136,15 @@ img.logo:hover {
 @media screen and (max-width: 767px) {
     body {
         font-size: 14px;
+    }
+
+    .header, .footer {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .header, .footer {
+        width: 75%;
     }
 }

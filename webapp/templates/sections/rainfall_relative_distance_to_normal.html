@@ -13,11 +13,6 @@
 {% block scripts %}
 
 <script type='text/javascript'>
-    const config = {
-        responsive: true,
-        scrollZoom: true,
-    };
-
     const graph_rainfall_relative_distance_to_normal = {{ plotlyRainfallRelativeDistance2NormalJSON|safe }}
 
     const graph_div_id_to_graph_json = {
@@ -36,7 +31,7 @@
         }
 
         Object.entries(graph_div_id_to_graph_json).forEach(([graph_div_id, graph_json]) => {
-            Plotly.newPlot(graph_div_id, graph_json, {}, config);
+            Plotly.react(graph_div_id, graph_json, {}, config);
         })
     }))
 </script>
