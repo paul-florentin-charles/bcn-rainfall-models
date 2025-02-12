@@ -571,13 +571,13 @@ class YearlyRainfall:
         Defaults to False (optional).
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
-        figure = go.Figure()
-        figure.add_hline(
-            100.0,
-            annotation_text="Normal (%)",
-            annotation_position="top left",
-            line_dash="dash",
-            line_color="orange",
+
+        figure = go.Figure(
+            go.Scatter(
+                x=self.data[Label.YEAR.value],
+                y=[100.0] * len(self.data),
+                name="Normal rainfall (%)",
+            )
         )
 
         if not display_clusters:
